@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<h2>Flashdown - Build & Study Cards in a Flash</h2>
+
+<ul id="deck_list">
+
+{% for deck in decks %}
+  {% include 'decks/deckinfo_partial.html' with deck=deck %}
+{% endfor %}
+
+</ul>
+
+<form id="add_deck" action="" method="post">
+  <input id="deck_name" type="text" name="deck_name" size="30">
+  <input type="submit" value="Add"> 
+</form>
+
+{% endblock %}

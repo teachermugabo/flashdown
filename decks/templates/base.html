@@ -1,0 +1,55 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}Flashdown - Flash Cards in Markdown{% endblock %}</title>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--> 
+
+    <style>
+        body { padding-top: 60px; } // for fixed navbar spacing
+    </style>
+
+
+    <link href="{% static "css/site.css" %}" rel="stylesheet">
+    {% block css %} {% endblock %}
+  </head>
+
+  <body>
+
+    {% block navbar %}
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="/">Flashdown</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href={% url overview %}>Decks</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    <div class="container">
+
+      {% block content %}
+      {% endblock %}
+
+    </div> <!-- /content -->
+
+    <!-- JS - placed at the end of the document so the pages load faster -->
+    <script src="{% static "js/jquery.js" %}"></script>
+    <script src="{% static "js/jquery.validate.js" %}"></script>
+    <script src="{% static "js/bootstrap.js" %}"></script>
+    <script src="{% static "js/slide.js" %}"></script>
+    <script src="{% static "js/ajax.js" %}"></script>
+    {% block js %} {% endblock %}
+
+  </body>
+</html>

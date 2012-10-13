@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ deck.name }}</h1>
+
+{% if cards %}
+<ul>
+
+{% for card in cards %}
+  <li>
+    {{ card.question|truncatechars:30 }}
+    <a href="{% url edit_card card_id=card.id %}">Edit</a>
+  </li>
+{% endfor %}
+
+<li>
+{% endif %}
+
+<a href="{% url new_card deck_name=deck.name %}">Add Card</a>
+
+{% endblock %}
