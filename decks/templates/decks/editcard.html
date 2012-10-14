@@ -3,29 +3,24 @@
 
 {% block content %}
 
-        <h1>Edit Card</h1>
+        <h1>Add Cards to <em>{{ deck.name }}</em></h1>
         <hr />
 
         <form id="card_form" action="{% url new_card deck_id=deck.id %}" method="post">
+            {% csrf_token %}
+            <h2>Front</h2>
             <div class="wmd-panel">
-                <div id="wmd-button-bar-back"></div>
-                <textarea class="wmd-input" id="wmd-input-front">
-This is the *demo* editor.
-------------------------------
-Just plain **Markdown**, except that the input is sanitized:
-<marquee>I'm the ghost from the past!</marquee>
-                </textarea>
+                <div id="wmd-button-bar-front"></div>
+                <textarea name="front" class="wmd-input" id="wmd-input-front"></textarea>
             </div>
             <div id="wmd-preview-front" class="well wmd-panel wmd-preview"></div>
 
-            <div class="wmd-panel-back">
+            <hr />
+
+            <h2>Back</h2>
+            <div class="wmd-panel">
                 <div id="wmd-button-bar-back"></div>
-                <textarea class="wmd-input" id="wmd-input-back">
-This is the *demo* editor.
-------------------------------
-Just plain **Markdown**, except that the input is sanitized:
-<marquee>I'm the ghost from the past!</marquee>
-                </textarea>
+                <textarea name="back" class="wmd-input" id="wmd-input-back"></textarea>
             </div>
             <div id="wmd-preview-back" class="well wmd-panel wmd-preview"></div>
 
@@ -39,9 +34,22 @@ Just plain **Markdown**, except that the input is sanitized:
     <script src="{% static "js/pagedown-bootstrap/Markdown.Sanitizer.js" %}"></script>
     <script type="text/javascript">
         (function () {
+            {% if card %}
+            var front = "{{ card.front|safe|addslashes }}";
+            var back = "{{ card.back|safe|addslashes }}";
+            {% else %}
+            var front = "##This is the card editor.\nEdit your cards in **Markdown**";
+            var back = "";
+            {% endif %}
+            $("#wmd-input-front").val(front);
+            $("#wmd-input-back").val(back);
+
             var converter = Markdown.getSanitizingConverter();
-            var editor = new Markdown.Editor(converter);
+            var editor = new Markdown.Editor(converter, "-front");
             editor.run();
+
+            var editor2 = new Markdown.Editor(converter, "-back");
+            editor2.run();
         })();
     </script>
 {% endblock %}

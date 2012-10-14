@@ -9,14 +9,14 @@
 
 {% for card in cards %}
   <li>
-    {{ card.question|truncatechars:30 }}
-    <a href="{% url edit_card deck_id=deck_id card_id=card.id %}">Edit</a>
+    {{ card.front|truncatechars:30 }}
+    <a href="{% url edit_card deck_id=deck.id card_id=card.id %}">Edit</a>
   </li>
 {% endfor %}
 
-<li>
+</ul>
 {% endif %}
 
-<a href="{% url edit_new_card deck_id=deck.id %}">Add Card</a>
+<a href="{% url edit_new_card deck_id=deck.id %}" class="btn btn-primary">Add Card</a>
 
 {% endblock %}

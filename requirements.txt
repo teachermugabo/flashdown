@@ -1,4 +1,8 @@
 Django==1.4.1
 South==0.7.6
 argparse==1.2.1
+html5lib==0.95
+python-dateutil==2.1
+pytz==2012f
+six==1.2.0
 wsgiref==0.1.2

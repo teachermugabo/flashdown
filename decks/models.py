@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+#from django.utils import timezone
 import datetime
 
 class Tag(models.Model):
@@ -10,12 +10,14 @@ class Tag(models.Model):
     return self.name
 
 class Card(models.Model):
-  question = models.TextField()
-  answer = models.TextField()
-  tags = models.ManyToManyField(Tag, related_name="tagged_cards") # many to many
+  front = models.TextField()
+  back = models.TextField()
   deck = models.ForeignKey(Tag, related_name="deck_cards") # one to many
-  last_asked = models.DateTimeField()
-  next_due = models.DateTimeField()
+  tags = models.ManyToManyField(Tag, related_name="tagged_cards") # many to many
+
+  last_asked = models.DateTimeField(null=True)
+  next_due = models.DateTimeField(auto_now_add=True)
+  created = models.DateTimeField(auto_now_add=True)
 
   def __unicode__(self):
     return self.question + "\n\n" + self.answer

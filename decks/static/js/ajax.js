@@ -58,18 +58,5 @@ $(function() {
         // cause a broken pipe in our ajax app
     });
 
-    // submit handler for adding/editing a card in editcard.html
-    $('#cardform').submit(function() {
-        var self = $(this);
-
-        $.ajax({
-            url: self.attr("action"),
-            type: "POST",
-            data: {
-                front : converter.makeHtml(self.find("#wmd-input-front").val()),
-                back : converter.makeHtml(self.find("#wmd-input-back").val())
-            },
-            success: function
-    });
 });
 

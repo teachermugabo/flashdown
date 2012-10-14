@@ -1,6 +1,7 @@
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from decks.models import Tag, Card
 
 def overview(request):
@@ -14,14 +15,18 @@ def edit_card(request, deck_id, card_id=None):
     deck = get_object_or_404(Tag, pk=deck_id)
 
     if card_id is None:
-        return render_to_response('decks/editcard.html', {'deck' : deck})
+        return render_to_response('decks/editcard.html',
+                                  {'deck' : deck},
+                                  context_instance=RequestContext(request))
         #adding a new card
 
     card = get_object_or_404(Card, pk=card_id)
     if card.deck != deck:
         return HttpResponseBadRequest()
 
-    return render_to_response('decks/editcard.html', {'card' : card, 'deck' : deck})
+    return render_to_response('decks/editcard.html',
+                              {'card' : card, 'deck' : deck},
+                              context_instance=RequestContext(request))
 
 
 def view_deck(request, deck_id):
@@ -61,20 +66,33 @@ def new_deck(request):
 
 
 def new_card(request, deck_id):
-    pass
+    if request.method != 'POST':
+        return HttpResponseBadRequest()
 
+    deck = get_object_or_404(Tag, pk=deck_id)
+    if not deck.is_deck:
+        return HttpResponseBadRequest()
 
-from django import template
-from django.template.defaultfilters import stringfilter
+    # sanitize data
+    """
+    this is no longer necessary since we're just storing markdown and
+    rendering it later
 
-register = template.Library()
+    import html5lib
+    from html5lib import sanitizer
 
-import html5lib
-from html5lib import sanitizer
-
-@register.filter
-@stringfilter
-def sanitize(value):
     p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
-        return p.parseFragment(value).toxml()
+    front = p.parseFragment(request.POST["front"]).toxml()
+    back = p.parseFragment(request.POST["back"]).toxml()
+    """
+    front = request.POST["front"]
+    back = request.POST["back"]
+
+    card = Card(front=front, back=back, deck=deck)
+    card.save()
+
+    #todo: store tags
+
+    return HttpResponseRedirect(reverse('edit_new_card', kwargs={'deck_id' : deck_id}))
+
 # vim: set ai et ts=4 sw=4 sts=4 :
