@@ -38,7 +38,7 @@ def view_deck(request, deck_id):
     return render_to_response('decks/viewdeck.html', {'deck' : deck, 'cards' : cards})
 
 
-def review_deck(request, deck_name):
+def review_deck(request, deck_id):
     return render_to_response('decks/reviewdeck.html')
 
 
@@ -62,8 +62,7 @@ def new_deck(request):
         deck = Tag(name=deck_name, is_deck=True)
         deck.save()
 
-    return render_to_response('decks/deckinfo_partial.html', {'deck': deck})
-
+    return render_to_response('decks/deckinfo_partial.html', {'deck' : deck})
 
 def new_card(request, deck_id):
     if request.method != 'POST':

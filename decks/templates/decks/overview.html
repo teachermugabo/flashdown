@@ -5,13 +5,20 @@
 
 <h2>Flashdown - Build & Study Cards in a Flash</h2>
 
-<ul id="deck_list">
+<table id="deck_list" class="table">
+    <thead>
+        <tr>
+            <td>Deck Name</td>
+            <td>Total Cards</td>
+            <td>Due</td>
+        </tr>
+    </thead>
 
-{% for deck in decks %}
-  {% include 'decks/deckinfo_partial.html' with deck=deck %}
-{% endfor %}
+    {% for deck in decks %}
+      {% include 'decks/deckinfo_partial.html' with deck=deck %}
+    {% endfor %}
 
-</ul>
+</table>
 
 <form id="add_deck" action="{% url new_deck %}" method="post" class="form-inline">
   <input id="deck_name" type="text" class="input-large">

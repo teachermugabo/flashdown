@@ -5086,3 +5086,32 @@ a.badge:hover {
   font-weight: bold;
   border: 1px solid #888888;
 }
+
+.card-editor {
+  *zoom: 1;
+}
+
+.card-editor .wmd-container {
+  float: left;
+  width: 450px;
+  padding: 0 10px;
+}
+
+.card-editor:before,
+.card-editor:after {
+  display: table;
+  content: "";
+}
+
+.card-editor:after {
+  clear: both;
+}
+
+.card-editor h2.card-name {
+  text-align: center;
+}
+
+#add-card {
+  width: 100px;
+  margin-left: 10px;
+}

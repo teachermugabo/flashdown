@@ -1,5 +1,5 @@
-<li>
-  {{ deck.name }}
-  <a href="{% url review_deck deck_id=deck.id %}">Study</a>
-  <a href="{% url view_deck deck_id=deck.id %}">View/Edit</a>
-</li>
+<tr>
+    <td><a href="{% url view_deck deck_id=deck.id %}">{{ deck.name }}</a></td>
+    <td>{{ deck.card_count }}</td>
+    <td>{{ deck.due_count }}</td>
+</tr>
