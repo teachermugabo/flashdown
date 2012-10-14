@@ -2,19 +2,35 @@
 {% load staticfiles %}
 
 {% block content %}
+
         <h1>Edit Card</h1>
         <hr />
 
-        <div class="wmd-panel">
-            <div id="wmd-button-bar"></div>
-            <textarea class="wmd-input" id="wmd-input">
+        <form id="card_form" action="{% url new_card deck_id=deck.id %}" method="post">
+            <div class="wmd-panel">
+                <div id="wmd-button-bar-back"></div>
+                <textarea class="wmd-input" id="wmd-input-front">
 This is the *demo* editor.
 ------------------------------
 Just plain **Markdown**, except that the input is sanitized:
 <marquee>I'm the ghost from the past!</marquee>
-            </textarea>
-        </div>
-        <div id="wmd-preview" class="well wmd-panel wmd-preview"></div>
+                </textarea>
+            </div>
+            <div id="wmd-preview-front" class="well wmd-panel wmd-preview"></div>
+
+            <div class="wmd-panel-back">
+                <div id="wmd-button-bar-back"></div>
+                <textarea class="wmd-input" id="wmd-input-back">
+This is the *demo* editor.
+------------------------------
+Just plain **Markdown**, except that the input is sanitized:
+<marquee>I'm the ghost from the past!</marquee>
+                </textarea>
+            </div>
+            <div id="wmd-preview-back" class="well wmd-panel wmd-preview"></div>
+
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
 {% endblock %}
 
 {% block js %}
@@ -23,9 +39,9 @@ Just plain **Markdown**, except that the input is sanitized:
     <script src="{% static "js/pagedown-bootstrap/Markdown.Sanitizer.js" %}"></script>
     <script type="text/javascript">
         (function () {
-            var converter1 = Markdown.getSanitizingConverter();
-            var editor1 = new Markdown.Editor(converter1);
-            editor1.run();
+            var converter = Markdown.getSanitizingConverter();
+            var editor = new Markdown.Editor(converter);
+            editor.run();
         })();
     </script>
 {% endblock %}

@@ -1,60 +1,75 @@
 // Ensure ajax requests include csrf token, if necessary
 $(function() {
-  var DEBUG = true;
+    var DEBUG = true;
 
-  function getCookie(name) {
-      var cookieValue = null;
-      if (document.cookie && document.cookie != '') {
-          var cookies = document.cookie.split(';');
-          for (var i = 0; i < cookies.length; i++) {
-              var cookie = jQuery.trim(cookies[i]);
-              // Does this cookie string begin with the name we want?
-              if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                  break;
-              }
-          }
-      }
-      return cookieValue;
-  }
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
-  function csrfSafeMethod(method) {
-      // these HTTP methods do not require CSRF protection
-      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-  }
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
 
-  var csrftoken = getCookie('csrftoken');
+    var csrftoken = getCookie('csrftoken');
 
-  $.ajaxSetup({
-      crossDomain: false, // obviates need for sameOrigin test
-      beforeSend: function(xhr, settings) {
-          if (!csrfSafeMethod(settings.type)) {
-              xhr.setRequestHeader("X-CSRFToken", csrftoken);
-          }
-      }
-  });
-
-
-  // and now set up the submit handler 
-  $("#add_deck").submit(function() {
-    var self = $(this);
-    // TODO: validate
-    $.ajax({
-      // trailing slash is very important. otherwise, since we have
-      // APPEND_SLASH=true, Django re-routes our request and breaks
-      // the expected functionality of this ajax call
-      url: "/decks/new-deck/" + self.find("#deck_name").val() + "/",
-      type: "POST",
-      success: function(response) {
-        $("#deck_list").append(response);
-      },
-      error: function(data) {
-        if (DEBUG)
-          alert("ajax problem: " + data);
-      }
+    $.ajaxSetup({
+        crossDomain: false, // obviates need for sameOrigin test
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
     });
-    return false; // prevents default submit behavior, which would
-    // cause a broken pipe in our ajax app
-  });
+
+
+    // and now set up the submit handler for adding a deck in overview.html
+    $("#add_deck").submit(function() {
+        var self = $(this);
+        // TODO: validate
+        $.ajax({
+            // trailing slash is very important. otherwise, since we have
+            // APPEND_SLASH=true, Django re-routes our request and breaks
+            // the expected functionality of this ajax call
+            url: self.attr("action"),
+            type: "POST",
+            data: {deck_name : self.find("#deck_name").val()},
+            success: function(response) {
+                $("#deck_list").append(response);
+            },
+            error: function(data) {
+                if (DEBUG)
+                    alert("ajax error");
+            }
+        });
+        return false; // prevents default submit behavior, which would
+        // cause a broken pipe in our ajax app
+    });
+
+    // submit handler for adding/editing a card in editcard.html
+    $('#cardform').submit(function() {
+        var self = $(this);
+
+        $.ajax({
+            url: self.attr("action"),
+            type: "POST",
+            data: {
+                front : converter.makeHtml(self.find("#wmd-input-front").val()),
+                back : converter.makeHtml(self.find("#wmd-input-back").val())
+            },
+            success: function
+    });
 });
 

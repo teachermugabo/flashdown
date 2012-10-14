@@ -13,9 +13,9 @@
 
 </ul>
 
-<form id="add_deck" action="" method="post">
-  <input id="deck_name" type="text" name="deck_name" size="30">
-  <input type="submit" value="Add"> 
+<form id="add_deck" action="{% url new_deck %}" method="post" class="form-inline">
+  <input id="deck_name" type="text" class="input-large">
+  <button type="submit" class="btn btn-primary">Add</button>
 </form>
 
 {% endblock %}
