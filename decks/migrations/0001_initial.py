@@ -19,11 +19,12 @@ class Migration(SchemaMigration):
         # Adding model 'Card'
         db.create_table('decks_card', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('question', self.gf('django.db.models.fields.TextField')()),
-            ('answer', self.gf('django.db.models.fields.TextField')()),
+            ('front', self.gf('django.db.models.fields.TextField')()),
+            ('back', self.gf('django.db.models.fields.TextField')()),
             ('deck', self.gf('django.db.models.fields.related.ForeignKey')(related_name='deck_cards', to=orm['decks.Tag'])),
-            ('last_asked', self.gf('django.db.models.fields.DateTimeField')()),
-            ('next_due', self.gf('django.db.models.fields.DateTimeField')()),
+            ('last_asked', self.gf('django.db.models.fields.DateTimeField')(null=True)),
+            ('next_due', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
         db.send_create_signal('decks', ['Card'])
 
@@ -50,12 +51,13 @@ class Migration(SchemaMigration):
     models = {
         'decks.card': {
             'Meta': {'object_name': 'Card'},
-            'answer': ('django.db.models.fields.TextField', [], {}),
+            'back': ('django.db.models.fields.TextField', [], {}),
+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'deck': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'deck_cards'", 'to': "orm['decks.Tag']"}),
+            'front': ('django.db.models.fields.TextField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_asked': ('django.db.models.fields.DateTimeField', [], {}),
-            'next_due': ('django.db.models.fields.DateTimeField', [], {}),
-            'question': ('django.db.models.fields.TextField', [], {}),
+            'last_asked': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
+            'next_due': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'tags': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'tagged_cards'", 'symmetrical': 'False', 'to': "orm['decks.Tag']"})
         },
         'decks.tag': {

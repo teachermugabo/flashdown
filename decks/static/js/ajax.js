@@ -40,9 +40,6 @@ $(function() {
         var self = $(this);
         // TODO: validate
         $.ajax({
-            // trailing slash is very important. otherwise, since we have
-            // APPEND_SLASH=true, Django re-routes our request and breaks
-            // the expected functionality of this ajax call
             url: self.attr("action"),
             type: "POST",
             data: {deck_name : self.find("#deck_name").val()},

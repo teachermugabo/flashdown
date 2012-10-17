@@ -84,8 +84,13 @@ def new_card(request, deck_id):
     front = p.parseFragment(request.POST["front"]).toxml()
     back = p.parseFragment(request.POST["back"]).toxml()
     """
+
+    # escape newlines or we'll have trouble when inserting this in javascript
+    # later
     front = request.POST["front"]
+#    front = front.replace('\r\n', '\n')
     back = request.POST["back"]
+#    back = back.replace('\r\n', '\n')
 
     card = Card(front=front, back=back, deck=deck)
     card.save()
