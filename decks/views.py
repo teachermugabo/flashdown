@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from decks.models import Tag, Card
+from django.utils import simplejson
 
 def overview(request):
     decks = Tag.objects.all()
@@ -34,7 +35,8 @@ def view_deck(request, deck_id):
     if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
         return HttpResponse(code=400)
 
-    cards = deck.deck_cards.all()
+    #cards = deck.deck_cards.all()
+    cards = deck.deck_cards.filter(deleted=False)
     return render_to_response('decks/viewdeck.html', {'deck' : deck, 'cards' : cards})
 
 
@@ -94,9 +96,37 @@ def new_card(request, deck_id):
 
     card = Card(front=front, back=back, deck=deck)
     card.save()
+    card.tags.add(deck)
 
-    #todo: store tags
+    #todo: store additional tags
 
     return HttpResponseRedirect(reverse('edit_new_card', kwargs={'deck_id' : deck_id}))
 
+def delete_card(request, deck_id, card_id):
+    if not request.is_ajax() or request.method != 'POST':
+        print("1")
+        return HttpResponseBadRequest()
+
+    deck = get_object_or_404(Tag, pk=deck_id)
+    if not deck.is_deck:
+        print("2")
+        return HttpResponseBadRequest()
+
+    print("3")
+    card = get_object_or_404(Card, pk=card_id)
+    try:
+        if not card.tags.filter(name=deck.name):
+            return HttpResponseBadRequest()
+    except:
+        print("fuck")
+
+    print("here2")
+    card.deleted = True # keep it around in case we want to restore it later
+    card.save()
+
+    print("here3")
+    return HttpResponse('success')
+
+
 # vim: set ai et ts=4 sw=4 sts=4 :
+

@@ -15,4 +15,6 @@ urlpatterns = patterns('decks.views',
     url(r'^new-deck/$', 'new_deck', name='new_deck'),
     # add a new card (ajax)
     url(r'^(?P<deck_id>\d+)/new-card/$', 'new_card', name='new_card'),
+    # delete a card (ajax)
+    url(r'^(?P<deck_id>\d+)/delete-card/(?P<card_id>\d+)/$', 'delete_card', name='delete_card'),
 )

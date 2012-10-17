@@ -20,6 +20,7 @@ class Card(models.Model):
     back = models.TextField()
     deck = models.ForeignKey(Tag, related_name="deck_cards") # one to many
     tags = models.ManyToManyField(Tag, related_name="tagged_cards") # many to many
+    deleted = models.BooleanField(default=False)
 
     last_asked = models.DateTimeField(null=True)
     next_due = models.DateTimeField(auto_now_add=True)
