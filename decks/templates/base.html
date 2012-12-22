@@ -17,6 +17,8 @@
 
     <link href="{% static "css/site.css" %}" rel="stylesheet">
     {% block css %} {% endblock %}
+
+    <script src="{% static "js/modernizr.js" %}"></script>
   </head>
 
   <body>
@@ -49,6 +51,7 @@
     <script src="{% static "js/bootstrap.js" %}"></script>
     <script src="{% static "js/slide.js" %}"></script>
     <script src="{% static "js/ajax.js" %}"></script>
+    <script src="{% static "js/jquery-placeholder.js" %}"></script> <!-- emulate html5 placeholder attribute -->
     {% block js %} {% endblock %}
 
   </body>
