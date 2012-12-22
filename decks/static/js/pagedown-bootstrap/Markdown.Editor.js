@@ -21,7 +21,7 @@
     // -------------------------------------------------------------------
     //  YOUR CHANGES GO HERE
     //
-    // I've tried to localize the things you are likely to change to 
+    // I've tried to localize the things you are likely to change to
     // this area.
     // -------------------------------------------------------------------
 
@@ -160,7 +160,7 @@
             beforeReplacer = function (s) { that.before += s; return ""; }
             afterReplacer = function (s) { that.after = s + that.after; return ""; }
         }
-        
+
         this.selection = this.selection.replace(/^(\s*)/, beforeReplacer).replace(/(\s*)$/, afterReplacer);
     };
 
@@ -228,14 +228,14 @@
         }
     };
 
-    // end of Chunks 
+    // end of Chunks
 
     // A collection of the important regions on the page.
     // Cached so we don't have to keep traversing the DOM.
     // Also holds ieCachedRange and ieCachedScrollTop, where necessary; working around
     // this issue:
     // Internet explorer has problems with CSS sprite buttons that use HTML
-    // lists.  When you click on the background image "button", IE will 
+    // lists.  When you click on the background image "button", IE will
     // select the non-existent link text and discard the selection in the
     // textarea.  The solution to this is to cache the textarea selection
     // on the button's mousedown event and set a flag.  In the part of the
@@ -580,7 +580,7 @@
                     setMode("escape");
                 }
                 else if ((keyCode < 16 || keyCode > 20) && keyCode != 91) {
-                    // 16-20 are shift, etc. 
+                    // 16-20 are shift, etc.
                     // 91: left window key
                     // I think this might be a little messed up since there are
                     // a lot of nonprinting keys above 20.
@@ -724,7 +724,7 @@
 
                 if (panels.ieCachedRange)
                     stateObj.scrollTop = panels.ieCachedScrollTop; // this is set alongside with ieCachedRange
-                
+
                 panels.ieCachedRange = null;
 
                 this.setInputAreaSelection();
@@ -964,7 +964,7 @@
         init();
     };
 
-    
+
     // This simulates a modal dialog box and asks for the URL when you
     // click the hyperlink or image buttons.
     //
@@ -1121,11 +1121,11 @@
                 range.moveEnd("character", defTextLen);
                 range.select();
             }
-            
+
             $(dialog).on('shown', function () {
                 input.focus();
             })
-            
+
             $(dialog).on('hidden', function () {
                 dialog.parentNode.removeChild(dialog);
             })
@@ -1263,7 +1263,7 @@
                 //
                 // var link = CreateLinkDialog();
                 // makeMarkdownLink(link);
-                // 
+                //
                 // Instead of this straightforward method of handling a
                 // dialog I have to pass any code which would execute
                 // after the dialog is dismissed (e.g. link creation)
@@ -1314,6 +1314,9 @@
             }
             else {
                 button.disabled = true;
+
+                // when disabling a button, make sure we hide its tooltip if it's showing
+                $(button).tooltip('hide')
             }
         }
 
@@ -1339,7 +1342,7 @@
                 button.id = id + postfix;
                 button.appendChild(buttonImage);
                 button.title = title;
-                $(button).tooltip({placement: 'bottom'})
+                $(button).tooltip({placement: 'top'})
                 if (textOp)
                     button.textOp = textOp;
                 setupButton(button, true);
@@ -1361,7 +1364,7 @@
             group1 = makeGroup(1);
             buttons.bold = makeButton("wmd-bold-button", "Bold - Ctrl+B", "icon-bold", bindCommand("doBold"), group1);
             buttons.italic = makeButton("wmd-italic-button", "Italic - Ctrl+I", "icon-italic", bindCommand("doItalic"), group1);
-            
+
             group2 = makeGroup(2);
             buttons.link = makeButton("wmd-link-button", "Link - Ctrl+L", "icon-link", bindCommand(function (chunk, postProcessing) {
                 return this.doLinkOrImage(chunk, postProcessing, false);
@@ -1381,7 +1384,7 @@
             }), group3);
             buttons.heading = makeButton("wmd-heading-button", "Heading - Ctrl+H", "icon-header", bindCommand("doHeading"), group3);
             buttons.hr = makeButton("wmd-hr-button", "Horizontal Rule - Ctrl+R", "icon-hr-line", bindCommand("doHorizontalRule"), group3);
-            
+
             group4 = makeGroup(4);
             buttons.undo = makeButton("wmd-undo-button", "Undo - Ctrl+Z", "icon-undo", null, group4);
             buttons.undo.execute = function (manager) { if (manager) manager.undo(); };
@@ -1617,7 +1620,7 @@
 
         }
         else {
-            
+
             // We're moving start and end tag back into the selection, since (as we're in the else block) we're not
             // *removing* a link, but *adding* one, so whatever findTags() found is now back to being part of the
             // link text. linkEnteredCallback takes care of escaping any brackets.
@@ -1653,7 +1656,7 @@
                     // would mean a zero-width match at the start. Since zero-width matches advance the string position,
                     // the first bracket could then not act as the "not a backslash" for the second.
                     chunk.selection = (" " + chunk.selection).replace(/([^\\](?:\\\\)*)(?=[[\]])/g, "$1\\").substr(1);
-                    
+
                     var linkDef = " [999]: " + properlyEncoded(link);
 
                     var num = that.addLinkDef(chunk, linkDef);
@@ -1694,7 +1697,7 @@
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}>[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ \t]+\n$/, "\n\n");
-        
+
         // There's no selection, end the cursor wasn't at the end of the line:
         // The user wants to split the current list item / code line / blockquote line
         // (for the latter it doesn't really matter) in two. Temporarily select the
@@ -1722,7 +1725,7 @@
                 commandMgr.doCode(chunk);
             }
         }
-        
+
         if (fakeSelection) {
             chunk.after = chunk.selection + chunk.after;
             chunk.selection = "";
