@@ -12,7 +12,7 @@ less: custom
 
 custom: 
 	@echo "\n${HR}"
-	@echo "Building Bootstrap Custom Extensions (site.css)"
+	@echo "Building Bootstrap Custom Extensions (bootstrap.css)"
 	@echo "${HR}\n"
 	@recess --compile ${BOOTSTRAP_LESS} > ${BOOTSTRAP}
 	@echo "Compiling LESS with Recess...               ${CHECK} Done\n"
