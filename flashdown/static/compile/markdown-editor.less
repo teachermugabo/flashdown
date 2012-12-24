@@ -78,20 +78,67 @@
   font-weight: bold;
 }
 
-// custom style for front/back of cards
-.card-editor {
-    .wmd-container {
-        width: 450px;
-        float: left;
-        padding: 0 10px;
-    }
+// match github tables
 
-    .clearfix;
-    h2.card-name { text-align: center; }
+.wmd-preview table tr {
+  border-top: 1px solid #CCC;
+  background-color: white;
 }
 
-#add-card {
-    width: 100px;
-    margin-left: 10px;
+.wmd-preview table td, .wmd-preview table th {
+  border: 1px solid #CCC;
+  padding: 6px 13px;
+}
+
+.wmd-preview table th {
+  font-weight: bold;
+}
+
+.wmd-preview table tr:nth-child(2n) {
+  background-color: #F8F8F8;
+}
+
+.wmd-preview p, .wmd-preview blockquote, .wmd-preview ul,
+.wmd-preview ol, .wmd-preview dl, .wmd-preview table,
+.wmd-preview pre {
+  margin: 15px 0;
+ }
+
+// match github code blocks
+.wmd-preview .highlight pre, .wmd-preview pre, .wmd-preview .prettyprint {
+  background-color: #F8F8F8;
+  border: 1px solid #CCC;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+.wmd-preview pre code, .wmd-preview pre tt {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  white-space: pre;
+}
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+// miscellaneous formatting
+
+.wmd-preview > :first-child {
+  margin-top: 0 !important;
+}
+
+.wmd-preview > :last-child {
+  margin-bottom: 0 !important;
+}
+
+textarea.wmd-input {
+  resize: none;
 }
 

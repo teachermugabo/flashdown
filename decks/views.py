@@ -104,27 +104,22 @@ def new_card(request, deck_id):
 
 def delete_card(request, deck_id, card_id):
     if not request.is_ajax() or request.method != 'POST':
-        print("1")
         return HttpResponseBadRequest()
 
     deck = get_object_or_404(Tag, pk=deck_id)
     if not deck.is_deck:
-        print("2")
         return HttpResponseBadRequest()
 
-    print("3")
     card = get_object_or_404(Card, pk=card_id)
     try:
         if not card.tags.filter(name=deck.name):
             return HttpResponseBadRequest()
     except:
-        print("fuck")
+        pass
 
-    print("here2")
     card.deleted = True # keep it around in case we want to restore it later
     card.save()
 
-    print("here3")
     return HttpResponse('success')
 
 

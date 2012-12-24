@@ -1,5 +1,5 @@
-BOOTSTRAP = ../css/site.css
-BOOTSTRAP_LESS = site.less
+BOOTSTRAP = ../css/bootstrap.css
+BOOTSTRAP_LESS = bootstrap.less
 CHECK=\033[32m✔\033[39m
 HR=\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
