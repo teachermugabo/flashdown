@@ -51,13 +51,70 @@
 
     {% endblock %}
 
-    <div class="container">
+    <div id="contentwrapper">
 
+       <div id="leftcolumn">
+            <!-- ** left panel ** -->
+            <div id="leftpanel">
+                <div class="leftpanel-wrapper">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li class="user-container">
+                            <a href="#">
+                                <img src="images/100/07.png">
+                                Gwen
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="index.html">
+                                <i class="icon-large icon-home"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="sample-layouts.html">
+                                <i class="icon-large icon-file"></i>
+                                Sample Layouts
+                            </a>
+                        </li>
+                        <li>
+                            <a href="user-interface.html">
+                                <i class="icon-large icon-random"></i>
+                                User Interface
+                            </a>
+                        </li>
+                        <li>
+                            <a href="charts-maps.html">
+                                <i class="icon-large icon-bar-chart"></i>
+                                Charts &amp; Maps
+                            </a>
+                        </li>
+                        <li>
+                            <a href="form-elements.html">
+                                <i class="icon-large icon-check"></i>
+                                Form Elements
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tables.html">
+                                <i class="icon-large icon-table"></i>
+                                Tables
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div> <!-- ** ./ left panel -->
+        </div> <!-- ** ./ left column -->
 
-      {% block content %}
-      {% endblock %}
+        <div id="contentcolumn">
+            <div class="container-fluid">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
 
-    </div> <!-- /content -->
+        <div class="clearfix"></div>
+
+    </div> <!-- ./ container -->
 
     <!-- JS - placed at the end of the document so the pages load faster -->
     <script src="{% static "js/jquery.js" %}"></script>
