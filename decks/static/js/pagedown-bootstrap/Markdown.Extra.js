@@ -7,16 +7,23 @@
   // any markdown contained in the html we return
   var conv = Markdown.getSanitizingConverter();
 
-  // TODO; option to add a class to tables, or root output element
+  /* These  variables that can be set by options */
 
-  Markdown.Extra.setConverter = function(converter) {
-    conv = converter;
-  };
+  // fenced code block options
+  var _googleCodePrettify = false;
+  var _highlightJs = false;
 
   // table options
   var _tableClass = 'wmd-table';
 
   Markdown.Extra.setup = function(options) {
+    if (typeof options.fencedCodeBlocks != "undefined") {
+      var fc = options.fencedCodeBlocks;
+      if (typeof fc.highlighter != "undefined") {
+        _googleCodePrettify = fc.highlighter === 'prettify';
+        _highlightJs = fc.highlighter === 'highlight';
+      }
+    }
     if (typeof options.tables != "undefined") {
       var tb = options.tables;
       if (typeof tb.tableClass != "undefined")
@@ -159,30 +166,11 @@
 
   // gfm-inspired fenced code blocks
   Markdown.Extra.fencedCodeBlocks = function(text) {
-    // Next three functions stolen from Markdown.Converter.js.
-    // Could've modified the converter source to make them
-    // available but we want this to work with stock pagedown.
     function encodeCode(code) {
       code = code.replace(/&/g, "&amp;");
       code = code.replace(/</g, "&lt;");
       code = code.replace(/>/g, "&gt;");
-      code = escapeCharacters(code, "\*_{}[]\\", false);
       return code;
-    }
-
-    function escapeCharacters(code, charsToEscape, afterBackslash) {
-      var regexString = "([" + charsToEscape.replace(/([\[\]\\])/g, "\\$1") + "])";
-      if (afterBackslash)
-          regexString = "\\\\" + regexString;
-
-      var regex = new RegExp(regexString, "g");
-      code = code.replace(regex, escapeCharacters_callback);
-      return code;
-    }
-
-    function escapeCharacters_callback(wholeMatch, m1) {
-        var charCodeToEscape = m1.charCodeAt(0);
-        return "~E" + charCodeToEscape + "E";
     }
 
     var re = new RegExp(
@@ -194,11 +182,12 @@
 
     var match, codeblock, codeclass, first, last;
     while (match = re.exec(text)) {
+      preclass = _googleCodePrettify ? ' class="prettyprint"' : '';
       codeclass = '';
-      if (typeof match[2] != "undefined")
-        codeclass = ' class="' + match[2] + '"';
-      codeblock = '\n\n<pre class="prettyprint linenums"><code'+codeclass+'>';
-      codeblock += encodeCode(match[3]) + '\n</code></pre>\n\n';
+      if (typeof match[2] != "undefined" && (_googleCodePrettify || _highlightJs))
+        codeclass = ' class="language-' + match[2] + '"';
+      codeblock = '\n\n<pre' + preclass + '><code' + codeclass + '>';
+      codeblock += encodeCode(match[3]) + '</code></pre>\n\n';
 
       // substitute wrapped content for fenced code block
       first = text.substring(0, match.index);
