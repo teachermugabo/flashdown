@@ -13,23 +13,10 @@
     conv = converter;
   };
 
-  /* These  variables that can be set by options */
-
-  // fenced code block options
-  var _googleCodePrettify = false;
-  var _highlightJs = false;
-
   // table options
   var _tableClass = 'wmd-table';
 
   Markdown.Extra.setup = function(options) {
-    if (typeof options.fencedCodeBlocks != "undefined") {
-      var fc = options.fencedCodeBlocks;
-      if (typeof fc.highlighter != "undefined") {
-        _googleCodePrettify = fc.highlighter === 'prettify';
-        _highlightJs = fc.highlighter === 'highlight';
-      }
-    }
     if (typeof options.tables != "undefined") {
       var tb = options.tables;
       if (typeof tb.tableClass != "undefined")
@@ -172,30 +159,51 @@
 
   // gfm-inspired fenced code blocks
   Markdown.Extra.fencedCodeBlocks = function(text) {
+    // Next three functions stolen from Markdown.Converter.js.
+    // Could've modified the converter source to make them
+    // available but we want this to work with stock pagedown.
+    function encodeCode(code) {
+      code = code.replace(/&/g, "&amp;");
+      code = code.replace(/</g, "&lt;");
+      code = code.replace(/>/g, "&gt;");
+      code = escapeCharacters(code, "\*_{}[]\\", false);
+      return code;
+    }
+
+    function escapeCharacters(code, charsToEscape, afterBackslash) {
+      var regexString = "([" + charsToEscape.replace(/([\[\]\\])/g, "\\$1") + "])";
+      if (afterBackslash)
+          regexString = "\\\\" + regexString;
+
+      var regex = new RegExp(regexString, "g");
+      code = code.replace(regex, escapeCharacters_callback);
+      return code;
+    }
+
+    function escapeCharacters_callback(wholeMatch, m1) {
+        var charCodeToEscape = m1.charCodeAt(0);
+        return "~E" + charCodeToEscape + "E";
+    }
+
     var re = new RegExp(
-        '(\\n\\n|^\\n?)' +         // separator, $1 = leading whitespace
-        '^```(\\w+)?\\s*\\n' +     // opening fence, $2 = optional lang
-        '([\\s\\S]*?)' +           // $3 = code block content (no dotAll in js - dot doesn't match newline)
-        '^```\\s*\\n',             // closing fence
-        'gm');                     // Flags : global, multiline
+      '(\\n\\n|^\\n?)' +         // separator, $1 = leading whitespace
+      '^```(\\w+)?\\s*\\n' +     // opening fence, $2 = optional lang
+      '([\\s\\S]*?)' +           // $3 = code block content (no dotAll in js - dot doesn't match newline)
+      '^```\\s*\\n',             // closing fence
+      'gm');                     // Flags : global, multiline
 
-    var match, output, first, last,
-        codeClass, codeTagStart, preTagStart;
+    var match, codeblock, codeclass, first, last;
     while (match = re.exec(text)) {
-      // we give it a class if none is specified by the user's choice of highlighter
-      codeClass = match[2] === '' ? 'wmd-code-block' : 'language-'+match[2];
-      preTagStart = _googleCodePrettify ? '<pre class="prettyprint">' : '<pre>';
-      codeTagStart = '<code class="'+codeClass+'">';
-
-      // wrap code block content
-      output = match[1] + preTagStart + codeTagStart;
-      output += match[3];
-      output += '</code></pre>';
+      codeclass = '';
+      if (typeof match[2] != "undefined")
+        codeclass = ' class="' + match[2] + '"';
+      codeblock = '\n\n<pre class="prettyprint linenums"><code'+codeclass+'>';
+      codeblock += encodeCode(match[3]) + '\n</code></pre>\n\n';
 
       // substitute wrapped content for fenced code block
       first = text.substring(0, match.index);
       last = text.substr(match.index + match[0].length);
-      text = first + output + last;
+      text = first + codeblock + last;
     }
 
     return text;

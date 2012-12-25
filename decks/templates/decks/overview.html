@@ -3,26 +3,45 @@
 
 {% block content %}
 
-<h2>Flashdown - Build & Study Cards in a Flash</h2>
+<div class='row-fluid'>
+    <div class='span6 content-block'>
 
-<table id="deck_list" class="table">
-    <thead>
-        <tr>
-            <td>Deck Name</td>
-            <td>Total Cards</td>
-            <td>Due</td>
-        </tr>
-    </thead>
+        <div class="navbar navbar-header">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="">Your Decks</a>
+                </div>
+            </div>
+        </div>
 
-    {% for deck in decks %}
-      {% include 'decks/deckinfo_partial.html' with deck=deck %}
-    {% endfor %}
+        <div class="content-wrapper">
+            <table id="deck_list" class="table table-striped">
+                <thead>
+                    <tr>
+                        <td>Deck</td>
+                        <td>Total Cards</td>
+                        <td>Due</td>
+                    </tr>
+                </thead>
 
-</table>
+                {% for deck in decks %}
+                  {% include 'decks/deckinfo_partial.html' with deck=deck %}
+                {% endfor %}
 
-<form id="add_deck" action="{% url new_deck %}" method="post" class="form-inline">
-  <input id="deck_name" type="text" class="input-large">
-  <button type="submit" class="btn btn-primary">Add</button>
-</form>
+            </table>
+
+            <form id="add_deck" action="{% url new_deck %}" method="post" class="form-inline">
+              <input id="deck_name" type="text" class="input-large">
+              <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="span6 content-block">
+        <h1>Hello There!</h1>
+        <p>what's up?</p>
+    </div>
+</div>
 
 {% endblock %}

@@ -1,17 +1,29 @@
 /* boostrap customizations */
 
+@blockHeaderBackground: #386EA5;
+@blockHeaderHighlight: lighten(@blockHeaderBackground, 20%);
+@blockHeaderColor: #c7c7c7;
+
+html, body {
+  height: 100%;
+}
+
 // Sidebar and fluid container styles.
 #contentwrapper {
-  float: left;
   width: 100%;
+  height: 100%;
   background: none;
-  margin-top: 43px; /* for header */
+
+  /* Account for the navbar without adding height / scrollbar to the page. */
+  position: fixed;
+  top: 43px;
 }
 
 #contentcolumn {
+  padding-top: 20px;
   margin-left: 120px;
   background-color: #DDD;
-  min-height: 600px;
+  height: 100%;
 }
 
 #leftcolumn {
@@ -24,6 +36,32 @@
   width: 120px;
   background-color: #4D4D4D;
   min-height: 600px;
+}
+
+.content-block {
+  overflow: hidden;
+  background-color: #F9F9F9;
+  .border-radius(5px);
+
+  .content-wrapper {
+    padding: 0 1em;
+  }
+
+}
+
+.navbar-header {
+  margin: 0;
+  .navbar-inner {
+    .border-bottom-radius(0);
+    border-left: none;
+    border-right: none;
+    #gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground);
+
+    .brand {
+      color: #F9F9F9;
+      text-shadow: 0 1px 0 #777;
+    }
+  }
 }
 
 // Left panel styles.
@@ -156,11 +194,9 @@ body {
     margin-left: 10px;
 }
 
-
 // Formatting for markdown extra tables.
 .wmd-table td, .wmd-table th {
   padding: 5px;
   border: 1px solid black;
 }
-
 
