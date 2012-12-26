@@ -28,6 +28,4 @@ function setupMarkdownEditor() {
     var back = document.getElementById('wmd-input-back');
     tabIndent.render(front);
     tabIndent.render(back);
-
-    var slider = $('.content-slider').bxSlider();
 }

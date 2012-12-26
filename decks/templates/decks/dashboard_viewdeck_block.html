@@ -10,11 +10,11 @@
     <tr>
         {# card.front|markdown|sanitize #}
         <td>{{ card.front }}</td>
-        <td><a href="{% url edit_card deck_id=deck.id card_id=card.id %}" class="btn edit_deck">Edit</a></td>
-        <td><a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn delete-card">Remove</a></td>
+        <td><a href="{% url edit_card deck_id=deck.id card_id=card.id %}" class="btn editcard">Edit</a></td>
+        <td><a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn">Remove</a></td>
     </tr>
     {% endfor %}
 </table>
 
-<a href="{% url edit_new_card deck_id=deck.id %}" class="btn btn-primary">Add Card</a>
+<a href="{% url edit_new_card deck_id=deck.id %}" class="btn btn-primary editcard">Add Card</a>
 
