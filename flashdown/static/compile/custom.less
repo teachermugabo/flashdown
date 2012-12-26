@@ -24,6 +24,11 @@ html, body {
   margin-left: 120px;
   background-color: #DDD;
   height: 100%;
+
+  table {
+    border: @tableBorder;
+    .border-radius(5px);
+  }
 }
 
 #leftcolumn {
@@ -192,11 +197,5 @@ body {
 #add-card {
     width: 100px;
     margin-left: 10px;
-}
-
-// Formatting for markdown extra tables.
-.wmd-table td, .wmd-table th {
-  padding: 5px;
-  border: 1px solid black;
 }
 

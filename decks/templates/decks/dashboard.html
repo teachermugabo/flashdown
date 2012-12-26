@@ -1,0 +1,77 @@
+{% extends "dashboard_base.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/prettify.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/markdown-editor.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.bxslider.css" %}" />
+{% endblock %}
+
+{% block content %}
+
+<div id="dashboard-subnav btn-group">
+    <div class="btn-group">
+        <button class="btn overview active">Decks</button>
+        <button class="btn add">Add Facts</button>
+        <button class="btn browse"xBrowse</button>
+    </div>
+</div>
+
+<ul class="content-slider">
+
+    <li id="decks-overview">
+    {% include "decks/dashboard_overview_block.html" with decks=decks %}
+    </li>
+
+    <li id="decks-viewdeck">
+    Placeholder viewdeck.
+    {## include "decks/dashboard_viewdeck_block.html" ##}
+    </li>
+
+    <li id="decks-editcard">
+    Placeholder editcard.
+    {## include "decks/dashboard_editcard_block.html" ##}
+    </li>
+
+</ul>
+
+{% endblock %}
+
+<!-- modals -->
+{% include "decks/deck_options_modal.html" %}
+
+{% block js %}
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            elements: ['wmd-preview-back', 'wmd-preview-front'],
+            tex2jax: {
+                inlineMath: [ ['$','$'] ],
+                displayMath: [ ['$$','$$'] ],
+                processEscapes: true
+            },
+            asciimath2jax: {
+                delimiters: [ ['@@', '@@'], ['\\(', '\\)'] ],
+            }
+        });
+    </script>
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML-full"></script>
+    <script src="{% static "js/pagedown-bootstrap/Markdown.Converter.js" %}"></script>
+    <script src="{% static "js/pagedown-bootstrap/Markdown.Editor.js" %}"></script>
+    <script src="{% static "js/pagedown-bootstrap/Markdown.Sanitizer.js" %}"></script>
+    <script src="{% static "js/pagedown-bootstrap/Markdown.Extra.js" %}"></script> 
+    <script src="{% static "js/prettify.js" %}"></script>
+    <script src="{% static "js/tabIndent.js" %}"></script>
+    <script src="{% static "js/jquery.bxslider.js" %}"></script>
+    <script src="{% static "js/jquery.pjax.js" %}"></script>
+    <script src="{% static "js/editor-setup.js" %}"></script>
+    <script>
+      (function() {
+        slider = $('.content-slider').bxSlider();
+
+        $(document).pjax('a.overview', '#decks-overview');
+        $(document).pjax('a.viewdeck', '#decks-viewdeck');
+        $(document).pjax('a.editcard', '#decks-editcard');
+
+      })();
+    </script>
+{% endblock %}

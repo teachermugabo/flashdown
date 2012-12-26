@@ -198,5 +198,11 @@
     return text;
   };
 
+  Markdown.Extra.all = function(text) {
+    text = Markdown.Extra.tables(text);
+    text = Markdown.Extra.fencedCodeBlocks(text);
+    return text;
+  }
+
 })();
 

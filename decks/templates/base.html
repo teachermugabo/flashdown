@@ -38,8 +38,8 @@
               <div class="nav-collapse">
                 <ul class="nav">
 
-                  <li><a href={% url overview %}>Decks</a></li>
-                  <li class="active"><a href="#">Home</a></li>
+                  <li class="active"><a href={% url dashboard %}>Dashboard</a></li>
+                  <li><a href="#">Home</a></li>
                   <li><a href="#about">About</a></li>
                   <li><a href="#contact">Contact</a></li>
                 </ul>
@@ -52,67 +52,8 @@
 
         {% endblock %}
 
- 
-       <div id="leftcolumn">
-            <!-- ** left panel ** -->
-            <div id="leftpanel">
-                <div class="leftpanel-wrapper">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li class="user-container">
-                            <a href="#">
-                                <img src="{% static "img/user.png" %}">
-                                User
-                            </a>
-                        </li>
-                        <li class="active">
-                            <a href="#profile">
-                                <i class="icon-large icon-home"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                         <li>
-                            <a href="#study">
-                                <i class="icon-large icon-play"></i>
-                                Study
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#newdecks">
-                                <i class="icon-large icon-th-large"></i>
-                                Find decks
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#achievements">
-                                <i class="icon-large icon-trophy"></i>
-                                Achievements
-                            </a>
-                        </li>
-                         <li>
-                            <a href="#charts">
-                                <i class="icon-large icon-bar-chart"></i>
-                                Charts &amp; Stats
-                            </a>
-                        </li>
-                       <li>
-                            <a href="#settings">
-                                <i class="icon-large icon-cogs"></i>
-                                Settings
-                            </a>
-                        </li>
-                   </ul>
-                </div>
-            </div> <!-- ** ./ left panel -->
-        </div> <!-- ** ./ left column -->
-
-        <div id="contentcolumn">
-            <div class="container-fluid">
-                {% block content %}
-                {% endblock %}
-            </div>
-        </div>
-
-        <div class="clearfix"></div>
+        {% block content_wrapped %}
+        {% endblock %}
 
     </div> <!-- ./ container -->
 

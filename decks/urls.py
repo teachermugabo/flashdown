@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('decks.views',
-    url(r'^/?$', 'overview', name='overview'),
+    url(r'^/?$', 'dashboard', name='dashboard'),
     # we edit/add a single card at a time
     url(r'^(?P<deck_id>\d+)/edit-card/$', 'edit_card', name='edit_new_card'),
     url(r'^(?P<deck_id>\d+)/edit-card/(?P<card_id>\d+)/$', 'edit_card', name='edit_card'),

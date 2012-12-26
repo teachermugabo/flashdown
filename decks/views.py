@@ -5,10 +5,10 @@ from django.core.urlresolvers import reverse
 from decks.models import Tag, Card
 from django.utils import simplejson
 
-def overview(request):
+def dashboard(request):
     decks = Tag.objects.all()
     # do we need the RequestContext?
-    return render_to_response('decks/overview.html',
+    return render_to_response('decks/dashboard.html',
                               {'decks' : decks},
                               context_instance=RequestContext(request))
 
@@ -16,7 +16,7 @@ def edit_card(request, deck_id, card_id=None):
     deck = get_object_or_404(Tag, pk=deck_id)
 
     if card_id is None:
-        return render_to_response('decks/editcard.html',
+        return render_to_response('decks/dashboard_editcard_block.html',
                                   {'deck' : deck},
                                   context_instance=RequestContext(request))
         #adding a new card
@@ -25,7 +25,7 @@ def edit_card(request, deck_id, card_id=None):
     if card.deck != deck:
         return HttpResponseBadRequest()
 
-    return render_to_response('decks/editcard.html',
+    return render_to_response('decks/dashboard_editcard_block.html',
                               {'card' : card, 'deck' : deck},
                               context_instance=RequestContext(request))
 
@@ -37,7 +37,8 @@ def view_deck(request, deck_id):
 
     #cards = deck.deck_cards.all()
     cards = deck.deck_cards.filter(deleted=False)
-    return render_to_response('decks/viewdeck.html', {'deck' : deck, 'cards' : cards})
+    return render_to_response('decks/dashboard_viewdeck_block.html',
+                              {'deck' : deck, 'cards' : cards})
 
 
 def review_deck(request, deck_id):

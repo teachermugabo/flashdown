@@ -6362,6 +6362,13 @@ body {
   background-color: #DDD;
 }
 
+#contentcolumn table {
+  border: #cccccc;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+}
+
 #leftcolumn {
   float: left;
   width: 120px;
@@ -6567,10 +6574,4 @@ body {
 #add-card {
   width: 100px;
   margin-left: 10px;
-}
-
-.wmd-table td,
-.wmd-table th {
-  padding: 5px;
-  border: 1px solid black;
 }
