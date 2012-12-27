@@ -216,7 +216,7 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
-  color: #333333;
+  color: #ffffff;
   background-color: #ffffff;
 }
 
@@ -1618,7 +1618,7 @@ select:focus:invalid:focus {
 
 .help-block,
 .help-inline {
-  color: #595959;
+  color: #ffffff;
 }
 
 .help-block {
@@ -6347,16 +6347,16 @@ body {
   background-color: #343434;
 }
 
-.proper-content > .container {
-  background-color: #ddd;
-}
-
-[class^="span"]:first-child .is-padded {
+.row [class^="span"]:first-child .is-padded {
   margin-left: 15px;
 }
 
-[class^="span"]:last-child .is-padded {
+.row [class^="span"]:last-child .is-padded {
   margin-right: 15px;
+}
+
+.row form {
+  margin-bottom: 0;
 }
 
 .content-block {
@@ -6368,7 +6368,7 @@ body {
 
 .content-block .content-wrapper {
   padding: 1em;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
 }
 
 .content-block .content-wrapper :first-child {
@@ -6411,6 +6411,15 @@ body {
   text-shadow: 0 1px 0 #777;
 }
 
+.wrapper {
+  width: 940px;
+  background-color: #4e4e4e;
+}
+
+.wrapper .proper-content > .container:first-child {
+  margin-top: 20px;
+}
+
 .card-editor h2.card-name {
   text-align: center;
 }
@@ -6424,8 +6433,16 @@ body {
 #dashboard-subnav div.btn-group {
   display: inline-block;
   width: inherit;
-  margin: 0 auto 20px;
   text-align: center;
+}
+
+footer .container {
+  text-align: center;
+}
+
+footer #footer-links {
+  display: inline-table;
+  margin: 3px auto;
 }
 
 html,

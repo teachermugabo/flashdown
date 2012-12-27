@@ -56,7 +56,10 @@ $(function() {
     });
 
     $('#new-card-form').submit(function() {
-        var data = $('#new-card-form').serialize();
+        var data = {'deck-id': $('#deck-id-input').val(),
+                     front: $('#wmd-input-front').val(),
+                     back: $('#wmd-input-back').val()
+                    };
         var self = this;
         $.post($(this).attr("action"), data, function() {
             // clear card data

@@ -4,13 +4,14 @@
 @blockHeaderHighlight: lighten(@blockHeaderBackground, 20%);
 @blockHeaderColor: #c7c7c7;
 
+@bgColor: #343434;
+@contentBgColor: lighten(@bgColor, 10%);
+@blockBgColor: #F9F9F9;
+@textColor: white;
+
 body {
   line-height: 1.5em;
-  background-color: #343434;
-}
-
-.proper-content > .container {
-  background-color: #ddd;
+  background-color: @bgColor;
 }
 
 // add spacing so span blocks don't line up with container edges
@@ -24,13 +25,15 @@ body {
   }
 }
 
+.row form { margin-bottom: 0; }
+
 // blocks on overview page
 .content-block {
   overflow: hidden;
   .border-radius(5px);
 
   .content-wrapper {
-    background-color: #F9F9F9;
+    background-color: @blockBgColor;
     padding: 1em;
 
     :first-child { margin-top: 0; }
@@ -58,6 +61,15 @@ body {
   }
 }
 
+// background of container
+.wrapper {
+  width: 940px;
+  background-color: @contentBgColor;
+  .proper-content > .container:first-child {
+    margin-top: 20px;
+  }
+}
+
 // Custom style for front/back of cards.
 .card-editor {
     h2.card-name { text-align: center; }
@@ -67,11 +79,20 @@ body {
 #dashboard-subnav {
     text-align: center;
     div.btn-group {
-      /* Rows were showing at 584 px. wtf? */
-        margin: 0 auto 20px; 
         text-align: center;
         width: inherit;
         display: inline-block;
     }
 }
 
+footer {
+  .container {
+    text-align: center;
+  }
+
+  #footer-links {
+    display: inline-table;
+    margin: 3px auto;
+  }
+
+}

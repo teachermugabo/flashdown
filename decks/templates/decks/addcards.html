@@ -13,7 +13,7 @@
 {% block dashboard_content %}
     <!-- TODO: if decks length is 0 (check in view), open different page directing user to
             first add decks before trying to edit cards -->
-    <div class="row-fluid">
+    <div class="row">
         <div class="span12">
             <form class="form-inline is-padded" id="deck-select-form">
                 <label>Deck: </label>
@@ -33,7 +33,7 @@
                     <h2 class="card-name">Front</h2>
                     <div class="wmd-panel">
                         <div id="wmd-button-bar-front"></div>
-                        <textarea name="front" class="wmd-input" id="wmd-input-front" placeholder="Enter a question." tabindex="0">{{ card.front|safe }}</textarea>
+                        <textarea name="front" class="wmd-input" id="wmd-input-front" placeholder="Enter a question." tabindex="1">{{ card.front|safe }}</textarea>
                     </div>
                     <div id="wmd-preview-front" class="well wmd-panel wmd-preview"></div>
                 </div>
@@ -44,7 +44,7 @@
                     <h2 class="card-name">Back</h2>
                     <div class="wmd-panel">
                         <div id="wmd-button-bar-back"></div>
-                        <textarea name="back" class="wmd-input" id="wmd-input-back" placeholder="And the answer." tabindex="1">{{ card.back|safe }}</textarea>
+                        <textarea name="back" class="wmd-input" id="wmd-input-back" placeholder="And the answer." tabindex="2">{{ card.back|safe }}</textarea>
                     </div>
                     <div id="wmd-preview-back" class="well wmd-panel wmd-preview"></div>
                 </div>
@@ -58,7 +58,7 @@
             <form id="new-card-form" action="{% url new_card %}" method="post" class="is-padded">
                 {% csrf_token %}
                 <input type="hidden" name="deck-id" id="deck-id-input" value="{{ deck_id }}"></input>
-                <button id="add-card" type="submit" class="btn btn-primary" tabindex="2">Add</button>
+                <button id="add-card" type="submit" class="btn btn-primary" tabindex="3">Add</button>
             </form>
         </div>
     </div>
@@ -85,20 +85,18 @@
     <script src="{% static "js/pagedown-bootstrap/Markdown.Sanitizer.js" %}"></script>
     <script src="{% static "js/pagedown-bootstrap/Markdown.Extra.js" %}"></script> 
     <script src="{% static "js/prettify.js" %}"></script>
-    <script src="{% static "js/tabIndent.js" %}"></script>
     <script>
     (function() {
         // if no initial value, set it to value of first option in deck select box
         if ($('#deck-id-input').val() === '')
-          $('#deck-id-input').val($('#deck-select:first-child').val());
+          $('#deck-id-input').val($('#deck-select').val());
 
         $('#deck-select').change(function() {
             var id = $(this).val();
+            var x = $('#deck-id-input');
             $('#deck-id-input').val(id);
-        })
-    })();
+        });
 
-    (function() {
         Markdown.Extra.setup({fencedCodeBlocks: {highlighter:"prettify"}});
 
         var converter = new Markdown.Converter(); // allow only whitelisted tags & close all tags
@@ -123,12 +121,14 @@
 
         // tab indent
         // tabIndent.renderAll();
+        /* Remove this until issue #1 is closed
         tabIndent.config.tab = '    ';
         var front = document.getElementById('wmd-input-front');
         var back = document.getElementById('wmd-input-back');
         tabIndent.render(front);
         tabIndent.render(back);
-        })();
+        */
+    })();
     </script>
 
 {% endblock %}

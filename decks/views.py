@@ -91,7 +91,10 @@ def new_card(request):
 
     for v in [deck_id, front, back]:
         if v is None:
-            return HttpResponseBadRequest()
+            return HttpResponseBadRequest('missing data')
+
+    if deck_id == '':
+        return HttpResponseBadRequest('malformed deck id')
 
     deck_id = int(deck_id)
 
