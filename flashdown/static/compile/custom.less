@@ -186,29 +186,25 @@ body {
 }
 
 // Custom style for front/back of cards.
-.card-editor {
-    .wmd-container {
-        width: 500px;
-        float: left;
-        padding: 0 10px;
-    }
-
-    .clearfix;
+#card-editor {
     h2.card-name { text-align: center; }
-}
-
-#add-card {
-    width: 100px;
-    margin-left: 10px;
+    .wmd-container { min-width: 240px; }
 }
 
 /* Dashboard-related stuff */
 #dashboard-subnav {
-  text-align: center;
-  div.btn-group {
-      margin: 0 auto 20px; 
-      text-align: center;
-      width: inherit;
-      display: inline-block;
-  }
+    text-align: center;
+    div.btn-group {
+      /* Rows were showing at 584 px. wtf? */
+        margin: 0 auto 20px; 
+        text-align: center;
+        width: inherit;
+        display: inline-block;
+    }
 }
+
+/* Rows were showing at 584 px. wtf? */
+#contentcolumn .row-fluid {
+  height: 0;
+}
+

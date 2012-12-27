@@ -6550,34 +6550,12 @@ body {
   background: #343434;
 }
 
-.card-editor {
-  *zoom: 1;
-}
-
-.card-editor .wmd-container {
-  float: left;
-  width: 500px;
-  padding: 0 10px;
-}
-
-.card-editor:before,
-.card-editor:after {
-  display: table;
-  line-height: 0;
-  content: "";
-}
-
-.card-editor:after {
-  clear: both;
-}
-
-.card-editor h2.card-name {
+#card-editor h2.card-name {
   text-align: center;
 }
 
-#add-card {
-  width: 100px;
-  margin-left: 10px;
+#card-editor .wmd-container {
+  min-width: 240px;
 }
 
 /* Dashboard-related stuff */
@@ -6591,4 +6569,10 @@ body {
   width: inherit;
   margin: 0 auto 20px;
   text-align: center;
+}
+
+/* Rows were showing at 584 px. wtf? */
+
+#contentcolumn .row-fluid {
+  height: 0;
 }

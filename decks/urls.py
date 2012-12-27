@@ -8,11 +8,15 @@ urlpatterns = patterns('decks.views',
     url(r'^(?P<deck_id>\d+)/add-cards/$', 'add_cards', name='add_cards_to_deck'),
 
     # view a list of all cards in a deck
+    url(r'^browse/$', 'browse', name='browse_all'),
     url(r'^(?P<deck_id>\d+)/browse/$', 'browse', name='browse'),
 
     # we review an entire deck (deck data passed to template all at once)
     url(r'^(?P<deck_id>\d+)/review/$', 'review', name='review'),
 
+
+    # get a list of cards for a deck id (ajax)
+    url(r'^(?P<deck_di>\d+)/get-cards/$', 'get_cards', name='get_cards'),
 
     # update card data (ajax)
     url(r'^update-card/(?P<card_id>\d+)$', 'update_card', name='update_card'),

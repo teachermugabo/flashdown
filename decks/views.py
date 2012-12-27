@@ -29,7 +29,10 @@ def update_card(request, card_id=None):
 def review(request, deck_id):
     pass
 
-def browse(request, deck_id):
+def get_cards(request, deck_id):
+    pass
+
+def browse(request, deck_id=None):
     deck = Tag.objects.get(pk=deck_id)
     if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
         return HttpResponse(code=400)
@@ -38,6 +41,18 @@ def browse(request, deck_id):
     cards = deck.deck_cards.filter(deleted=False)
     return render_to_response('decks/browse.html',
                               {'deck' : deck, 'cards' : cards})
+
+def cards(request, deck_id):
+    deck = Tag.objects.get(pk=deck_id)
+    if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
+        return HttpResponse(code=400)
+
+    #cards = deck.deck_cards.all()
+    cards = deck.deck_cards.filter(deleted=False)
+    return render_to_response('decks/browse.html',
+                              {'deck' : deck, 'cards' : cards})
+
+
 
 
 ###################################

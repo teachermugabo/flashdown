@@ -60,12 +60,12 @@ $(function() {
         var self = this;
         $.post($(this).attr("action"), data, function() {
             // clear card data
-            $(self).find('textarea').each(function(i, el) {
+            $('#card-editor textarea').each(function(i, el) {
                 $(el).val('');
             });
 
             // clear previews
-            $(self).find('.wmd-preview').each(function(i, el) {
+            $('#card-editor .wmd-preview').each(function(i, el) {
                 $(el).html('');
             });
 
@@ -77,6 +77,7 @@ $(function() {
         // cause a broken pipe in our ajax app
     });
 
+    // add this class to a delete link to submit it via ajax
     $(".delete-card").click(function() {
         var self = $(this);
         $.ajax({
