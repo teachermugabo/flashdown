@@ -6342,43 +6342,20 @@ a.badge:hover {
 
 /* boostrap customizations */
 
-html,
 body {
-  height: 100%;
+  line-height: 1.5em;
+  background-color: #343434;
 }
 
-#contentwrapper {
-  position: fixed;
-  top: 43px;
-  width: 100%;
-  height: 100%;
-  background: none;
-}
-
-#contentcolumn {
-  height: 100%;
-  padding-top: 20px;
-  margin-left: 120px;
+#content-wrap {
   background-color: #DDD;
 }
 
-#contentcolumn table {
+#content-wrap table {
   border: #cccccc;
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;
           border-radius: 5px;
-}
-
-#leftcolumn {
-  float: left;
-  width: 120px;
-}
-
-#leftpanel {
-  float: left;
-  width: 120px;
-  min-height: 600px;
-  background-color: #4D4D4D;
 }
 
 .content-block {
@@ -6391,10 +6368,6 @@ body {
 
 .content-block .content-wrapper {
   padding: 0 1em;
-}
-
-#activity-block p:first-child {
-  margin-top: 8px;
 }
 
 .navbar-header {
@@ -6425,137 +6398,8 @@ body {
   text-shadow: 0 1px 0 #777;
 }
 
-.leftpanel-wrapper {
-  margin-left: 0;
-}
-
-.leftpanel-wrapper .nav > li > a,
-.leftpanel-wrapper .nav > li > a:hover {
-  color: #f4f4f4;
-  text-shadow: 0 1px 0 #000;
-  background: #6c6c6c;
-  background: -moz-linear-gradient(top, #6c6c6c 0%, #505050 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #6c6c6c), color-stop(100%, #505050));
-  background: -webkit-linear-gradient(top, #6c6c6c 0%, #505050 100%);
-  background: -o-linear-gradient(top, #6c6c6c 0%, #505050 100%);
-  background: -ms-linear-gradient(top, #6c6c6c 0%, #505050 100%);
-  background: linear-gradient(top, #6c6c6c 0%, #505050 100%);
-}
-
-.leftpanel-wrapper .nav > li > a,
-.leftpanel-wrapper .nav > li > a:hover {
-  margin: 0;
-  font-size: 12px;
+.card-editor h2.card-name {
   text-align: center;
-  border-top: 1px solid #8c8c8c;
-  border-bottom: 1px solid #303030;
-}
-
-.leftpanel-wrapper .nav-pills > li > a {
-  -webkit-border-radius: 0;
-     -moz-border-radius: 0;
-          border-radius: 0;
-}
-
-.leftpanel-wrapper .nav {
-  padding: 0;
-  margin: 0;
-  border-bottom: 1px solid #5d5d5d;
-}
-
-.leftpanel-wrapper .nav > li:last-child a {
-  margin-bottom: 0;
-}
-
-.leftpanel-wrapper .nav > li > a:hover {
-  color: #f4f4f4;
-  background-color: transparent;
-}
-
-.leftpanel-wrapper .nav-pills > .active > a {
-  position: relative;
-}
-
-.leftpanel-wrapper .nav-pills > .active > a,
-.leftpanel-wrapper .nav-pills > .active > a:hover {
-  color: #fff;
-  background: #3d3d3d;
-  border-top: 1px solid #4d4d4d;
-}
-
-.leftpanel-wrapper .nav-pills > .active > a:before {
-  position: absolute;
-  top: 35px;
-  right: -8px;
-  width: 0;
-  height: 0;
-  margin-top: -8px;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
-  border-left: 8px solid #000;
-}
-
-.leftpanel-wrapper .nav-pills > .active > a:after {
-  position: absolute;
-  top: 35px;
-  right: -7px;
-  width: 0;
-  height: 0;
-  margin-top: -7px;
-  border-top: 7px solid transparent;
-  border-bottom: 7px solid transparent;
-  border-left: 7px solid #3d3d3d;
-  content: ' ';
-}
-
-.leftpanel-wrapper .nav > li > a i.icon-large {
-  display: block;
-  width: inherit;
-  margin: auto auto;
-  font-size: 30px;
-  line-height: 40px;
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: -1px 1px 1px #000000 !important;
-}
-
-.leftpanel-wrapper .nav > li > a img {
-  margin-top: 12px;
-  margin-bottom: 15px;
-}
-
-.user-container {
-  margin-top: 0;
-}
-
-img.thumb {
-  margin-top: 5px;
-}
-
-img.thumb,
-.leftpanel-wrapper .nav > li > a img {
-  -webkit-border-radius: 2px;
-     -moz-border-radius: 2px;
-          border-radius: 2px;
-  -webkit-box-shadow: 0 1px 3px #1e1e1e;
-     -moz-box-shadow: 0 1px 3px #1e1e1e;
-          box-shadow: 0 1px 3px #1e1e1e;
-}
-
-body {
-  min-width: 1000px;
-  padding: 0;
-  margin: 0;
-  line-height: 1.5em;
-  color: #333;
-  background: #343434;
-}
-
-#card-editor h2.card-name {
-  text-align: center;
-}
-
-#card-editor .wmd-container {
-  min-width: 240px;
 }
 
 /* Dashboard-related stuff */
@@ -6571,8 +6415,40 @@ body {
   text-align: center;
 }
 
-/* Rows were showing at 584 px. wtf? */
+html,
+body,
+.container,
+.content {
+  height: 100%;
+}
 
-#contentcolumn .row-fluid {
-  height: 0;
+.container,
+.content {
+  position: relative;
+}
+
+.proper-content {
+  padding-top: 40px;
+  /* >= navbar height */
+
+}
+
+.wrapper {
+  height: auto !important;
+  height: 100%;
+  min-height: 100%;
+  margin: 0 auto -40px;
+}
+
+.push {
+  height: 40px;
+  /* same as the footer */
+
+}
+
+.footer-wrapper {
+  position: relative;
+  height: 40px;
+  color: #777777;
+  background-color: #f2f2f2;
 }

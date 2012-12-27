@@ -4,43 +4,17 @@
 @blockHeaderHighlight: lighten(@blockHeaderBackground, 20%);
 @blockHeaderColor: #c7c7c7;
 
-html, body {
-  height: 100%;
+body {
+  line-height: 1.5em;
+  background-color: #343434;
 }
 
-// Sidebar and fluid container styles.
-#contentwrapper {
-  width: 100%;
-  height: 100%;
-  background: none;
-
-  /* Account for the navbar without adding height / scrollbar to the page. */
-  position: fixed;
-  top: 43px;
-}
-
-#contentcolumn {
-  padding-top: 20px;
-  margin-left: 120px;
+#content-wrap {
   background-color: #DDD;
-  height: 100%;
-
   table {
     border: @tableBorder;
     .border-radius(5px);
   }
-}
-
-#leftcolumn {
-  float: left;
-  width: 120px;
-}
-
-#leftpanel {
-  float: left;
-  width: 120px;
-  background-color: #4D4D4D;
-  min-height: 600px;
 }
 
 .content-block {
@@ -51,10 +25,6 @@ html, body {
   .content-wrapper {
     padding: 0 1em;
   }
-}
-
-#activity-block {
-  p:first-child { margin-top: 8px }
 }
 
 .navbar-header {
@@ -72,123 +42,9 @@ html, body {
   }
 }
 
-// Left panel styles.
-
-.leftpanel-wrapper {margin-left:0px;}
-
-.leftpanel-wrapper .nav > li > a, .leftpanel-wrapper .nav > li > a:hover {
-  background: #6c6c6c;
-  background: -moz-linear-gradient(top,  #6c6c6c 0%, #505050 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6c6c6c), color-stop(100%,#505050));
-  background: -webkit-linear-gradient(top,  #6c6c6c 0%,#505050 100%);
-  background: -o-linear-gradient(top,  #6c6c6c 0%,#505050 100%);
-  background: -ms-linear-gradient(top,  #6c6c6c 0%,#505050 100%);
-  background: linear-gradient(top,  #6c6c6c 0%,#505050 100%);
-  color:#f4f4f4;
-  text-shadow: 0 1px 0 #000;
-}
-
-.leftpanel-wrapper .nav > li > a, .leftpanel-wrapper .nav > li > a:hover {
-  font-size:12px;
-  text-align:center;
-  border-top: 1px solid #8c8c8c;
-  border-bottom: 1px solid #303030;
-  margin:0px;
-}
-
-.leftpanel-wrapper .nav-pills > li > a {
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  border-radius: 0px;
-}
-
-.leftpanel-wrapper .nav {
-  border-bottom: 1px solid #5d5d5d;
-  padding:0px;
-  margin:0px;
-}
-
-.leftpanel-wrapper .nav > li:last-child  a{margin-bottom:0px;}
-
-.leftpanel-wrapper .nav > li > a:hover {
-  background-color: transparent;
-  color:#f4f4f4;
-}
-
-.leftpanel-wrapper .nav-pills > .active > a {position:relative;}
-
-.leftpanel-wrapper .nav-pills > .active > a, .leftpanel-wrapper .nav-pills > .active > a:hover {
-  background: #3d3d3d;
-  border-top: 1px solid #4d4d4d;
-  color:#fff;
-}
-
-.leftpanel-wrapper .nav-pills > .active > a:before {
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 35px;
-  right: -8px;
-  margin-top: -8px;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
-  border-left: 8px solid #000;
-}
-
-.leftpanel-wrapper .nav-pills > .active > a:after {
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 35px;
-  right: -7px;
-  margin-top: -7px;
-  border-top: 7px solid transparent;
-  border-bottom: 7px solid transparent;
-  border-left: 7px solid #3d3d3d;
-  content: ' ';
-}
-
-.leftpanel-wrapper .nav > li > a i.icon-large {
-  display:block;
-  font-size:30px;
-  line-height:40px;
-  margin:auto auto;
-  color:rgba(255,255,255,0.8);
-  text-shadow: -1px 1px 1px #000!important;
-  width: inherit;
-}
-
-.leftpanel-wrapper .nav > li > a img {
-  margin-top:12px;
-  margin-bottom:15px;
-}
-
-.user-container {margin-top:0px;}
-
-img.thumb {margin-top:5px;}
-
-img.thumb, .leftpanel-wrapper .nav > li > a img {
-  box-shadow: 0 1px 3px #1e1e1e;
-  -webkit-box-shadow: 0 1px 3px #1e1e1e;
-  -moz-box-shadow: 0 1px 3px #1e1e1e;
-  border-radius: 2px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-}
-
-body {
-  background: #343434;
-  margin: 0;
-  padding: 0;
-  line-height: 1.5em;
-  min-width: 1000px;
-  color: #333;
-}
-
 // Custom style for front/back of cards.
-#card-editor {
+.card-editor {
     h2.card-name { text-align: center; }
-    .wmd-container { min-width: 240px; }
 }
 
 /* Dashboard-related stuff */
@@ -201,10 +57,5 @@ body {
         width: inherit;
         display: inline-block;
     }
-}
-
-/* Rows were showing at 584 px. wtf? */
-#contentcolumn .row-fluid {
-  height: 0;
 }
 

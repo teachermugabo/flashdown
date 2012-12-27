@@ -1,0 +1,33 @@
+@footerHeight: 40px;
+
+html, body, .container, .content {
+    height: 100%;
+}
+
+.container, .content {
+    position: relative;
+}
+
+.proper-content {
+    padding-top: 40px; /* >= navbar height */
+}
+
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -@navbarHeight; /* same as the footer */
+}
+
+.push {
+    height: @navbarHeight; /* same as the footer */
+}
+
+.footer-wrapper {
+    position: relative;
+    height: @navbarHeight;
+
+    background-color: @navbarBackground;
+    color: @navbarText;
+}
+

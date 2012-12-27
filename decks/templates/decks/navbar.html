@@ -1,0 +1,55 @@
+            <div class="navbar navbar-fixed-top">
+              <div class="navbar-inner">
+                <div class="container">
+
+                  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </a>
+                  <a class="brand" href="/">Flashdown</a>
+                  <div class="nav-collapse">
+                    <ul class="nav">
+                        <li>
+                            <a{% ifequal active "home" %} class="active"{% endifequal %} href="{% url overview %}">
+                                <i class="icon-home"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a{% ifequal active "study" %} class="active"{% endifequal %}  href="#study">
+                                <i class="icon-play"></i>
+                                Study
+                            </a>
+                        </li>
+                        <li>
+                            <a{% ifequal active "find" %} class="active"{% endifequal %}  href="#newdecks">
+                                <i class="icon-th-large"></i>
+                                Find decks
+                            </a>
+                        </li>
+                        <li>
+                            <a{% ifequal active "achievements" %} class="active"{% endifequal %} href="#achievements">
+                                <i class="icon-trophy"></i>
+                                Achievements
+                            </a>
+                        </li>
+                        <li>
+                            <a{% ifequal active "stats" %} class="active"{% endifequal %}  href="#charts">
+                                <i class="icon-bar-chart"></i>
+                                Stats
+                            </a>
+                        </li>
+                        <li>
+                            <a{% ifequal active "settings" %} class="active"{% endifequal %}  href="#settings">
+                                <i class="icon-cogs"></i>
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>
+                  </div><!--/.nav-collapse -->
+                </div>
+              </div>
+            </div>
+ 
