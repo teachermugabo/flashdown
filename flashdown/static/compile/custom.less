@@ -9,24 +9,40 @@ body {
   background-color: #343434;
 }
 
-#content-wrap {
-  background-color: #DDD;
-  table {
-    border: @tableBorder;
-    .border-radius(5px);
+.proper-content > .container {
+  background-color: #ddd;
+}
+
+// add spacing so span blocks don't line up with container edges
+.row [class^="span"] {
+  &:first-child .is-padded {
+    margin-left: 15px;
+  }
+
+  &:last-child .is-padded {
+    margin-right: 15px;
   }
 }
 
+// blocks on overview page
 .content-block {
   overflow: hidden;
-  background-color: #F9F9F9;
   .border-radius(5px);
 
   .content-wrapper {
-    padding: 0 1em;
+    background-color: #F9F9F9;
+    padding: 1em;
+
+    :first-child { margin-top: 0; }
+    :last-child { margin-bottom: 0; }
+
+    table {
+      margin-top: -8px;
+    }
   }
 }
 
+// header made from navbar
 .navbar-header {
   margin: 0;
   .navbar-inner {

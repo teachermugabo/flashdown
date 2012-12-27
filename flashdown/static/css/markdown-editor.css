@@ -200,3 +200,12 @@ tt {
 textarea.wmd-input {
   resize: none;
 }
+
+.wmd-container {
+  margin-left: 0;
+}
+
+#card-edit-front,
+#card-edit-back {
+  width: 451px;
+}

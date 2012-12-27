@@ -6,25 +6,35 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <td><h2>{{ deck.name }}</h2></td>
-                <td><a class="btn" href="{% url review deck_id=deck.id %}">Review</a></td>
-                <td></td>
-            </tr>
-        </thead>
-        {% for card in cards %}
-        <tr>
-            {# card.front|markdown|sanitize #}
-            <td>{{ card.front }}</td>
-            <td><a href="url edit_card deck_id=deck.id card_id=card.id" class="btn editcard">Edit (nonfunctional)</a></td>
-            <td><a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn delete-card">Remove</a></td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="row">
+        <div class="span12">
+            <div class="is-padded">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td><h2>{{ deck.name }}</h2></td>
+                            <td><a class="btn" href="{% url review deck_id=deck.id %}">Review</a></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    {% for card in cards %}
+                    <tr>
+                        {# card.front|markdown|sanitize #}
+                        <td>{{ card.front }}</td>
+                        <td><a href="url edit_card deck_id=deck.id card_id=card.id" class="btn editcard">Edit (nonfunctional)</a></td>
+                        <td><a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn delete-card">Remove</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
 
-    <a href="{% url add_cards_to_deck deck_id=deck.id %}" class="btn btn-primary editcard">Add Card</a>
+    <div class="row">
+        <div class="span12">
+            <a href="{% url add_cards_to_deck deck_id=deck.id %}" class="btn btn-primary editcard is-padded">Add Card</a>
+        </div>
+    </div>
 {% endblock %}
 
 

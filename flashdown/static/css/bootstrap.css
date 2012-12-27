@@ -6347,27 +6347,40 @@ body {
   background-color: #343434;
 }
 
-#content-wrap {
-  background-color: #DDD;
+.proper-content > .container {
+  background-color: #ddd;
 }
 
-#content-wrap table {
-  border: #cccccc;
-  -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
+[class^="span"]:first-child .is-padded {
+  margin-left: 15px;
+}
+
+[class^="span"]:last-child .is-padded {
+  margin-right: 15px;
 }
 
 .content-block {
   overflow: hidden;
-  background-color: #F9F9F9;
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;
           border-radius: 5px;
 }
 
 .content-block .content-wrapper {
-  padding: 0 1em;
+  padding: 1em;
+  background-color: #F9F9F9;
+}
+
+.content-block .content-wrapper :first-child {
+  margin-top: 0;
+}
+
+.content-block .content-wrapper :last-child {
+  margin-bottom: 0;
+}
+
+.content-block .content-wrapper table {
+  margin-top: -8px;
 }
 
 .navbar-header {
