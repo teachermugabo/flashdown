@@ -1,129 +1,70 @@
-{% extends "dashboard_base.html" %}
+{% extends "decks/base.html" %}
 {% load staticfiles %}
+ 
+{% block content_wrapped %}
 
-{% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/prettify.css" %}" />
-    <link rel="stylesheet" type="text/css" href="{% static "css/markdown-editor.css" %}" />
-    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.bxslider.css" %}" />
+       <div id="leftcolumn">
+            <!-- ** left panel ** -->
+            <div id="leftpanel">
+                <div class="leftpanel-wrapper">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li class="user-container"> <a href="#">
+                                <img src="{% static "img/user.png" %}">
+                                User
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="#profile">
+                                <i class="icon-large icon-home"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                         <li>
+                            <a href="#study">
+                                <i class="icon-large icon-play"></i>
+                                Study
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#newdecks">
+                                <i class="icon-large icon-th-large"></i>
+                                Find decks
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#achievements">
+                                <i class="icon-large icon-trophy"></i>
+                                Achievements
+                            </a>
+                        </li>
+                         <li>
+                            <a href="#charts">
+                                <i class="icon-large icon-bar-chart"></i>
+                                Charts &amp; Stats
+                            </a>
+                        </li>
+                       <li>
+                            <a href="#settings">
+                                <i class="icon-large icon-cogs"></i>
+                                Settings
+                            </a>
+                        </li>
+                   </ul>
+                </div>
+            </div> <!-- ** ./ left panel -->
+        </div> <!-- ** ./ left column -->
+
+        <div id="contentcolumn">
+            <div class="container-fluid">
+            {% block dashboard_subnav %}
+            {% endblock %}
+
+                <div id="dashboard-content-container">
+                {% block dashboard_content %}
+                {% endblock %}
+                </div>
+            </div>
+        </div>
+
 {% endblock %}
 
-{% block content %}
-
-<div id="dashboard-subnav">
-    <div class="btn-group">
-        <a class="btn overview active">Decks</a>
-        <a class="btn editcard">Add Facts</a>
-        <a class="btn browse">Browse</a>
-    </div>
-</div>
-
-<div id="dashboard-slider">
-
-    <div id="decks-overview" class="dashboard-slide">
-    {% include "decks/dashboard_overview_block.html" with decks=decks %}
-    </div >
-
-    <div id="decks-viewdeck" class="dashboard-slide"> </div>
-
-    <div id="decks-editcard" class="dashboard-slide"> </div>
-
-</div>
-
-{% endblock %}
-
-<!-- modals -->
-{% include "decks/deck_options_modal.html" %}
-
-{% block js %}
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-            elements: ['wmd-preview-back', 'wmd-preview-front'],
-            tex2jax: {
-                inlineMath: [ ['$','$'] ],
-                displayMath: [ ['$$','$$'] ],
-                processEscapes: true
-            },
-            asciimath2jax: {
-                delimiters: [ ['@@', '@@'], ['\\(', '\\)'] ],
-            }
-        });
-    </script>
-    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML-full"></script>
-    <script src="{% static "js/pagedown-bootstrap/Markdown.Converter.js" %}"></script>
-    <script src="{% static "js/pagedown-bootstrap/Markdown.Editor.js" %}"></script>
-    <script src="{% static "js/pagedown-bootstrap/Markdown.Sanitizer.js" %}"></script>
-    <script src="{% static "js/pagedown-bootstrap/Markdown.Extra.js" %}"></script> 
-    <script src="{% static "js/prettify.js" %}"></script>
-    <script src="{% static "js/tabIndent.js" %}"></script>
-    <script src="{% static "js/jquery.bxslider.js" %}"></script>
-    <script src="{% static "js/jquery.pjax.js" %}"></script>
-    <script src="{% static "js/editor-setup.js" %}"></script>
-    <script>
-      (function() {
-
-        // called after slide changes
-        function slideAfterCallback(el, oldNdx, newNdx) {
-          switch(newNdx) {
-            case 0: setSubNavActive('overview'); break;
-            case 1: setSubNavActive('overview'); break;
-            case 2: setSubNavActive('editcard'); break;
-          }
-        }
-
-        var dashboard_slider = $('#dashboard-slider').bxSlider({
-          slideSelector: 'div.dashboard-slide',
-          controls: false,
-          pager: false,
-          adaptiveHeight: true,
-          onSlideAfter: slideAfterCallback
-        });
-
-        // bxSlider duplicates our slide divs and gives them a class of .bx-clone
-        $(document).pjax('a.overview', '#decks-overview:not(.bx-clone)');
-        $(document).pjax('a.viewdeck', '#decks-viewdeck:not(.bx-clone)');
-        $(document).pjax('a.editcard', '#decks-editcard:not(.bx-clone)');
-
-        function setSubNavActive(cls) {
-          $('#dashboard-subnav a').each(function(i, el) {
-            el = $(el);
-            if (el.hasClass(cls))
-              el.addClass('active');
-            else
-              el.removeClass('active');
-          });
-        }
-
-        var state = { currSlide: 0 }; //, editorSetup: false };
-
-        $('#dashboard-subnav a.overview').live('click', function() {
-          dashboard_slider.goToSlide(0);
-        });
-
-        $('#dashboard-subnav a.editcard').live('click', function() {
-          dashboard_slider.goToSlide(2);
-        });
-
-        $('a.overview').live('click', function() {
-          state.currSlide = 0;
-        });
-
-        $('a.viewdeck').live('click', function() {
-          state.currSlide = 1;
-        });
-
-        $('a.editcard').live('click', function() {
-          state.currSlide = 2;
-        });
-
-        // now make sure the sliding happens only once pjax returns
-        $(document).on('pjax:complete', function() {
-          dashboard_slider.goToSlide(state.currSlide);
-          if (state.currSlide == 2) //&& !state.editorSetup) {
-            setupMarkdownEditor();
-          //  state.editorSetup = true;
-          //}
-        })
-
-      })();
-    </script>
-{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "decks/dashboard.html" %}
+{% load staticfiles %}
+
+{% block dashboard_subnav %}
+    {% include "decks/dashboard_subnav.html" with active="overview" %}
+{% endblock %}
+
+{% block dashboard_content %}
+
+    <div class='row-fluid'>
+        <div class='span6 content-block' id='decks-block'>
+
+            {% include 'decks/block_header_partial.html' with title='Add Decks' %}
+
+            <div class="content-wrapper">
+                <table id="deck_list" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>Deck</td>
+                            <td>Total Cards</td>
+                            <td>Due</td>
+                        </tr>
+                    </thead>
+
+                    {% for deck in decks %}
+                      {% include 'decks/deckinfo_partial.html' with deck=deck %}
+                    {% endfor %}
+
+                </table>
+
+                <form id="add_deck" action="{% url new_deck %}" method="post" class="form-inline">
+                  <input id="deck_name" type="text" class="input-large">
+                  <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+
+        </div>
+
+
+        <div class="span6 content-block" id='activity-block'>
+
+            {% include 'decks/block_header_partial.html' with title='Recent Activity' %}
+
+            <div class="content-wrapper">
+                <p>You created <strong>25</strong> new cards in <strong>8 decks</strong>.</p>
+                <p>You have <strong>35 cards due</strong> in <strong>4 decks</strong>.</p>
+                <p>User <a href='#profile'>arandom_user</a> left a <a href="#comment">comment</a> on the deck <em>College Algebra</em>.</p>
+            </div>
+
+        </div>
+
+    </div> <!-- /.row-fluid -->
+
+{% endblock %}

@@ -10,11 +10,6 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]--> 
 
-    <style>
-        body { padding-top: 60px; } // for fixed navbar spacing
-    </style>
-
-
     <link href="{% static "css/bootstrap.css" %}" rel="stylesheet">
     {% block css %} {% endblock %}
 
@@ -38,7 +33,7 @@
               <div class="nav-collapse">
                 <ul class="nav">
 
-                  <li class="active"><a href={% url dashboard %}>Dashboard</a></li>
+                  <li class="active"><a href={% url overview %}>Dashboard</a></li>
                   <li><a href="#">Home</a></li>
                   <li><a href="#about">About</a></li>
                   <li><a href="#contact">Contact</a></li>
@@ -49,7 +44,6 @@
             </div>
           </div>
         </div>
-
         {% endblock %}
 
         {% block content_wrapped %}

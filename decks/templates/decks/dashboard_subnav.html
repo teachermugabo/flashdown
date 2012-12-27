@@ -1,0 +1,9 @@
+<div id="dashboard-subnav">
+    <div class="btn-group">
+        <a href="{% url overview %}" class="btn{% ifequal active "overview" %} active{% endifequal %}">Decks</a>
+        <a href="{% url add_cards %}" class="btn{% ifequal active "edit" %} active{% endifequal %}">Add Facts</a>
+        <a href="{% url browse deck_id=2 %}" class="btn{% ifequal active "browse" %} active{% endifequal %}">Browse</a>
+    </div>
+</div>
+
+

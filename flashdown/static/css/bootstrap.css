@@ -6393,6 +6393,10 @@ body {
   padding: 0 1em;
 }
 
+#activity-block p:first-child {
+  margin-top: 8px;
+}
+
 .navbar-header {
   margin: 0;
 }

@@ -5,47 +5,45 @@ from django.core.urlresolvers import reverse
 from decks.models import Tag, Card
 from django.utils import simplejson
 
-def dashboard(request):
-    decks = Tag.objects.all()
+def overview(request):
+    decks = Tag.objects.filter(is_deck=True)
     # do we need the RequestContext?
-    return render_to_response('decks/dashboard.html',
+    return render_to_response('decks/overview.html',
                               {'decks' : decks},
                               context_instance=RequestContext(request))
 
-def edit_card(request, deck_id, card_id=None):
-    deck = get_object_or_404(Tag, pk=deck_id)
+def add_cards(request, deck_id=None):
+    decks = Tag.objects.filter(is_deck=True)
+    ctx = {'decks' : decks}
+    if deck_id:
+        ctx.update({'deck_id': int(deck_id)})
 
-    if card_id is None:
-        return render_to_response('decks/dashboard_editcard_block.html',
-                                  {'deck' : deck},
-                                  context_instance=RequestContext(request))
-        #adding a new card
-
-    card = get_object_or_404(Card, pk=card_id)
-    if card.deck != deck:
-        return HttpResponseBadRequest()
-
-    return render_to_response('decks/dashboard_editcard_block.html',
-                              {'card' : card, 'deck' : deck},
+    return render_to_response('decks/addcards.html',
+                              ctx,
                               context_instance=RequestContext(request))
 
 
-def view_deck(request, deck_id):
+def update_card(request, card_id=None):
+    pass
+
+def review(request, deck_id):
+    pass
+
+def browse(request, deck_id):
     deck = Tag.objects.get(pk=deck_id)
     if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
         return HttpResponse(code=400)
 
     #cards = deck.deck_cards.all()
     cards = deck.deck_cards.filter(deleted=False)
-    return render_to_response('decks/dashboard_viewdeck_block.html',
+    return render_to_response('decks/browse.html',
                               {'deck' : deck, 'cards' : cards})
 
 
-def review_deck(request, deck_id):
-    return render_to_response('decks/reviewdeck.html')
+###################################
+# Primarily AJAX Functions        #
+###################################
 
-
-# ajax handlers
 def new_deck(request):
     """process an ajax request to add a new deck"""
     if not request.is_ajax():
@@ -60,16 +58,27 @@ def new_deck(request):
     deck = None
     try:
         deck = Tag.objects.get(name=deck_name)
-        return HttpResponse('') # already exists, don't send a new list item
+        return HttpResponse() # already exists, don't send a new list item
     except Tag.DoesNotExist:
         deck = Tag(name=deck_name, is_deck=True)
         deck.save()
 
     return render_to_response('decks/deckinfo_partial.html', {'deck' : deck})
 
-def new_card(request, deck_id):
+
+def new_card(request):
     if request.method != 'POST':
         return HttpResponseBadRequest()
+
+    deck_id = request.POST.get("deck-id")
+    front = request.POST.get("front")
+    back = request.POST.get("back")
+
+    for v in [deck_id, front, back]:
+        if v is None:
+            return HttpResponseBadRequest()
+
+    deck_id = int(deck_id)
 
     deck = get_object_or_404(Tag, pk=deck_id)
     if not deck.is_deck:
@@ -101,7 +110,7 @@ def new_card(request, deck_id):
 
     #todo: store additional tags
 
-    return HttpResponseRedirect(reverse('edit_new_card', kwargs={'deck_id' : deck_id}))
+    return HttpResponse(status=201) # Created
 
 def delete_card(request, deck_id, card_id):
     if not request.is_ajax() or request.method != 'POST':
@@ -121,7 +130,7 @@ def delete_card(request, deck_id, card_id):
     card.deleted = True # keep it around in case we want to restore it later
     card.save()
 
-    return HttpResponse('success')
+    return HttpResponse() #status=200 OK
 
 
 # vim: set ai et ts=4 sw=4 sts=4 :
