@@ -26,7 +26,13 @@ body {
   }
 }
 
-.row form { margin-bottom: 0; }
+.row form {
+  margin-bottom: 0;
+  label {
+    margin-left: 20px;
+    &:first-child { margin-left: 0; }
+  }
+}
 
 // blocks on overview page
 .content-block {

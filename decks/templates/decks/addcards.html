@@ -20,6 +20,9 @@
                 <option value="{{ deck.id }}"{% if deck.id == active_deck_id %} selected{% endif %}>{{ deck.name }}</option>
                 {% endfor %}
                 </select>
+                <label class="checkbox">
+                    <input id="show-preview" type="checkbox" checked="checked"> Show Preview
+                </label>
             </form>
         </div>
     </div>
@@ -96,6 +99,12 @@
     <script src="{% static "js/prettify.js" %}"></script>
     <script>
     (function() {
+
+        // show / hide previews if user clicks checkbox
+        $('#show-preview').change(function() {
+            $('.wmd-preview').toggle();
+        })
+
         // set cookie to keep track of the active deck
         $('#deck-select').change(function() {
             var did = $(this).val();

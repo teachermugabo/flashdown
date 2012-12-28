@@ -6359,6 +6359,14 @@ body {
   margin-bottom: 0;
 }
 
+.row form label {
+  margin-left: 20px;
+}
+
+.row form label:first-child {
+  margin-left: 0;
+}
+
 .content-block {
   overflow: hidden;
   -webkit-border-radius: 5px;
