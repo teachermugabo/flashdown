@@ -11,21 +11,20 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <!-- TODO: if decks length is 0 (check in view), open different page directing user to
-            first add decks before trying to edit cards -->
     <div class="row">
         <div class="span12">
             <form class="form-inline is-padded" id="deck-select-form">
                 <label>Deck: </label>
                 <select id="deck-select">
                 {% for deck in decks %}
-                <option value="{{ deck.id }}"{% if deck.id == deck_id %} selected{% endif %}>{{ deck.name }}</option>
+                <option value="{{ deck.id }}"{% if deck.id == active_deck_id %} selected{% endif %}>{{ deck.name }}</option>
                 {% endfor %}
                 </select>
             </form>
         </div>
     </div>
 
+    {% if active_deck_id %}
     <div class="row">
         <div id="card-editor" class="span12">
             <div class="span6 wmd-container">
@@ -62,6 +61,13 @@
             </form>
         </div>
     </div>
+    {% else %}
+    <div class="row">
+        <div class="span12">
+            <p style="text-align:center">You haven't created any decks. <a href="{% url overview %}">Click here</a> to get started.</p>
+        </div>
+    </div>
+    {% endif %}
 
 {% endblock %}
 
@@ -87,14 +93,11 @@
     <script src="{% static "js/prettify.js" %}"></script>
     <script>
     (function() {
-        // if no initial value, set it to value of first option in deck select box
-        if ($('#deck-id-input').val() === '')
-          $('#deck-id-input').val($('#deck-select').val());
-
         $('#deck-select').change(function() {
-            var id = $(this).val();
-            var x = $('#deck-id-input');
-            $('#deck-id-input').val(id);
+            var did = $(this).val();
+            $('#deck-id-input').val(did);
+            // update the cookie
+            $.cookie('active-deck-id', did, {path: '/'});
         });
 
         Markdown.Extra.setup({fencedCodeBlocks: {highlighter:"prettify"}});

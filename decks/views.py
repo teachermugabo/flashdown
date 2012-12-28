@@ -13,15 +13,19 @@ def overview(request):
                               context_instance=RequestContext(request))
 
 def add_cards(request, deck_id=None):
+    if deck_id is None:
+        deck_id = request.COOKIES.get('active-deck-id', None)
+
     decks = Tag.objects.filter(is_deck=True)
+
     ctx = {'decks' : decks}
     if deck_id:
-        ctx.update({'deck_id': int(deck_id)})
+        ctx.update({'active_deck_id': int(deck_id)})
 
+    print("add did" + str(deck_id))
     return render_to_response('decks/addcards.html',
                               ctx,
                               context_instance=RequestContext(request))
-
 
 def update_card(request, card_id=None):
     pass
@@ -33,14 +37,29 @@ def get_cards(request, deck_id):
     pass
 
 def browse(request, deck_id=None):
-    deck = Tag.objects.get(pk=deck_id)
-    if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
-        return HttpResponse(code=400)
+    if deck_id is None:
+        print('cookies:' + str(request.COOKIES))
+        deck_id = request.COOKIES.get('active-deck-id', None)
 
-    #cards = deck.deck_cards.all()
-    cards = deck.deck_cards.filter(deleted=False)
-    return render_to_response('decks/browse.html',
-                              {'deck' : deck, 'cards' : cards})
+    decks = Tag.objects.filter(is_deck=True)
+
+    if deck_id is not None:
+        deck = Tag.objects.get(pk=deck_id)
+        if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
+            return HttpResponse(code=400)
+    elif decks.count() > 0:
+         # no deck_id, no active deck cookie - just get the first one
+        deck = decks[0]
+
+    if deck:
+        cards = deck.deck_cards.filter(deleted=False)
+
+    ctx = {'decks': decks, 'deck': deck, 'cards': cards}
+    if deck_id:
+        ctx.update({'active_deck_id': int(deck_id)})
+
+    print("browse did" + str(deck_id))
+    return render_to_response('decks/browse.html', ctx)
 
 def cards(request, deck_id):
     deck = Tag.objects.get(pk=deck_id)

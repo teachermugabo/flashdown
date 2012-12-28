@@ -27,7 +27,7 @@ class Card(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return self.question + "\n\n" + self.answer
+        return self.front + "\n" + self.back
 
     def is_due(self):
         return self.next_due < datetime.now()

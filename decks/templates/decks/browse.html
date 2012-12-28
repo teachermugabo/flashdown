@@ -8,7 +8,21 @@
 {% block dashboard_content %}
     <div class="row">
         <div class="span12">
+            <form class="form-inline is-padded" id="deck-select-form">
+                <label>Deck: </label>
+                <select id="deck-select">
+                {% for deck in decks %}
+                <option value="{{ deck.id }}"{% if deck.id == active_deck_id %} selected{% endif %}>{{ deck.name }}</option>
+                {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
             <div class="is-padded">
+                {% if deck %}
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -17,15 +31,24 @@
                             <td></td>
                         </tr>
                     </thead>
-                    {% for card in cards %}
-                    <tr>
-                        {# card.front|markdown|sanitize #}
-                        <td>{{ card.front }}</td>
-                        <td><a href="url edit_card deck_id=deck.id card_id=card.id" class="btn editcard">Edit (nonfunctional)</a></td>
-                        <td><a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn delete-card">Remove</a></td>
-                    </tr>
-                    {% endfor %}
+                    <tbody>
+                    {% if cards %}
+                        {% for card in cards %}
+                        <tr>
+                            {# card.front|markdown|sanitize #}
+                            <td>{{ card.front }}</td>
+                            <td><a href="url edit_card deck_id=deck.id card_id=card.id" class="btn editcard">Edit (nonfunctional)</a></td>
+                            <td><a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn delete-card">Remove</a></td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr><td colspan="3" style="text-align:center">This deck doesn't contain any cards yet. Click the button below to get started.</td></tr>
+                    {% endif %}
+                    </tbody>
                 </table>
+                {% else  %}
+                <p>You haven't created any decks yet. <a href="{% url overview %}">Click here</a> to get started.</p>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -35,6 +58,18 @@
             <a href="{% url add_cards_to_deck deck_id=deck.id %}" class="btn btn-primary editcard is-padded">Add Card</a>
         </div>
     </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    (function() {
+        $('#deck-select').change(function() {
+            // update the active id cookie
+            var did = $(this).val();
+            $.cookie('active-deck-id', did, {path: '/'});
+        });
+    })();
+</script>
 {% endblock %}
 
 

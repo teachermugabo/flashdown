@@ -6368,6 +6368,7 @@ body {
 
 .content-block .content-wrapper {
   padding: 1em;
+  color: #444444;
   background-color: #f9f9f9;
 }
 
@@ -6418,6 +6419,10 @@ body {
 
 .wrapper .proper-content > .container:first-child {
   margin-top: 20px;
+}
+
+.wrapper .proper-content > .container:first-child .row:last-child {
+  margin-bottom: 20px;
 }
 
 .card-editor h2.card-name {
