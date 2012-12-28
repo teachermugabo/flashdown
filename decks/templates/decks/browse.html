@@ -12,7 +12,9 @@
                 <label>Deck: </label>
                 <select id="deck-select">
                 {% for deck in decks %}
-                <option value="{{ deck.id }}"{% if deck.id == active_deck_id %} selected{% endif %}>{{ deck.name }}</option>
+                <p>{{ deck.id }}</p>
+                <p>{{ active_deck_id }}</p>
+                <option value="{{ deck.id }}"{% ifequal  deck.id active_deck_id %} selected{% endifequal %}>{{ deck.name }}</option>
                 {% endfor %}
                 </select>
             </form>

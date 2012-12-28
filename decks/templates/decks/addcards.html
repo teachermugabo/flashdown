@@ -123,16 +123,16 @@
             if (el.attr('id') == 'wmd-input-front') {
                 var scrollHeight = getScrollHeight(inputBack.get(0));
                 var maxHeight = Math.max(inputFront.outerHeight(), scrollHeight);
-                inputBack.css('height', maxHeight);
+                inputBack.height(maxHeight);
                 if (inputFront.outerHeight() < maxHeight) // guard against minHeight changes
-                    inputFront.css('height', maxHeight);
+                    inputFront.height(maxHeight);
             }
             else if (el.attr('id') == 'wmd-input-back') {
                 var scrollHeight = getScrollHeight(inputFront.get(0));
                 var maxHeight = Math.max(inputBack.outerHeight(), scrollHeight);
-                inputFront.css('height', maxHeight);
+                inputFront.height(maxHeight);
                 if (inputBack.outerHeight() < maxHeight) // guard against minheight changes
-                    inputBack.css('height', maxHeight);
+                    inputBack.height(maxHeight);
             }
         }
 
@@ -160,7 +160,7 @@
             //Re-apply the scroll position
             $(window).scrollTop(this_scroll);
 
-            return height;
+            return height + 10;
         }
 
         // auto expand textareas and keep them in sync
@@ -172,7 +172,7 @@
             //Set the textarea to scroll so that you can capture its height
             $(el).css('overflow', 'scroll');
             //Set the element height to the current scroll height
-            $(el).height($(el).prop('scrollHeight'));
+            $(el).height($(el).prop('scrollHeight') + 10);
             //Hide the scrollbars
             $(el).css('overflow', 'hidden');
             //Re-apply the scroll position

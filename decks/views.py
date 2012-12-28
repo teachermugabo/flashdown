@@ -45,23 +45,26 @@ def browse(request, deck_id=None):
     if deck_id is None:
         deck_id = request.COOKIES.get('active-deck-id', None)
 
+    print('browse active: ' + str(deck_id))
+
     decks = Tag.objects.filter(is_deck=True)
     deck = None
     cards = None
 
     if deck_id is not None:
         deck = Tag.objects.get(pk=deck_id)
-        if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
+        if not deck.is_deck:  #TODO: do we care if we're browsing decks vs tags?
             return HttpResponse(code=400)
     elif decks.count() > 0:
          # no deck_id, no active deck cookie - just get the first one
         deck = decks[0]
+        deck_id = deck.id
 
     if deck:
         cards = deck.deck_cards.filter(deleted=False)
 
-    if deck_id:
-        deck_id = str(deck_id)
+    if deck_id is not None and deck_id != '':
+        deck_id = int(deck_id)  # template will compre this to deck.id
 
     return render_to_response('decks/browse.html',
                               {'decks': decks, 'deck': deck,
