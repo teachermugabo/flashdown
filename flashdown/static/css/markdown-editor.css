@@ -63,6 +63,8 @@
           border-radius: 3px;
 }
 
+/* from pagedown-bootstrap */
+
 .wmd-panel {
   width: 100%;
 }
@@ -197,10 +199,6 @@ tt {
   margin-bottom: 0 !important;
 }
 
-textarea.wmd-input {
-  resize: none;
-}
-
 .wmd-container {
   margin-left: 0;
 }
@@ -208,4 +206,15 @@ textarea.wmd-input {
 #card-edit-front,
 #card-edit-back {
   width: 451px;
+}
+
+.wmd-panel {
+  color: #444444;
+}
+
+.wmd-input {
+  height: 130px;
+  min-height: 130px;
+  overflow: hidden;
+  resize: none;
 }

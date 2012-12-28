@@ -1,7 +1,9 @@
 // bootstrap dependencies
 @import "variables.less";
 @import "bootstrap/less/mixins.less";
-@import "bootstrap/less/wells.less"; // depends on mixins
+@import "bootstrap/less/wells.less"; // depends on mixins (jm)
+
+/* from pagedown-bootstrap */
 
 .wmd-panel {
   width: 100%;
@@ -60,7 +62,7 @@
   font-weight: bold;
 }
 
-// match github tables
+// match github tables (jm)
 
 .wmd-preview table tr {
   border-top: 1px solid #CCC;
@@ -110,7 +112,7 @@ pre, code, tt {
   font-family: Consolas, "Liberation Mono", Courier, monospace;
 }
 
-// miscellaneous formatting
+// miscellaneous custom formatting (jm)
 
 .wmd-preview > :first-child {
   margin-top: 0 !important;
@@ -120,14 +122,23 @@ pre, code, tt {
   margin-bottom: 0 !important;
 }
 
-textarea.wmd-input {
-  resize: none;
-}
-
 .wmd-container {
   margin-left: 0;
 }
 
 #card-edit-front, #card-edit-back {
   width: 451px;
+}
+
+// markdown previews
+@darkTextColor: darken(@navbarText, 20%);
+.wmd-panel {
+  color: @darkTextColor;
+}
+
+.wmd-input {
+  min-height: 130px;
+  height: 130px;
+  overflow: hidden;
+  resize: none; 
 }

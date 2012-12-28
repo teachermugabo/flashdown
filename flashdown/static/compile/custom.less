@@ -8,6 +8,7 @@
 @contentBgColor: lighten(@bgColor, 10%);
 @blockBgColor: #F9F9F9;
 @textColor: white;
+@darkTextColor: darken(@navbarText, 20%);
 
 body {
   line-height: 1.5em;
@@ -33,7 +34,7 @@ body {
   .border-radius(5px);
 
   .content-wrapper {
-    color: darken(@navbarText, 20%);
+    color: @darkTextColor;
     background-color: @blockBgColor;
     padding: 1em;
 
@@ -73,7 +74,7 @@ body {
 }
 
 // Custom style for front/back of cards.
-.card-editor {
+#card-editor {
     h2.card-name { text-align: center; }
 }
 
@@ -98,3 +99,25 @@ footer {
   }
 
 }
+
+/* browse screen */
+#add-card {
+  width: 50%;
+  margin: auto;
+}
+
+.table {
+  h2 { margin-bottom: 0; }
+  thead td {
+    /* header 'review' button */
+    vertical-align: baseline;
+    &:last-child { padding-right: 0; }
+  }
+
+  tbody {
+    background-color: white;
+    color: @darkTextColor;
+  }
+}
+
+

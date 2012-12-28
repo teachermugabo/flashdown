@@ -51,22 +51,24 @@
         </div>
     </div>
 
-
     <div class="row">
         <div class="span12">
             <form id="new-card-form" action="{% url new_card %}" method="post" class="is-padded">
                 {% csrf_token %}
-                <input type="hidden" name="deck-id" id="deck-id-input" value="{{ deck_id }}"></input>
-                <button id="add-card" type="submit" class="btn btn-primary" tabindex="3">Add</button>
+                <input type="hidden" name="deck-id" id="deck-id-input" value="{{ active_deck_id }}"></input>
+                <button id="add-card" type="submit" class="btn btn-primary btn-block" tabindex="3">Add</button>
             </form>
         </div>
     </div>
+
     {% else %}
+
     <div class="row">
         <div class="span12">
             <p style="text-align:center">You haven't created any decks. <a href="{% url overview %}">Click here</a> to get started.</p>
         </div>
     </div>
+
     {% endif %}
 
 {% endblock %}
@@ -86,6 +88,7 @@
         });
     </script>
     <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML-full"></script>
+    <script src="{% static "js/jquery.autoexpand.js" %}"></script>
     <script src="{% static "js/pagedown-bootstrap/Markdown.Converter.js" %}"></script>
     <script src="{% static "js/pagedown-bootstrap/Markdown.Editor.js" %}"></script>
     <script src="{% static "js/pagedown-bootstrap/Markdown.Sanitizer.js" %}"></script>
@@ -93,12 +96,96 @@
     <script src="{% static "js/prettify.js" %}"></script>
     <script>
     (function() {
+        // set cookie to keep track of the active deck
         $('#deck-select').change(function() {
             var did = $(this).val();
             $('#deck-id-input').val(did);
             // update the cookie
             $.cookie('active-deck-id', did, {path: '/'});
         });
+
+        var inputFront = $('#wmd-input-front'),
+            inputBack = $('#wmd-input-back'),
+            previewFront = $('#wmd-preview-front'),
+            previewBack = $('#wmd-preview-back');
+
+        // looks nicer if preview divs both line up
+        function matchPreviewHeights() {
+            previewFront.css('height', 'auto');
+            previewBack.css('height', 'auto');
+            var height = Math.max(previewFront.outerHeight(), previewBack.outerHeight());
+            previewFront.css('height', height);
+            previewBack.css('height', height);
+        }
+
+        // set the wmd input heights to the max of each's scroll height
+        function matchInputHeights(el) {
+            if (el.attr('id') == 'wmd-input-front') {
+                var scrollHeight = getScrollHeight(inputBack.get(0));
+                var maxHeight = Math.max(inputFront.outerHeight(), scrollHeight);
+                inputBack.css('height', maxHeight);
+                if (inputFront.outerHeight() < maxHeight) // guard against minHeight changes
+                    inputFront.css('height', maxHeight);
+            }
+            else if (el.attr('id') == 'wmd-input-back') {
+                var scrollHeight = getScrollHeight(inputFront.get(0));
+                var maxHeight = Math.max(inputBack.outerHeight(), scrollHeight);
+                inputFront.css('height', maxHeight);
+                if (inputBack.outerHeight() < maxHeight) // guard against minheight changes
+                    inputBack.css('height', maxHeight);
+            }
+        }
+
+        // prevent size mismatch upon first use
+        form_autosize(inputFront);
+        form_autosize(inputBack);
+
+        // similar to the autosize function below except it doesn't resize the element
+        function getScrollHeight(el) {
+             //Catch the current scroll position to stop it from jumping about in some browsers
+            var this_scroll = $(window).scrollTop(),
+                oldHeight = $(el).css('height'),
+                height;
+            //Clear any existing height settings
+            $(el).css('height', '');
+            //Set the textarea to scroll so that you can capture its height
+            $(el).css('overflow', 'scroll');
+
+            // get the scroll height
+            height = $(el).prop('scrollHeight');
+            //Set the element height back to the old height
+            $(el).height(oldHeight);
+            //Hide the scrollbars
+            $(el).css('overflow', 'hidden');
+            //Re-apply the scroll position
+            $(window).scrollTop(this_scroll);
+
+            return height;
+        }
+
+        // auto expand textareas and keep them in sync
+        function form_autosize(el){
+            //Catch the current scroll position to stop it from jumping about in some browsers
+            var this_scroll = $(window).scrollTop();
+            //Clear any existing height settings
+            $(el).css('height', '');
+            //Set the textarea to scroll so that you can capture its height
+            $(el).css('overflow', 'scroll');
+            //Set the element height to the current scroll height
+            $(el).height($(el).prop('scrollHeight'));
+            //Hide the scrollbars
+            $(el).css('overflow', 'hidden');
+            //Re-apply the scroll position
+            $(window).scrollTop(this_scroll);
+
+            // match heights
+            matchInputHeights(el);
+        }
+
+        inputFront.on('keyup change paste', function() { form_autosize(inputFront) });
+        inputBack.on('keyup change paste', function() { form_autosize(inputBack) });
+
+
 
         Markdown.Extra.setup({fencedCodeBlocks: {highlighter:"prettify"}});
 
@@ -112,6 +199,7 @@
             MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         });
         editor.hooks.chain("onPreviewRefresh", prettyPrint);
+        editor.hooks.chain("onPreviewRefresh", matchPreviewHeights);
         editor.run();
 
         // editor2 - back of card
@@ -120,6 +208,7 @@
             MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         });
         editor2.hooks.chain("onPreviewRefresh", prettyPrint);
+        editor2.hooks.chain("onPreviewRefresh", matchPreviewHeights);
         editor2.run();
 
         // tab indent

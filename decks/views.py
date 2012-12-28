@@ -18,13 +18,18 @@ def add_cards(request, deck_id=None):
 
     decks = Tag.objects.filter(is_deck=True)
 
-    ctx = {'decks' : decks}
-    if deck_id:
-        ctx.update({'active_deck_id': int(deck_id)})
+    if deck_id is None:
+        if decks.count() > 0:
+            deck_id = decks[0].id
 
-    print("add did" + str(deck_id))
+    if deck_id is not None:
+        deck_id = int(deck_id)
+
+    if decks == []:
+        deck_id = None
+
     return render_to_response('decks/addcards.html',
-                              ctx,
+                              {'decks': decks, 'active_deck_id': deck_id},
                               context_instance=RequestContext(request))
 
 def update_card(request, card_id=None):
@@ -38,10 +43,11 @@ def get_cards(request, deck_id):
 
 def browse(request, deck_id=None):
     if deck_id is None:
-        print('cookies:' + str(request.COOKIES))
         deck_id = request.COOKIES.get('active-deck-id', None)
 
     decks = Tag.objects.filter(is_deck=True)
+    deck = None
+    cards = None
 
     if deck_id is not None:
         deck = Tag.objects.get(pk=deck_id)
@@ -54,12 +60,12 @@ def browse(request, deck_id=None):
     if deck:
         cards = deck.deck_cards.filter(deleted=False)
 
-    ctx = {'decks': decks, 'deck': deck, 'cards': cards}
     if deck_id:
-        ctx.update({'active_deck_id': int(deck_id)})
+        deck_id = str(deck_id)
 
-    print("browse did" + str(deck_id))
-    return render_to_response('decks/browse.html', ctx)
+    return render_to_response('decks/browse.html',
+                              {'decks': decks, 'deck': deck,
+                               'cards': cards, 'active_deck_id': deck_id})
 
 def cards(request, deck_id):
     deck = Tag.objects.get(pk=deck_id)

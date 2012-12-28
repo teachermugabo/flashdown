@@ -6425,7 +6425,7 @@ body {
   margin-bottom: 20px;
 }
 
-.card-editor h2.card-name {
+#card-editor h2.card-name {
   text-align: center;
 }
 
@@ -6448,6 +6448,32 @@ footer .container {
 footer #footer-links {
   display: inline-table;
   margin: 3px auto;
+}
+
+/* browse screen */
+
+#add-card {
+  width: 50%;
+  margin: auto;
+}
+
+.table h2 {
+  margin-bottom: 0;
+}
+
+.table thead td {
+  /* header 'review' button */
+
+  vertical-align: baseline;
+}
+
+.table thead td:last-child {
+  padding-right: 0;
+}
+
+.table tbody {
+  color: #444444;
+  background-color: white;
 }
 
 html,

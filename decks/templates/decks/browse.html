@@ -27,8 +27,8 @@
                     <thead>
                         <tr>
                             <td><h2>{{ deck.name }}</h2></td>
-                            <td><a class="btn" href="{% url review deck_id=deck.id %}">Review</a></td>
                             <td></td>
+                            <td><a class="btn btn-block" href="{% url review deck_id=deck.id %}">Review</a></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +55,7 @@
 
     <div class="row">
         <div class="span12">
-            <a href="{% url add_cards_to_deck deck_id=deck.id %}" class="btn btn-primary editcard is-padded">Add Card</a>
+            <a id="add-card" href="{% url add_cards_to_deck deck_id=deck.id %}" class="btn btn-primary btn-block editcard">Add Card</a>
         </div>
     </div>
 {% endblock %}
