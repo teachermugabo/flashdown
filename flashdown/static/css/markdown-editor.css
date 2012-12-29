@@ -104,8 +104,7 @@
 
 .wmd-panel .btn-toolbar {
   width: 100%;
-  padding: 0;
-  margin-bottom: 0;
+  margin-bottom: 2px;
 }
 
 .wmd-prompt-background {
@@ -191,16 +190,23 @@ tt {
   font-size: 12px;
 }
 
-.wmd-preview > :first-child {
-  margin-top: 0 !important;
-}
-
-.wmd-preview > :last-child {
-  margin-bottom: 0 !important;
-}
+/* miscellaneous custom formatting (jm) */
 
 .wmd-container {
   margin-left: 0;
+}
+
+.wmd-preview,
+.wmd-input {
+  margin-bottom: 0;
+}
+
+.wmd-preview {
+  margin-top: 10px;
+}
+
+#add-card {
+  margin-top: 20px;
 }
 
 #card-edit-front,
@@ -208,8 +214,16 @@ tt {
   width: 451px;
 }
 
-.wmd-panel {
+.wmd-preview {
   color: #444444;
+}
+
+.wmd-preview :first-child {
+  margin-top: 0;
+}
+
+.wmd-preview :last-child {
+  margin-bottom: 0;
 }
 
 .wmd-input {

@@ -28,8 +28,7 @@
 }
 
 .wmd-panel .btn-toolbar {
-  margin-bottom: 0;
-  padding: 0;  
+  margin-bottom: 2px;
   width: 100%;
 }
 
@@ -112,19 +111,16 @@ pre, code, tt {
   font-family: Consolas, "Liberation Mono", Courier, monospace;
 }
 
-// miscellaneous custom formatting (jm)
-
-.wmd-preview > :first-child {
-  margin-top: 0 !important;
-}
-
-.wmd-preview > :last-child {
-  margin-bottom: 0 !important;
-}
+/* miscellaneous custom formatting (jm) */
 
 .wmd-container {
   margin-left: 0;
 }
+
+// Make spacing consistent with/without preview
+.wmd-preview, .wmd-input { margin-bottom: 0; }
+.wmd-preview { margin-top: 10px; }
+#add-card { margin-top: 20px; }
 
 #card-edit-front, #card-edit-back {
   width: 451px;
@@ -132,8 +128,10 @@ pre, code, tt {
 
 // markdown previews
 @darkTextColor: darken(@navbarText, 20%);
-.wmd-panel {
+.wmd-preview {
   color: @darkTextColor;
+  :first-child { margin-top: 0; }
+  :last-child { margin-bottom: 0; }
 }
 
 .wmd-input {
