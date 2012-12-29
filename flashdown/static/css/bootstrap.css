@@ -6485,6 +6485,37 @@ footer #footer-links {
   background-color: white;
 }
 
+.table-buttons-col {
+  width: 80px;
+}
+
+table .btn {
+  width: 25px;
+  height: 20px;
+  padding: 0;
+}
+
+.card-front-browse {
+  width: 80%;
+}
+
+#review-deck {
+  position: relative;
+  top: 15px;
+}
+
+#deck-data {
+  table-layout: fixed;
+}
+
+#deck-data .ellipsis {
+  /* use the bootstrap mixin to force single line & ellipses */
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 html,
 body,
 .container,
