@@ -53,6 +53,7 @@
 
    // looks nicer if preview divs both line up
     function matchPreviewHeights() {
+        return;
         previewFront.css('height', 'auto');
         previewBack.css('height', 'auto');
         var height = Math.max(previewFront.outerHeight(), previewBack.outerHeight());

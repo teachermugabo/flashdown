@@ -10,7 +10,7 @@ class Tag(models.Model):
         return self.name
 
     def card_count(self):
-        return self.deck_cards.count()
+        return self.deck_cards.filter(deleted=False).count()
 
     def due_count(self):
         return self.deck_cards.filter(next_due__lt=datetime.now()).count()

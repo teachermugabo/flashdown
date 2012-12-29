@@ -226,6 +226,11 @@ tt {
   margin-bottom: 0;
 }
 
+.wmd-preview hr {
+  margin-top: 0;
+  border-bottom: 1px solid #CCC;
+}
+
 .wmd-input {
   height: 130px;
   min-height: 130px;

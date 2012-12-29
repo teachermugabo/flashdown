@@ -6344,7 +6344,8 @@ a.badge:hover {
 
 body {
   line-height: 1.5em;
-  background-color: #343434;
+  background-color: #9cc2d5;
+  background-image: url('../img/graybg.jpg');
 }
 
 .row [class^="span"]:first-child .is-padded {
