@@ -55,31 +55,6 @@ $(function() {
         // cause a broken pipe in our ajax app
     });
 
-    $('#new-card-form').submit(function() {
-        var data = {'deck-id': $('#deck-id-input').val(),
-                     front: $('#wmd-input-front').val(),
-                     back: $('#wmd-input-back').val()
-                    };
-        var self = this;
-        $.post($(this).attr("action"), data, function() {
-            // clear card data
-            $('#card-editor textarea').each(function(i, el) {
-                $(el).val('');
-            });
-
-            // clear previews
-            $('#card-editor .wmd-preview').each(function(i, el) {
-                $(el).html('');
-            });
-
-            alert("success! now add that recently added section jackass.");
-            // show recently added cards to right of addcard area
-
-        }); // TODO; handle / log errors
-        return false; // prevents default submit behavior, which would
-        // cause a broken pipe in our ajax app
-    });
-
     // add this class to a delete link to submit it via ajax
     $(".delete-card").click(function() {
         var self = $(this);
