@@ -6343,6 +6343,7 @@ a.badge:hover {
 /* boostrap customizations */
 
 body {
+  font-family: 'Raleway', sans-serif;
   line-height: 1.5em;
   background-color: #9cc2d5;
   background-image: url('../img/graybg.jpg');
