@@ -3,6 +3,8 @@
 
 {% block css %}
 <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="{% static "css/prettify.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "css/markdown-editor.css" %}" />
 {% endblock %}
 
 {% block dashboard_subnav %}
@@ -43,11 +45,13 @@
                 {% if deck %}
                 <table id="deck-data" class="table table-striped">
                     <col span="1">
+                    <col span="1">
                     <col span="1" class="table-buttons-col">
                     <thead>
                         <tr>
                             <td>Front</td>
-                            <td></td>
+                            <td>Back</td>
+                            <td>Edit</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,7 +60,9 @@
                         <tr>
                             {# card.front|markdown|sanitize #}
                             <td class="ellipsis">{{ card.front }}</td>
-                            <td><a href="url edit_card deck_id=deck.id card_id=card.id" class="btn btn-success editcard">
+                            <td class="ellipsis">{{ card.back }}</td>
+                            {# this first link is handled in js - brings up a modal #}
+                            <td><a href="#" data-id="{{ card.id }}" class="btn btn-success editcard">
                                     <i class="icon-edit icon-large"></i></a>
                                 <a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn btn-danger delete-card pull-right">
                                     <i class="icon-trash icon-large"></i></a>
@@ -77,13 +83,40 @@
 
     <div class="row">
         <div class="span12">
-            <a id="add-card" href="{% url add_cards_to_deck deck_id=deck.id %}" class="btn btn-primary btn-block editcard">Add Card</a>
+            <a id="add-card" href="{% url add_cards_to_deck deck_id=deck.id %}" class="btn btn-primary btn-block addcard">Add Card</a>
         </div>
     </div>
 {% endblock %}
 
+
+{% block modals %}
+    {% include "decks/add_cards_modal.html" %}
+{% endblock %}
+
+
 {% block js %}
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        elements: ['wmd-preview-back', 'wmd-preview-front'],
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            displayMath: [ ['$$','$$'] ],
+            processEscapes: true
+        },
+        asciimath2jax: {
+            delimiters: [ ['@@', '@@'], ['\\(', '\\)'] ],
+        }
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML-full"></script>
+<script src="{% static "js/jquery.autoexpand.js" %}"></script>
+<script src="{% static "js/pagedown-bootstrap/Markdown.Converter.js" %}"></script>
+<script src="{% static "js/pagedown-bootstrap/Markdown.Editor.js" %}"></script>
+<script src="{% static "js/pagedown-bootstrap/Markdown.Sanitizer.js" %}"></script>
+<script src="{% static "js/pagedown-bootstrap/Markdown.Extra.js" %}"></script> 
+<script src="{% static "js/prettify.js" %}"></script>
+<script src="{% static "js/browse.js" %}"></script>
 <script>
     (function() {
 //        $('#deck-data').dataTable();
@@ -93,6 +126,46 @@
             var did = $(this).val();
             $.cookie('active-deck-id', did, {path: '/'});
         });
+
+        var inputFront = $('#wmd-input-front');
+        var inputBack = $('#wmd-input-back');
+        var cardIdInput = $('#card-id');
+
+        $('.wmd-preview').hide(); // `toggle checkbox` is initially unchecked
+
+        $('.editcard').click(function() {
+            $('#edit-card-modal').modal('show');
+            inputFront.focus();
+            var id = $(this).data('id');
+
+            // load the card data into the modal
+            $.ajax({
+                url: '/decks/get-card/' + id + '/',
+                type: 'POST',
+                success: function(json) {
+                    inputFront.val(json.front);
+                    inputBack.val(json.back);
+                    cardIdInput.val(id);
+                }
+            });
+            return false;
+        });
+
+        $('#card-edit-submit').click(function() {
+            $.ajax({
+                url: $(this).attr('href'),
+                type: 'POST',
+                data: {card_id: cardIdInput.val(),
+                       front: inputFront.val(),
+                       back: inputBack.val()
+                },
+                success: function() {
+                    alert("you changed it");
+                }
+            });
+            return false;
+        })
+
     })();
 </script>
 {% endblock %}

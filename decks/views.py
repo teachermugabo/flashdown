@@ -32,9 +32,6 @@ def add_cards(request, deck_id=None):
                               {'decks': decks, 'active_deck_id': deck_id},
                               context_instance=RequestContext(request))
 
-def update_card(request, card_id=None):
-    pass
-
 def review(request, deck_id):
     pass
 
@@ -158,6 +155,19 @@ def new_card(request):
 
     return HttpResponse(status=201) # Created
 
+
+def get_card(request, card_id):
+    print(card_id)
+    try:
+        card = Card.objects.get(pk=card_id, deleted=False)
+    except Card.DoesNotExist:
+        return HttpResponse(status=404)
+
+    card = {'front': card.front, 'back': card.back}
+
+    return HttpResponse(simplejson.dumps(card), mimetype="application/json")
+
+
 def delete_card(request, deck_id, card_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
@@ -178,6 +188,27 @@ def delete_card(request, deck_id, card_id):
 
     return HttpResponse() #status=200 OK
 
+
+def update_card(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest()
+
+    card_id = request.POST.get('card_id')
+    front = request.POST.get('front')
+    back = request.POST.get('back')
+
+    if card_id is None or front is None or back is None:
+        return HttpResponseBadRequest()
+
+    try:
+        card = Card.objects.get(pk=card_id, deleted=False)
+        card.front = front
+        card.back = back
+        card.save()
+    except Card.DoesNotExist:
+        return HttpResponse(status=404)
+
+    return HttpResponse(status=200)
 
 # vim: set ai et ts=4 sw=4 sts=4 :
 

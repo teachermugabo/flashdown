@@ -6506,6 +6506,7 @@ table .btn {
 }
 
 #deck-data {
+  margin-bottom: 0;
   table-layout: fixed;
 }
 
@@ -6553,4 +6554,8 @@ body,
   height: 40px;
   color: #777777;
   background-color: #f2f2f2;
+}
+
+.modal {
+  color: #444444;
 }
