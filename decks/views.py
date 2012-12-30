@@ -4,7 +4,13 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedire
 from django.core.urlresolvers import reverse
 from decks.models import Tag, Card
 from django.utils import simplejson
+from django.views.decorators.csrf import ensure_csrf_cookie
 
+# Note: ensure_csrf_cookie required if template doesn't have forms
+# containing the csrf_token tag. Forgetting about this has caused
+# problems in the past so I'm leaving it here to prevent problems caused
+# by future refactoring of templates.
+@ensure_csrf_cookie
 def overview(request):
     decks = Tag.objects.filter(is_deck=True)
     # do we need the RequestContext?
@@ -12,6 +18,7 @@ def overview(request):
                               {'decks' : decks},
                               context_instance=RequestContext(request))
 
+@ensure_csrf_cookie
 def add_cards(request, deck_id=None):
     if deck_id is None:
         deck_id = request.COOKIES.get('active-deck-id', None)
