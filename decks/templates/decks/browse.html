@@ -2,7 +2,6 @@
 {% load staticfiles %}
 
 {% block css %}
-<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="{% static "css/prettify.css" %}" />
 <link rel="stylesheet" type="text/css" href="{% static "css/markdown-editor.css" %}" />
 {% endblock %}
@@ -96,6 +95,7 @@
 
 {% block js %}
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+<script src="{% static "js/datatables-bootstrap-integration.js" %}"></script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         elements: ['wmd-preview-back', 'wmd-preview-front'],
@@ -165,6 +165,20 @@
             });
             return false;
         })
+
+
+        /* Data tables stuff, including the bootstrap pagination extension */
+        $('#deck-data').dataTable( {
+            "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+            "sPaginationType": "bootstrap"
+        });
+
+        $.extend( $.fn.dataTableExt.oStdClasses, {
+            "sSortAsc": "header headerSortDown",
+            "sSortDesc": "header headerSortUp",
+            "sSortable": "header",
+            "sWrapper": "dataTables_wrapper form-inline"
+        });
 
     })();
 </script>

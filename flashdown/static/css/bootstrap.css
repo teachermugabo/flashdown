@@ -6559,3 +6559,62 @@ body,
 .modal {
   color: #444444;
 }
+
+/* Styles to integrate the data tables library with bootstrap
+ * and our custom styles. See http://www.datatables.net/blog/Twitter_Bootstrap
+ * and the follow up article.
+ */
+
+div.dataTables_length label {
+  float: left;
+  text-align: left;
+}
+
+div.dataTables_filter label {
+  float: right;
+}
+
+div.dataTables_info {
+  padding-top: 8px;
+}
+
+div.dataTables_paginate {
+  float: right;
+  margin: 0;
+}
+
+table {
+  margin-bottom: 6px !important;
+  clear: both;
+}
+
+/* Sort styling */
+
+table.table thead .sorting,
+table.table thead .sorting_asc,
+table.table thead .sorting_desc,
+table.table thead .sorting_asc_disabled,
+table.table thead .sorting_desc_disabled {
+  cursor: pointer;
+  *cursor: hand;
+}
+
+table.table thead .sorting {
+  background: url('../img/datatables/sort_both.png') no-repeat center right;
+}
+
+table.table thead .sorting_asc {
+  background: url('../img/datatables/sort_asc.png') no-repeat center right;
+}
+
+table.table thead .sorting_desc {
+  background: url('../img/datatables/sort_desc.png') no-repeat center right;
+}
+
+table.table thead .sorting_asc_disabled {
+  background: url('../img/datatables/sort_asc_disabled.png') no-repeat center right;
+}
+
+table.table thead .sorting_desc_disabled {
+  background: url('../img/datatables/sort_desc_disabled.png') no-repeat center right;
+}
