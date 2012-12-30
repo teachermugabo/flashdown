@@ -33,6 +33,7 @@
                     {% endif %}
 
                     <form id="add-deck" action="{% url new_deck %}" method="post" class="form-inline">
+                      {% csrf_token %}
                       <input id="deck-name" type="text" class="input-large">
                       <button type="submit" class="btn btn-primary">Add</button>
                     </form>
