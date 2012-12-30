@@ -71,6 +71,14 @@ body {
   }
 }
 
+#deck-data thead {
+  margin: 0;
+  #gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground);
+  color: #F9F9F9;
+  font-weigth: bold;
+}
+
+
 // background of container
 .wrapper {
   width: 940px;
@@ -131,11 +139,14 @@ footer {
 .table-buttons-col { width: 80px; }
 table .btn { padding: 0; width: 25px; height: 20px; }
 .card-front-browse { width: 80%; }
+
 // align review button with header
 #review-deck { position:relative; top:15px; }
+
 #deck-data {
   margin-bottom: 0;
   table-layout:fixed;
+  display: none;  /* until after datatables finishes loading */
   .ellipsis {
       /* use the bootstrap mixin to force single line & ellipses */
       .text-overflow;

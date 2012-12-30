@@ -6422,6 +6422,20 @@ body {
   text-shadow: 0 1px 0 #777;
 }
 
+#deck-data thead {
+  margin: 0;
+  color: #F9F9F9;
+  background-color: #5c8dbf;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#73a1d0), to(#386ea5));
+  background-image: -webkit-linear-gradient(top, #73a1d0, #386ea5);
+  background-image: -o-linear-gradient(top, #73a1d0, #386ea5);
+  background-image: linear-gradient(to bottom, #73a1d0, #386ea5);
+  background-image: -moz-linear-gradient(top, #73a1d0, #386ea5);
+  background-repeat: repeat-x;
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ff73a1d0', endColorstr='#ff386ea5', GradientType=0);
+  font-weigth: bold;
+}
+
 .wrapper {
   width: 940px;
   background-color: #4e4e4e;
@@ -6506,6 +6520,7 @@ table .btn {
 }
 
 #deck-data {
+  display: none;
   margin-bottom: 0;
   table-layout: fixed;
 }

@@ -119,8 +119,6 @@
 <script src="{% static "js/browse.js" %}"></script>
 <script>
     (function() {
-//        $('#deck-data').dataTable();
-
         $('#deck-select').change(function() {
             // update the active id cookie
             var did = $(this).val();
@@ -169,8 +167,9 @@
 
         /* Data tables stuff, including the bootstrap pagination extension */
         $('#deck-data').dataTable( {
-            "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-            "sPaginationType": "bootstrap"
+            "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+            "sPaginationType": "bootstrap",
+            "bAutoWidth": false
         });
 
         $.extend( $.fn.dataTableExt.oStdClasses, {
@@ -179,6 +178,8 @@
             "sSortable": "header",
             "sWrapper": "dataTables_wrapper form-inline"
         });
+
+        $('#deck-data').css({'display': 'table'});
 
     })();
 </script>
