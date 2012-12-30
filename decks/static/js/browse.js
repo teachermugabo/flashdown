@@ -158,6 +158,12 @@
     editor2.hooks.chain("onPreviewRefresh", matchPreviewHeights);
     editor2.run();
 
+    Flashdown = window.Flashdown || {};
+    Flashdown.editor1 = editor;
+    Flashdown.editor2 = editor2;
+    window.Flashdown = Flashdown;
+
+
     // tab indent
     // tabIndent.renderAll();
     /* Remove this until issue #1 is closed

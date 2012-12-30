@@ -110,7 +110,6 @@
     });
 </script>
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML-full"></script>
-<script src="{% static "js/jquery.autoexpand.js" %}"></script>
 <script src="{% static "js/pagedown-bootstrap/Markdown.Converter.js" %}"></script>
 <script src="{% static "js/pagedown-bootstrap/Markdown.Editor.js" %}"></script>
 <script src="{% static "js/pagedown-bootstrap/Markdown.Sanitizer.js" %}"></script>
@@ -144,6 +143,8 @@
                     inputFront.val(json.front);
                     inputBack.val(json.back);
                     cardIdInput.val(id);
+                    Flashdown.editor1.refreshPreview();
+                    Flashdown.editor2.refreshPreview();
                 }
             });
             return false;
@@ -169,7 +170,10 @@
         $('#deck-data').dataTable( {
             "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
             "sPaginationType": "bootstrap",
-            "bAutoWidth": false
+            "bAutoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "Show _MENU_ cards"
+            }
         });
 
         $.extend( $.fn.dataTableExt.oStdClasses, {
