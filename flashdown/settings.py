@@ -1,6 +1,13 @@
 # Django settings for flashdown project.
 
+import os
+
 DEBUG = True
+
+# already added 'LIVE_SITE' environment variable to heroku dev environment with `heroku config:add`
+if os.environ.has_key('LIVE_SITE'):
+    DEBUG = False
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -13,16 +20,16 @@ DECK_ROOT = os.path.join(os.path.dirname(SITE_ROOT), 'decks')
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'flashdown_db',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
-}
+
+# Heroku - Load database config info from DATABASE_URL environment variable, if
+# set. Otherwise use our local config.
+import dj_database_url
+
+if not os.environ.has_key('DATABASE_URL'):
+    os.environ['DATABASE_URL'] = 'postgres://django_login:password@localhost/django_db'
+
+DATABASES = {'default': dj_database_url.config(default=os.environ['DATABASE_URL'])}
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
