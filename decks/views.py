@@ -42,16 +42,19 @@ def browse(request, deck_id=None):
     if deck_id is None:
         deck_id = request.COOKIES.get('active-deck-id', None)
 
-    print('browse active: ' + str(deck_id))
-
     decks = Tag.objects.filter(is_deck=True)
     deck = None
     cards = None
 
     if deck_id is not None:
-        deck = Tag.objects.get(pk=deck_id)
-        if not deck.is_deck:  #TODO: do we care if we're browsing decks vs tags?
+        try:
+            deck = Tag.objects.get(pk=deck_id)
+        except Tag.DoesNotExist:
+            deck_id = None
+
+        if deck and not deck.is_deck:  #TODO: do we care if we're browsing decks vs tags?
             return HttpResponse(code=400)
+
     elif decks.count() > 0:
          # no deck_id, no active deck cookie - just get the first one
         deck = decks[0]
@@ -94,11 +97,12 @@ def new_deck(request):
 
     #TODO: validate data
 
-    deck_name = request.POST["deck_name"]
+    # currently the max deck name length is 50 characters
+    deck_name = request.POST["deck_name"][:50]
     deck = None
     try:
         deck = Tag.objects.get(name=deck_name)
-        return HttpResponse() # already exists, don't send a new list item
+        return HttpResponse(status=200) # already exists, don't send a new list item
     except Tag.DoesNotExist:
         deck = Tag(name=deck_name, is_deck=True)
         deck.save()

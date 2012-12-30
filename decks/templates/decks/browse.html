@@ -25,7 +25,9 @@
                     </select>
                 </div>
 
+                {% if deck %}
                 <a id="review-deck" class="btn" href="{% url review deck_id=deck.id %}">Review</a>
+                {% endif %}
             </form>
         </div>
     </div>
@@ -61,22 +63,24 @@
                         </tr>
                         {% endfor %}
                     {% else %}
-                    <tr><td colspan="3" style="text-align:center">This deck doesn't contain any cards yet. Click the button below to get started.</td></tr>
+                    <tr><td colspan="3" style="text-align:center">This deck doesn't contain any cards. Click the button below to add some.</td></tr>
                     {% endif %}
                     </tbody>
                 </table>
                 {% else  %}
-                <p>You haven't created any decks yet. <a href="{% url overview %}">Click here</a> to get started.</p>
+                <p style="text-align:center;">You haven't created any decks. <a href="{% url overview %}">Click here</a> to get started.</p>
                 {% endif %}
             </div>
         </div>
     </div>
 
+    {% if deck %}
     <div class="row">
         <div class="span12">
             <a id="add-card" class="btn btn-primary btn-block btn-large addcard" href="{% url add_cards_to_deck deck_id=deck.id %}">Add Card</a>
         </div>
     </div>
+    {% endif %}
 {% endblock %}
 
 

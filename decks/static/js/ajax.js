@@ -34,28 +34,7 @@ $(function() {
         }
     });
 
-
-    // and now set up the submit handler for adding a deck in overview.html
-    $("#add_deck").submit(function() {
-        var self = $(this);
-        // TODO: validate
-        $.ajax({
-            url: self.attr("action"),
-            type: "POST",
-            data: {deck_name : self.find("#deck_name").val()},
-            success: function(response) {
-                $("#deck_list").append(response);
-            },
-            error: function(data) {
-                if (DEBUG)
-                    alert("ajax error");
-            }
-        });
-        return false; // prevents default submit behavior, which would
-        // cause a broken pipe in our ajax app
-    });
-
-    // add this class to a delete link to submit it via ajax
+   // add this class to a delete link to submit it via ajax
     $(".delete-card").click(function() {
         var self = $(this);
         $.ajax({

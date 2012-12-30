@@ -14,7 +14,7 @@
                 {% include "decks/block_header_partial.html" with title="Add Decks" %}
 
                 <div class="content-wrapper">
-                    <table id="deck_list" class="table table-striped">
+                    <table id="deck-list"{% if not decks %} style="display:none;"{% endif %} class="table table-striped">
                         <thead>
                             <tr>
                                 <td>Deck</td>
@@ -26,11 +26,14 @@
                         {% for deck in decks %}
                           {% include "decks/deckinfo_partial.html" with deck=deck %}
                         {% endfor %}
-
                     </table>
 
-                    <form id="add_deck" action="{% url new_deck %}" method="post" class="form-inline">
-                      <input id="deck_name" type="text" class="input-large">
+                    {% if not decks %}
+                    <p id="empty-message" style="text-align:center;">Your decks will be displayed here once you create them.</p>
+                    {% endif %}
+
+                    <form id="add-deck" action="{% url new_deck %}" method="post" class="form-inline">
+                      <input id="deck-name" type="text" class="input-large">
                       <button type="submit" class="btn btn-primary">Add</button>
                     </form>
                 </div>
@@ -62,6 +65,36 @@
         var did = $(this).data('deck-id');
         var p = $.cookie('active-deck-id', did, {path: '/'});
     });
+
+    var $deckList = $('#deck-list'); // hidden if no decks exist
+    var $deckNameInput = $('#deck-name');
+    var $emptyMessage = $('#empty-message'); // displayed if no decks exist
+    // and now set up the submit handler for adding a deck in overview.html
+    $("#add-deck").submit(function() {
+        var self = $(this);
+        // TODO: validate
+        $.ajax({
+            url: self.attr("action"),
+            type: "POST",
+            data: {deck_name : $deckNameInput.val()},
+            success: function(response) {
+                if (response === '')
+                    return;
+
+                // as a precaution
+                $emptyMessage.hide();
+                $deckList.show();
+                $deckList.append(response);
+            },
+            error: function(data) {
+                if (DEBUG)
+                    alert("ajax error");
+            }
+        });
+        return false; // prevents default submit behavior, which would
+        // cause a broken pipe in our ajax app
+    });
+
 })();
 </script>
 {% endblock %}
