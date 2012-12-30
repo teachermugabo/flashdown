@@ -6533,6 +6533,19 @@ table .btn {
   white-space: nowrap;
 }
 
+#edit-card-modal {
+  width: 1000px;
+  margin-left: -500px;
+  /* -(width / 2) */
+
+}
+
+#edit-card-modal #card-editor {
+  margin-left: 30px;
+  /* margin:auto not working ?? */
+
+}
+
 html,
 body,
 .container,

@@ -185,6 +185,14 @@
 
         $('#deck-data').css({'display': 'table'});
 
+        var words = [];
+
+        $('td.ellipsis').each(function(i, el) {
+            words = words.concat($(this).text().split());
+        });
+
+        $($('#deck-data_filter input')[0]).typeahead({source: words});
+
     })();
 </script>
 {% endblock %}
