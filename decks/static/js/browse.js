@@ -10,7 +10,12 @@
     // show / hide previews if user clicks checkbox
     $('#show-preview').change(function() {
         $('.wmd-preview').toggle();
-    })
+    });
+
+    $('#show-controls').change(function() {
+        $('#wmd-button-bar-front').toggle();
+        $('#wmd-button-bar-back').toggle();
+    });
 
     /* DIFF
     // set cookie to keep track of the active deck
