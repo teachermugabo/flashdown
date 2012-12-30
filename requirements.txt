@@ -3,6 +3,7 @@ Markdown==2.2.0
 South==0.7.6
 argparse==1.2.1
 dj-database-url==0.2.1
+django-debug-toolbar==0.9.4
 django-pipeline==1.2.22
 html5lib==0.95
 psycopg2==2.4.6
