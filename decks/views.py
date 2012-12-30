@@ -50,10 +50,6 @@ def browse(request, deck_id=None):
     if deck_id is None:
         deck_id = request.COOKIES.get('active-deck-id', None)
 
-    print("deck_id:" + str(deck_id))
-    print()
-    print()
-
     decks = Tag.objects.filter(is_deck=True)
     deck = None
     cards = None
@@ -79,9 +75,6 @@ def browse(request, deck_id=None):
     if deck_id is not None and deck_id != '':
         deck_id = int(deck_id)  # template will compre this to deck.id
 
-    ctx = {'decks': decks, 'deck': deck,
-           'cards': cards, 'active_deck_id': deck_id}
-    print(ctx)
     return render_to_response('decks/browse.html',
                               {'decks': decks, 'deck': deck,
                                'cards': cards, 'active_deck_id': deck_id})
