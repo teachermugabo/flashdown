@@ -29,7 +29,6 @@ body {
 }
 
 .row form {
-  margin-bottom: 0;
   label {
     margin-left: 20px;
     &:first-child { margin-left: 0; }
@@ -62,7 +61,9 @@ body {
     .border-bottom-radius(0);
     border-left: none;
     border-right: none;
-    #gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground);
+    .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+
+    /*#gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground);*/
 
     .brand {
       color: #F9F9F9;
@@ -73,7 +74,8 @@ body {
 
 #deck-data thead {
   margin: 0;
-  #gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground);
+  .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+  /* #gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground); */
   color: #F9F9F9;
   font-weigth: bold;
 }
@@ -111,16 +113,18 @@ footer {
 
   #footer-links {
     display: inline-table;
-    margin: 3px auto;
   }
 }
 
 /* browse screen */
-#add-card {
-  width: 50%;
-  margin: auto;
-}
 
+// input addons
+.add-on { color: @darkTextColor; }
+
+// center the form at the top of the page
+#deck-select-form { text-align: center; }
+
+// the table on the browse page
 .table {
   h2 { margin-bottom: 0; }
   thead td {
@@ -135,13 +139,9 @@ footer {
   }
 }
 
-// 
 .table-buttons-col { width: 80px; }
 table .btn { padding: 0; width: 25px; height: 20px; }
 .card-front-browse { width: 80%; }
-
-// align review button with header
-#review-deck { position:relative; top:15px; }
 
 #deck-data {
   margin-bottom: 0;
@@ -160,3 +160,11 @@ table .btn { padding: 0; width: 25px; height: 20px; }
     margin-left: 30px; /* margin:auto not working ?? */
   }
 }
+
+// button
+#add-card {
+  width: 50%;
+  margin: auto;
+}
+
+

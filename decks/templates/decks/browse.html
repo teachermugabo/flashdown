@@ -13,30 +13,22 @@
 {% block dashboard_content %}
     <div class="row">
         <div class="span12">
-            <form class="form-inline is-padded" id="deck-select-form">
-                <label>Deck: </label>
-                <select id="deck-select">
-                {% for deck in decks %}
-                <p>{{ deck.id }}</p>
-                <p>{{ active_deck_id }}</p>
-                <option value="{{ deck.id }}"{% ifequal  deck.id active_deck_id %} selected{% endifequal %}>{{ deck.name }}</option>
-                {% endfor %}
-                </select>
+            <form class="form-horizontal is-padded" id="deck-select-form">
+                <div class="input-prepend">
+                    <span class="add-on">Deck: </span>
+                    <select id="deck-select">
+                        {% for deck in decks %}
+                        <p>{{ deck.id }}</p>
+                        <p>{{ active_deck_id }}</p>
+                        <option value="{{ deck.id }}"{% ifequal  deck.id active_deck_id %} selected{% endifequal %}>{{ deck.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <a id="review-deck" class="btn" href="{% url review deck_id=deck.id %}">Review</a>
             </form>
         </div>
     </div>
-
-    {% if deck %}
-    <div class="row">
-        <div class="span12">
-            <div class="is-padded">
-                <h2 id="deck-name" class="pull-left">{{ deck.name }}</h2>
-                <a id="review-deck" class="btn pull-right" href="{% url review deck_id=deck.id %}">Review</a>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
 
     <div class="row">
         <div class="span12">
@@ -82,7 +74,7 @@
 
     <div class="row">
         <div class="span12">
-            <a id="add-card" href="{% url add_cards_to_deck deck_id=deck.id %}" class="btn btn-primary btn-block addcard">Add Card</a>
+            <a id="add-card" class="btn btn-primary btn-block btn-large addcard" href="{% url add_cards_to_deck deck_id=deck.id %}">Add Card</a>
         </div>
     </div>
 {% endblock %}
@@ -159,7 +151,8 @@
                        back: inputBack.val()
                 },
                 success: function() {
-                    alert("you changed it");
+                    alert("you changed it. need a refresh!");
+                    $('#edit-card-modal').modal('hide');
                 }
             });
             return false;
@@ -188,7 +181,7 @@
         var words = [];
 
         $('td.ellipsis').each(function(i, el) {
-            words = words.concat($(this).text().split());
+            words = words.concat($(this).text().split(/\s+/));
         });
 
         $($('#deck-data_filter input')[0]).typeahead({source: words});

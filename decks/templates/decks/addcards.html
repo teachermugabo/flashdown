@@ -14,12 +14,15 @@
     <div class="row">
         <div class="span12">
             <form class="form-inline is-padded" id="deck-select-form">
-                <label>Deck: </label>
-                <select id="deck-select">
-                {% for deck in decks %}
-                <option value="{{ deck.id }}"{% if deck.id == active_deck_id %} selected{% endif %}>{{ deck.name }}</option>
-                {% endfor %}
-                </select>
+                <div class="input-prepend">
+                    <span class="add-on">Deck: </span>
+
+                    <select id="deck-select">
+                    {% for deck in decks %}
+                    <option value="{{ deck.id }}"{% if deck.id == active_deck_id %} selected{% endif %}>{{ deck.name }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
                 <label class="checkbox">
                     <input id="show-preview" type="checkbox" checked="checked"> Show Preview
                 </label>
@@ -59,7 +62,7 @@
             <form id="new-card-form" action="{% url new_card %}" method="post" class="is-padded">
                 {% csrf_token %}
                 <input type="hidden" name="deck-id" id="deck-id-input" value="{{ active_deck_id }}"></input>
-                <button id="add-card" type="submit" class="btn btn-primary btn-block" tabindex="3">Add</button>
+                <button id="add-card" type="submit" class="btn btn-primary btn-block btn-large" tabindex="3">Add</button>
             </form>
         </div>
     </div>
