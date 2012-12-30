@@ -1,8 +1,8 @@
 /* boostrap customizations */
 
-@blockHeaderBackground: #386EA5;
-@blockHeaderHighlight: lighten(@blockHeaderBackground, 20%);
-@blockHeaderColor: #c7c7c7;
+//@blockHeaderBackground: #386EA5;
+//@blockHeaderHighlight: lighten(@blockHeaderBackground, 20%);
+//@blockHeaderColor: #c7c7c7;
 
 @bgColor: #9cc2d5; //#343434;
 @contentBgColor: lighten(#343434, 10%);
@@ -54,6 +54,10 @@ body {
   }
 }
 
+// mixin
+.headerBackground {
+  .buttonBackground(@hdrPrimaryBackground, @hdrPrimaryBackgroundHighlight);
+}
 // header made from navbar
 .navbar-header {
   margin: 0;
@@ -61,7 +65,7 @@ body {
     .border-bottom-radius(0);
     border-left: none;
     border-right: none;
-    .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+    .headerBackground;
 
     /*#gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground);*/
 
@@ -74,7 +78,7 @@ body {
 
 #deck-data thead {
   margin: 0;
-  .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+  .headerBackground;
   /* #gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground); */
   color: #F9F9F9;
   font-weigth: bold;

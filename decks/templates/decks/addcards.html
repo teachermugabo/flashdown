@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    {% if active_deck_id %}
+    {% if decks %}
     <div class="row">
         <div id="card-editor" class="span12">
             <div class="span6 wmd-container">
@@ -80,6 +80,7 @@
 {% endblock %}
 
 {% block js %}
+    {% if decks %}
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
             elements: ['wmd-preview-back', 'wmd-preview-front'],
@@ -100,6 +101,6 @@
     <script src="{% static "js/pagedown-bootstrap/Markdown.Extra.js" %}"></script> 
     <script src="{% static "js/prettify.js" %}"></script>
     <script src="{% static "js/addcards.js" %}"></script>
-
+    {% endif %}
 {% endblock %}
 

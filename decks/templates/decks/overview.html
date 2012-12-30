@@ -61,7 +61,7 @@
 {% block js %}
 <script>
 (function() {
-    $('#deck_list a.viewdeck').click(function() {
+    $('#deck-list a.viewdeck').click(function() {
         var did = $(this).data('deck-id');
         var p = $.cookie('active-deck-id', did, {path: '/'});
     });

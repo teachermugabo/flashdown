@@ -35,7 +35,7 @@
     <div class="row">
         <div class="span12">
             <div class="is-padded">
-                {% if deck %}
+                {% if deck and cards %}
                 <table id="deck-data" class="table table-striped">
                     <col span="1">
                     <col span="1">
@@ -48,7 +48,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% if cards %}
                         {% for card in cards %}
                         <tr>
                             {# card.front|markdown|sanitize #}
@@ -62,11 +61,10 @@
                             </td>
                         </tr>
                         {% endfor %}
-                    {% else %}
-                    <tr><td colspan="3" style="text-align:center">This deck doesn't contain any cards. Click the button below to add some.</td></tr>
-                    {% endif %}
                     </tbody>
                 </table>
+                {% elif deck %}
+                <p style="text-align:center">This deck doesn't contain any cards. Click the button below to add some.</p>
                 {% else  %}
                 <p style="text-align:center;">You haven't created any decks. <a href="{% url overview %}">Click here</a> to get started.</p>
                 {% endif %}
@@ -77,7 +75,7 @@
     {% if deck %}
     <div class="row">
         <div class="span12">
-            <a id="add-card" class="btn btn-primary btn-block btn-large addcard" href="{% url add_cards_to_deck deck_id=deck.id %}">Add Card</a>
+            <a id="add-card" class="btn btn-primary btn-block btn-large addcard" href="{% url add_cards_to_deck deck_id=deck.id %}">Add Cards</a>
         </div>
     </div>
     {% endif %}

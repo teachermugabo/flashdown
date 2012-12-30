@@ -16,17 +16,25 @@ def add_cards(request, deck_id=None):
     if deck_id is None:
         deck_id = request.COOKIES.get('active-deck-id', None)
 
+    # TODO: what if we're passed some random string here using this cookie?
+
     decks = Tag.objects.filter(is_deck=True)
 
     if deck_id is None:
         if decks.count() > 0:
             deck_id = decks[0].id
+    else:
+        try:
+            Tag.objects.filter(pk=deck_id)
+        except Tag.DoesNotExist:
+            deck_id = None   # we got an invalid id
 
     if deck_id is not None:
         deck_id = int(deck_id)
 
     if decks == []:
         deck_id = None
+
 
     return render_to_response('decks/addcards.html',
                               {'decks': decks, 'active_deck_id': deck_id},
@@ -42,6 +50,10 @@ def browse(request, deck_id=None):
     if deck_id is None:
         deck_id = request.COOKIES.get('active-deck-id', None)
 
+    print("deck_id:" + str(deck_id))
+    print()
+    print()
+
     decks = Tag.objects.filter(is_deck=True)
     deck = None
     cards = None
@@ -52,8 +64,6 @@ def browse(request, deck_id=None):
         except Tag.DoesNotExist:
             deck_id = None
 
-        if deck and not deck.is_deck:  #TODO: do we care if we're browsing decks vs tags?
-            return HttpResponse(code=400)
 
     elif decks.count() > 0:
          # no deck_id, no active deck cookie - just get the first one
@@ -61,11 +71,17 @@ def browse(request, deck_id=None):
         deck_id = deck.id
 
     if deck:
-        cards = deck.deck_cards.filter(deleted=False)
+        if not deck.is_deck:  #TODO: do we care if we're browsing decks vs tags?
+            deck = None
+        else:
+            cards = deck.deck_cards.filter(deleted=False)
 
     if deck_id is not None and deck_id != '':
         deck_id = int(deck_id)  # template will compre this to deck.id
 
+    ctx = {'decks': decks, 'deck': deck,
+           'cards': cards, 'active_deck_id': deck_id}
+    print(ctx)
     return render_to_response('decks/browse.html',
                               {'decks': decks, 'deck': deck,
                                'cards': cards, 'active_deck_id': deck_id})
