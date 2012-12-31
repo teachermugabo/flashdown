@@ -129,7 +129,10 @@ body {
 // add, play, settings buttons
 table .btn { padding: 0; width: 25px; height: 20px; }
 
-#deck-list { table-layout: fixed; }
+#deck-list {
+  table-layout: fixed;
+  .ellipsis { .text-overflow; }
+}
 
 #deck-data {
   margin-bottom: 0;
@@ -166,4 +169,6 @@ table .btn { padding: 0; width: 25px; height: 20px; }
   }
 }
 
+// style text selections
+::selection { background: @accentColor !important; }
 

@@ -17,9 +17,9 @@
                     <table id="deck-list"{% if not decks %} style="display:none;"{% endif %} class="table table-striped">
                        <thead>
                             <tr>
-                                <th>Deck</th>
-                                <th>Total Cards</th>
-                                <th>Due</th>
+                                <th style="width:60%">Deck</th>
+                                <th style="width:20%">Cards</th>
+                                <th style="width:20%">Due</th>
                                 <th style="width:90px">Settings</th>
                             </tr>
                         </thead>
@@ -89,10 +89,13 @@
                 if (response === '')
                     return;
 
-                // as a precaution
+                // as a precaution. 
                 $emptyMessage.hide();
                 $deckList.show();
+
                 $deckList.append(response);
+
+                $deckNameInput.val('');
             },
             error: function(data) {
                 if (DEBUG)

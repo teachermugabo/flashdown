@@ -6580,6 +6580,12 @@ table .btn {
   table-layout: fixed;
 }
 
+#deck-list .ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 #deck-data {
   display: none;
   margin-bottom: 0;
@@ -6623,6 +6629,10 @@ table .btn {
      -moz-transition: none;
        -o-transition: none;
           transition: none;
+}
+
+::selection {
+  background: #f89406 !important;
 }
 
 html,
