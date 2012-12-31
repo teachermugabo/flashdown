@@ -5,6 +5,7 @@ from datetime import datetime
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     is_deck = models.BooleanField(default=False) # for filtering purposes
+    deleted = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name

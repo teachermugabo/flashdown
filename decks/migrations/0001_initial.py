@@ -13,6 +13,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=50)),
             ('is_deck', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('deleted', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('decks', ['Tag'])
 
@@ -64,6 +65,7 @@ class Migration(SchemaMigration):
         },
         'decks.tag': {
             'Meta': {'object_name': 'Tag'},
+            'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_deck': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '50'})
