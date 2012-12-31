@@ -238,6 +238,13 @@ tt {
   resize: none;
 }
 
+.wmd-input:focus {
+  border-color: #25b6ff;
+  -webkit-box-shadow: inset 0 1px 1px #25b6ff, 0 0 8px #25b6ff;
+     -moz-box-shadow: inset 0 1px 1px #25b6ff, 0 0 8px #25b6ff;
+          box-shadow: inset 0 1px 1px #25b6ff, 0 0 8px #25b6ff;
+}
+
 .wmd-preview {
   word-wrap: break-word;
 }

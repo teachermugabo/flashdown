@@ -44,10 +44,6 @@
                             <th style="width:60px">Edit</th>
                         </tr>
                     </thead>
-                    <colgroup>
-                        <col span="2">
-                        <col span="1" id="browse-table-buttons-col">
-                    </colgroup>
                     <tbody>
                         {% for card in cards %}
                         <tr>
@@ -55,9 +51,9 @@
                             <td class="ellipsis">{{ card.front }}</td>
                             <td class="ellipsis">{{ card.back }}</td>
                             {# this first link is handled in js - brings up a modal #}
-                            <td><a href="#" data-id="{{ card.id }}" class="btn btn-success editcard">
+                            <td><a href="#" data-id="{{ card.id }}" class="btn btn-success editcard" rel="tooltip" title="Edit Card">
                                     <i class="icon-edit icon-large"></i></a>
-                                <a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn btn-danger delete-card pull-right">
+                                <a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn btn-danger delete-card pull-right" rel="tooltip" title="Delete Card">
                                     <i class="icon-trash icon-large"></i></a>
                             </td>
                         </tr>
@@ -118,6 +114,9 @@
             var did = $(this).val();
             $.cookie('active-deck-id', did, {path: '/'});
         });
+
+        $.fn.tooltip.defaults.animation = false;;
+        $("#deck-data").tooltip({ selector: '[rel=tooltip]' });
 
         var inputFront = $('#wmd-input-front');
         var inputBack = $('#wmd-input-back');

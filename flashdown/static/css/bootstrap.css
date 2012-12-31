@@ -216,7 +216,7 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
-  color: #ffffff;
+  color: #333333;
   background-color: #ffffff;
 }
 
@@ -1618,7 +1618,7 @@ select:focus:invalid:focus {
 
 .help-block,
 .help-inline {
-  color: #ffffff;
+  color: #595959;
 }
 
 .help-block {
@@ -6345,7 +6345,8 @@ a.badge:hover {
 body {
   font-family: 'Raleway', sans-serif;
   line-height: 1.5em;
-  background-color: #9cc2d5;
+  color: white;
+  background-color: #707070;
   background-image: url('../img/graybg.jpg');
 }
 
@@ -6572,6 +6573,10 @@ table .btn {
   padding: 0;
 }
 
+#deck-list {
+  table-layout: fixed;
+}
+
 #deck-data {
   display: none;
   margin-bottom: 0;
@@ -6602,6 +6607,19 @@ table .btn {
 #add-card {
   width: 50%;
   margin: auto;
+  border: 1px solid #25b6ff;
+}
+
+#add-card:hover,
+#add-card:focus {
+  color: white;
+  background-color: #f89406;
+  background-position: 0 -50px;
+  border: 1px solid #f89406;
+  -webkit-transition: none;
+     -moz-transition: none;
+       -o-transition: none;
+          transition: none;
 }
 
 html,
@@ -6644,7 +6662,7 @@ body,
 
 footer .container {
   text-align: center;
-  border-top: 2px dashed orange;
+  border-top: 2px dashed #f89406;
 }
 
 footer #footer-links {

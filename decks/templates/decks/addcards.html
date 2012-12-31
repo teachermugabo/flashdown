@@ -65,7 +65,7 @@
             <form id="new-card-form" action="{% url new_card %}" method="post" class="is-padded">
                 {% csrf_token %}
                 <input type="hidden" name="deck-id" id="deck-id-input" value="{{ active_deck_id }}"></input>
-                <button id="add-card" type="submit" class="btn btn-primary btn-block btn-large" tabindex="3">Add</button>
+                <button id="add-card" type="submit" class="btn btn-block btn-large" tabindex="3">Add</button>
             </form>
         </div>
     </div>

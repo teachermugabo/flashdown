@@ -1,19 +1,10 @@
 /* boostrap customizations */
 
-//@blockHeaderBackground: #386EA5;
-//@blockHeaderHighlight: lighten(@blockHeaderBackground, 20%);
-//@blockHeaderColor: #c7c7c7;
-
-@bgColor: #9cc2d5; //#343434;
-@contentBgColor: lighten(#343434, 10%);
-@blockBgColor: #F9F9F9;
-@textColor: white;
-@darkTextColor: darken(@navbarText, 20%);
-
 body {
   line-height: 1.5em;
   background-image:url('../img/graybg.jpg');
   background-color: @bgColor;
+  color: white;
   font-family: 'Raleway', sans-serif;
 }
 
@@ -161,8 +152,18 @@ table .btn { padding: 0; width: 25px; height: 20px; }
 
 // button
 #add-card {
+  border: 1px solid @linkColor;
   width: 50%;
   margin: auto;
+
+  &:hover, &:focus {
+    /* Turn off default bootstrap styles */
+    background-color: @accentColor;
+    background-position: 0 -50px;
+    border: 1px solid @accentColor;
+    color: white;
+    .transition(none);
+  }
 }
 
 
