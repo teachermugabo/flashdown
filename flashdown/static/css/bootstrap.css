@@ -6468,7 +6468,9 @@ body {
 }
 
 .navbar-header .navbar-inner .brand {
-  color: #F9F9F9;
+  color: white;
+  /*#F9F9F9; */
+
   text-shadow: 0 1px 0 #777;
 }
 
@@ -6523,6 +6525,7 @@ body {
 }
 
 #card-editor h2.card-name {
+  font-weight: normal;
   text-align: center;
 }
 
