@@ -25,7 +25,7 @@ def add_cards(request, deck_id=None):
 
     # TODO: what if we're passed some random string here using this cookie?
 
-    decks = Tag.objects.filter(is_deck=True)
+    decks = Tag.objects.filter(is_deck=True, deleted=False)
 
     if deck_id is None:
         if decks.count() > 0:
