@@ -2,33 +2,29 @@
 
 import os
 
-DEBUG = True
+SITE_ROOT = os.path.dirname(__file__)
+DECK_ROOT = os.path.join(os.path.dirname(SITE_ROOT), 'decks')
 
-# already added 'LIVE_SITE' environment variable to heroku dev environment with `heroku config:add`
-if os.environ.has_key('LIVE_SITE'):
-    DEBUG = False
-
+DEBUG = False if os.environ.has_key('LIVE_SITE') else True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
-
-import os
-SITE_ROOT = os.path.dirname(__file__)
-DECK_ROOT = os.path.join(os.path.dirname(SITE_ROOT), 'decks')
-
 MANAGERS = ADMINS
-
 
 # Heroku - Load database config info from DATABASE_URL environment variable, if
 # set. Otherwise use our local config.
 import dj_database_url
 
-if not os.environ.has_key('DATABASE_URL'):
-    os.environ['DATABASE_URL'] = 'postgres://django_login:password@localhost/django_db'
+if DEBUG:
+    db_url = 'postgres://django_login:password@localhost/django_db'
+else:
+    db_url = os.environ['DATABASE_URL']
 
-DATABASES = {'default': dj_database_url.config(default=os.environ['DATABASE_URL'])}
+DATABASES = {
+    'default': dj_database_url.config(default=db_url)
+}
 
 
 # Local time zone for this installation. Choices can be found here:
@@ -106,7 +102,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware', # only enabled in DEBUG
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )

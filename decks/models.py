@@ -1,6 +1,6 @@
 from django.db import models
 #from django.utils import timezone
-from datetime import datetime
+from django.utils import timezone #
 
 class Tag(models.Model):
     name = models.CharField(max_length=50)
@@ -14,7 +14,7 @@ class Tag(models.Model):
         return self.deck_cards.filter(deleted=False).count()
 
     def due_count(self):
-        return self.deck_cards.filter(next_due__lt=datetime.now()).count()
+        return self.deck_cards.filter(next_due__lt=timezone.now()).count()
 
 class Card(models.Model):
     front = models.TextField()
@@ -31,7 +31,8 @@ class Card(models.Model):
         return self.front + "\n" + self.back
 
     def is_due(self):
-        return self.next_due < datetime.now()
+        #return self.next_due < datetime.datetime.utcnow().replace(tzinfo=utc) <-- correct but long
+        return self.next_due < timezone.now()
 
 
 # vim: set ai et ts=4 sw=4 sts=4 :
