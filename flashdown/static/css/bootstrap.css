@@ -6572,7 +6572,11 @@ footer #footer-links {
   background-color: white;
 }
 
-.table-buttons-col {
+#overview-table-buttons-col {
+  width: 100px;
+}
+
+#browse-table-buttons-col {
   width: 80px;
 }
 

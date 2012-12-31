@@ -12,7 +12,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 # by future refactoring of templates.
 @ensure_csrf_cookie
 def overview(request):
-    decks = Tag.objects.filter(is_deck=True)
+    decks = Tag.objects.filter(is_deck=True, deleted=False)
     # do we need the RequestContext?
     return render_to_response('decks/overview.html',
                               {'decks' : decks},
@@ -57,7 +57,7 @@ def browse(request, deck_id=None):
     if deck_id is None:
         deck_id = request.COOKIES.get('active-deck-id', None)
 
-    decks = Tag.objects.filter(is_deck=True)
+    decks = Tag.objects.filter(is_deck=True, deleted=False)
     deck = None
     cards = None
 
@@ -68,7 +68,7 @@ def browse(request, deck_id=None):
             deck_id = None
 
 
-    elif decks.count() > 0:
+    elif decks and len(decks) > 0:
          # no deck_id, no active deck cookie - just get the first one
         deck = decks[0]
         deck_id = deck.id
@@ -117,13 +117,26 @@ def new_deck(request):
     deck_name = request.POST["deck_name"][:50]
     deck = None
     try:
-        deck = Tag.objects.get(name=deck_name)
+        deck = Tag.objects.get(name=deck_name, deleted=False) # will be 0 or 1 of these
         return HttpResponse(status=200) # already exists, don't send a new list item
     except Tag.DoesNotExist:
         deck = Tag(name=deck_name, is_deck=True)
         deck.save()
 
     return render_to_response('decks/deckinfo_partial.html', {'deck' : deck})
+
+def delete_deck(request, deck_id):
+    if not request.is_ajax() or request.method != 'POST':
+        return HttpResponseBadRequest()
+
+    deck = get_object_or_404(Tag, pk=deck_id, deleted=False)
+    if not deck.is_deck:
+        return HttpResponseBadRequest()
+
+    deck.deleted = True # keep it around in case we want to restore it later
+    deck.save()
+
+    return HttpResponse() #status=200 OK
 
 
 def new_card(request):

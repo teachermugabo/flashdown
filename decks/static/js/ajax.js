@@ -34,28 +34,5 @@ $(function() {
         }
     });
 
-   // add this class to a delete link to submit it via ajax
-    $(".delete-card").click(function() {
-        var self = $(this);
-        $.ajax({
-            url: self.attr("href"),
-            type: "POST",
-            data: {},
-            success: function(response) {
-                tr = self.closest("tr");
-                tr.fadeOut("slow", function() {
-                    $(this).remove();
-                });
-            },
-            error: function(data) {
-                if (DEBUG)
-                    alert("ajax error deleting deck");
-            }
-        });
-        return false; // prevents default submit behavior, which would
-        // cause a broken pipe in our ajax app
-
-    });
-
 });
 

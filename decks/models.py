@@ -3,7 +3,7 @@ from django.db import models
 from datetime import datetime
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     is_deck = models.BooleanField(default=False) # for filtering purposes
     deleted = models.BooleanField(default=False)
 

@@ -2,4 +2,11 @@
     <td><a data-deck-id="{{deck.id}}" class="viewdeck" href="{% url browse deck_id=deck.id %}">{{ deck.name }}</a></td>
     <td>{{ deck.card_count }}</td>
     <td>{{ deck.due_count }}</td>
+    <td><a href={% url review deck_id=deck.id %} class="btn btn-success play-deck">
+            <i class="icon-play icon-large"></i></a>
+        <a href="#" data-id="{{ deck.id }}" class="btn edit-deck">
+            <i class="icon-cog icon-large"></i></a>
+        <a href="{% url delete_deck deck_id=deck.id %}" class="btn btn-danger delete-deck">
+            <i class="icon-trash icon-large"></i></a>
+    </td>
 </tr>

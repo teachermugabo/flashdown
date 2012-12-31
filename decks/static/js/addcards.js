@@ -25,6 +25,28 @@
         $.cookie('active-deck-id', did, {path: '/'});
     });
 
+   // add this class to a delete link to submit it via ajax
+    $(".delete-card").click(function() {
+        var self = $(this);
+        $.ajax({
+            url: self.attr("href"),
+            type: "POST",
+            data: {},
+            success: function(response) {
+                tr = self.closest("tr");
+                tr.fadeOut("slow", function() {
+                    $(this).remove();
+                });
+            },
+            error: function(data) {
+                if (DEBUG)
+                    alert("ajax error delete card");
+            }
+        });
+        return false; // prevents default submit behavior, which would
+        // cause a broken pipe in our ajax app
+
+    });
 
     $('#new-card-form').submit(function() {
         var data = {'deck-id': $('#deck-id-input').val(),

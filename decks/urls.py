@@ -25,14 +25,17 @@ urlpatterns = patterns('decks.views',
     # get a card by its id
     url(r'^get-card/(?P<card_id>\d+)/$', 'get_card', name='get_card'),
 
-    # update card data (ajax)
-    url(r'^update-card/$', 'update_card', name='update_card'),
+    # add a new deck (ajax)
+    url(r'^new-deck/$', 'new_deck', name='new_deck'),
+
+    # delete a deck (ajax)
+    url(r'^(?P<deck_id>\d+)/delete-deck/$', 'delete_deck', name='delete_deck'),
 
     # add a new card (ajax)
     url(r'^new-card/$', 'new_card', name='new_card'),
 
-    # add a new deck (ajax)
-    url(r'^new-deck/$', 'new_deck', name='new_deck'),
+    # update card data (ajax)
+    url(r'^update-card/$', 'update_card', name='update_card'),
 
     # delete a card (ajax)
     url(r'^(?P<deck_id>\d+)/delete-card/(?P<card_id>\d+)/$', 'delete_card', name='delete_card'),

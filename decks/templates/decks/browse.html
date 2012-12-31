@@ -37,16 +37,17 @@
             <div class="is-padded">
                 {% if deck and cards %}
                 <table id="deck-data" class="table table-striped">
-                    <col span="1">
-                    <col span="1">
-                    <col span="1" class="table-buttons-col">
                     <thead>
                         <tr>
-                            <td>Front</td>
-                            <td>Back</td>
-                            <td>Edit</td>
+                            <th>Front</th>
+                            <th>Back</th>
+                            <th>Edit</th>
                         </tr>
                     </thead>
+                    <colgroup>
+                        <col span="2">
+                        <col span="1" id="browse-table-buttons-col">
+                    </colgroup>
                     <tbody>
                         {% for card in cards %}
                         <tr>

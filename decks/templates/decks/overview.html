@@ -15,21 +15,29 @@
 
                 <div class="content-wrapper">
                     <table id="deck-list"{% if not decks %} style="display:none;"{% endif %} class="table table-striped">
-                        <thead>
+                       <thead>
                             <tr>
-                                <td>Deck</td>
-                                <td>Total Cards</td>
-                                <td>Due</td>
+                                <th>Deck</th>
+                                <th>Total Cards</th>
+                                <th>Due</th>
+                                <th></th>
                             </tr>
                         </thead>
-
+                        <colgroup>
+                            <col span="3">
+                            <col span="1" id="overview-table-buttons-col">
+                        </colgroup>
+                         <tbody>
                         {% for deck in decks %}
                           {% include "decks/deckinfo_partial.html" with deck=deck %}
                         {% endfor %}
+                        </tbody>
                     </table>
 
                     {% if not decks %}
                     <p id="empty-message" style="text-align:center;">Your decks will be displayed here once you create them.</p>
+                    {% else %}
+                    <p id="empty-message" style="text-align:center;display:none;">Your decks will be displayed here once you create them.</p>
                     {% endif %}
 
                     <form id="add-deck" action="{% url new_deck %}" method="post" class="form-inline">
@@ -89,13 +97,40 @@
             },
             error: function(data) {
                 if (DEBUG)
-                    alert("ajax error");
+                    alert("ajax error on add deck");
             }
         });
         return false; // prevents default submit behavior, which would
         // cause a broken pipe in our ajax app
     });
 
+
+    // overview controls
+    $('#deck-list').on('click', '.delete-deck', function() {
+        var self = $(this);
+        $.ajax({
+            url: self.attr('href'),
+            type: 'POST',
+            success: function() {
+                tr = self.closest('tr');
+                tr.fadeOut('slow', function() {
+                    $(this).remove();
+                    if ($deckList.find('tbody tr').length == 0) {
+                        $deckList.hide();
+                        $emptyMessage.show();
+                    }
+                });
+            },
+            error: function() {
+                if (DEBUG)
+                    alert("ajax error on delete deck");
+            }
+        });
+        return false;
+    });
+
+    //$('.edit-deck').click(function() { })
+    //$('.play-deck').click(function() { })
 })();
 </script>
 {% endblock %}
