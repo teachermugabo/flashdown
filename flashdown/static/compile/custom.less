@@ -89,6 +89,8 @@ body {
 .wrapper {
   width: 940px;
   background-color: @contentBgColor;
+  border-left: 1px dotted @linkColor;
+  border-right: 1px dotted @linkColor;
   .proper-content > .container:first-child {
     margin-top: 20px;
     .row:last-child { margin-bottom: 20px; }
@@ -108,16 +110,6 @@ body {
         width: inherit;
         display: inline-block;
     }
-}
-
-footer {
-  .container {
-    text-align: center;
-  }
-
-  #footer-links {
-    display: inline-table;
-  }
 }
 
 /* browse screen */
@@ -143,10 +135,10 @@ footer {
   }
 }
 
-#overview-table-buttons-col { width: 100px; }
-#browse-table-buttons-col { width: 80px; }
+// add, play, settings buttons
 table .btn { padding: 0; width: 25px; height: 20px; }
-.card-front-browse { width: 80%; }
+
+#deck-list { table-layout: fixed; }
 
 #deck-data {
   margin-bottom: 0;
@@ -158,6 +150,7 @@ table .btn { padding: 0; width: 25px; height: 20px; }
   }
 }
 
+// center the editors in the modal, and the modal itself
 #edit-card-modal {
   width: 1000px;
   margin-left: -500px; /* -(width / 2) */

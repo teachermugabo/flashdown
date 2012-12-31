@@ -1,4 +1,4 @@
-@footerHeight: 40px;
+@footerHeight: @navbarHeight + 2; // accountn for the footer top border
 
 html, body, .container, .content {
     height: 100%;
@@ -16,18 +16,36 @@ html, body, .container, .content {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    margin: 0 auto -@navbarHeight; /* same as the footer */
+    margin: 0 auto -@footerHeight; /* same as the footer */
 }
 
 .push {
-    height: @navbarHeight; /* same as the footer */
+    height: @footerHeight; /* same as the footer */
 }
 
 .footer-wrapper {
     position: relative;
-    height: @navbarHeight;
-
-    background-color: @navbarBackground;
-    color: @navbarText;
+    height: @footerHeight;
 }
+
+/* not sticky-footer related */
+footer {
+  .container {
+    text-align: center;
+    border-top: 2px dashed orange;
+  }
+
+  #footer-links {
+    display: inline-table;
+    margin: 3px 0 0; /* changing this to anything other than 0 breaks the sticky footer */
+  }
+  .nav > li > a {
+    color: @linkColor;
+    &:hover {
+        color: white; 
+        background-color: transparent;
+    }
+  }
+}
+
 

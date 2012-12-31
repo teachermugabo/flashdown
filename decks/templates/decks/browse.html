@@ -41,7 +41,7 @@
                         <tr>
                             <th>Front</th>
                             <th>Back</th>
-                            <th>Edit</th>
+                            <th style="width:60px">Edit</th>
                         </tr>
                     </thead>
                     <colgroup>
@@ -76,7 +76,7 @@
     {% if deck %}
     <div class="row">
         <div class="span12">
-            <a id="add-card" class="btn btn-primary btn-block btn-large addcard" href="{% url add_cards_to_deck deck_id=deck.id %}">Add Cards</a>
+            <a id="add-card" class="btn btn-block btn-large addcard" href="{% url add_cards_to_deck deck_id=deck.id %}">Add Cards</a>
         </div>
     </div>
     {% endif %}
