@@ -51,8 +51,12 @@
           {% endblock %}
       </div>
 
+    <!-- modals -->
+    {% include "decks/login_modals.html" %}
+
     {% block modals %}
     {% endblock %}
+    <!-- end modals -->
 
     <!-- JS - placed at the end of the document so the pages load faster -->
     {% compress js %}
@@ -62,6 +66,7 @@
     <script src="{{ STATIC_URL }}js/bootstrap.js"></script>
     <script src="{{ STATIC_URL }}js/ajax.js"></script>
     <script src="{{ STATIC_URL }}js/jquery-placeholder.js"></script> <!-- emulate html5 placeholder attribute -->
+    <script src="{{ STATIC_URL }}js/modals.js"></script> <!-- show modals if errors -->
     {% endcompress %}
     {% block js %} {% endblock %}
 

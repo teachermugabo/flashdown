@@ -1,0 +1,21 @@
+{% load staticfiles %}
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="nav pull-left" id="logo">
+                    <img src={% static "t4logo_v0.25_50.png" %} />
+                </div>
+                <ul class="nav pull-right">
+                    <li><a id="register-button" data-toggle="modal" href="/#register-modal">Register</a></li>
+                    <li><a id="login-button" data-toggle="modal" href="/#login-modal">Login</a></li>
+                    <li><a href="{% url socialauth_begin 'facebook' %}"><img id="facebook_login_icon" alt="Facebook Login" src={% static "fb_login_icon.gif" %}/></a></li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li><a href="/">Welcome, guest</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+

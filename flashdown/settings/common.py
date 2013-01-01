@@ -196,6 +196,12 @@ THIRD_PARTY_APPS = (
 
     # Asynchronous task queue:
     'djcelery',
+
+    # Crispy Bootstrap forms:
+    'crispy_forms',
+
+    # Painless password reset:
+    'password_reset',
 )
 
 LOCAL_APPS = (
@@ -258,3 +264,13 @@ COMPRESS_JS_FILTERS = [
     'compressor.filters.template.TemplateFilter',
 ]
 ########## END COMPRESSION CONFIGURATION
+
+########## CRISPY FORMS CONFIGURATION
+# let django-crispy-forms know we're using bootstrap
+CRISPY_TEMPLATE_PACK = 'bootstrap'
+
+# don't log silently while we're in debug mode
+CRISPY_FAIL_SILENTLY = not DEBUG
+########## END CRISPY FORMS CONFIGURATION
+
+

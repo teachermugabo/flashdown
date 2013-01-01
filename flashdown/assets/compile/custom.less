@@ -172,3 +172,14 @@ table .btn { padding: 0; width: 25px; height: 20px; }
 // style text selections
 ::selection { background: @accentColor !important; }
 
+// icon colors on navbar link hover
+.navbar .nav > li > a {
+    &:hover { color: @linkColor; }
+    &:hover i { color: @accentColor; }
+}
+
+.navbar-text {
+    margin-right: 1em;
+}
+
+.navbar .btn { color: @navbarText; }

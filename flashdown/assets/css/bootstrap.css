@@ -6640,6 +6640,22 @@ table .btn {
   background: #f89406 !important;
 }
 
+.navbar .nav > li > a:hover {
+  color: #25b6ff;
+}
+
+.navbar .nav > li > a:hover i {
+  color: #f89406;
+}
+
+.navbar-text {
+  margin-right: 1em;
+}
+
+.navbar .btn {
+  color: #777777;
+}
+
 html,
 body,
 .container,

@@ -3,6 +3,12 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('apps.decks.views',
     url(r'^/?$', 'overview', name='overview'),
 
+    # user registration
+    url(r'^register/$', 'register', name='register'),
+    url(r'^login/$', 'login', name='login'),
+    url(r'^logout/$', 'logout', name='logout'),
+    url(r'^recover/$', 'recover', name='password_reset_recover'),
+
     # open editor for a new card (optionally specify the deck)
     url(r'^add-cards/$', 'add_cards', name='add_cards'),
     url(r'^(?P<deck_id>\d+)/add-cards/$', 'add_cards', name='add_cards_to_deck'),

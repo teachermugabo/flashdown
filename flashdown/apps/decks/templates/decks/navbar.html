@@ -41,9 +41,18 @@
                             </a>
                         </li>
                     </ul>
-                    <p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>
+                    {% if user.is_authenticated %}
+                    <a class="btn pull-right" id="logout-button" href="{% url logout %}"><i class="icon-signout"></i> Logout</a>
+                    <ul class="nav pull-right">
+                        <li>
+                        <p class="navbar-text"><i class="icon-user"></i> <a href="#">{{ user.username }}</a></p>
+                        </li>
+                    </ul>
+                    {% else %}
+                    <p class="navbar-text pull-right"><a id="register-button" data-toggle="modal" href="#register-modal">Register</a></p>
+                    <p class="navbar-text pull-right"><a id="login-button" data-toggle="modal" href="#login-modal">Login</a>&nbsp;&nbsp;</p>
+                    {% endif %}
                   </div><!--/.nav-collapse -->
                 </div>
               </div>
             </div>
- 
