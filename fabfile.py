@@ -77,6 +77,11 @@ def migrate(app=None):
 def collectstatic():
     """Collect all static files, and copy them to S3 for production usage."""
     local('%(run)s collectstatic --noinput' % env)
+
+@task
+def compress():
+    """Pre-compress blocks, and copy the compressed files to S3."""
+    local('%(run)s compress' % env)
 ########## END FILE MANAGEMENT
 
 
@@ -112,12 +117,22 @@ def bootstrap():
             "Couldn't initialize New Relic, continue anyway?")
 
 
-@task
-def destroy():
-    """Destroy this Heroku application. Wipe it from existance.
+#@task
+#def destroy():
+#    """Destroy this Heroku application. Wipe it from existance.
+#
+#    .. note::
+#        This really will completely destroy your application. Think twice.
+#    """
+#    local('heroku apps:destroy')
 
-    .. note::
-        This really will completely destroy your application. Think twice.
-    """
-    local('heroku apps:destroy')
+@task
+def deploy():
+    cont('git push heroku master',
+            "Couldn't push your application to Heroku, continue anyway?")
+    syncdb()
+    migrate()
+    collectstatic()
+    compress()
+
 ########## END HEROKU MANAGEMENT
