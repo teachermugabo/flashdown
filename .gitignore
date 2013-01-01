@@ -1,48 +1,23 @@
-### /home/justin/.gitignore-boilerplates/Python.gitignore
-static
-collected
+# Python bytecode:
+*.py[co]
 
-*.py[cod]
+# Packaging files:
+*.egg*
 
-# C extensions
-*.so
+# Editor temp files:
+*.swp
+*~
 
-# Packages
-*.egg
-*.egg-info
-dist
+# Sphinx docs:
 build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
 
-# Installer logs
-pip-log.txt
+# SQLite3 database files:
+*.db
 
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
+# Celerybeat scheduler file:
+celerybeat-schedule
 
-# Translations
-*.mo
+# Cached static files
+flashdown/static
 
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-
-### /home/justin/.gitignore-boilerplates/Django.gitignore
-
-*.log
-*.pot
 *.pyc
-local_settings.py
-

@@ -1,0 +1,199 @@
+{% extends "decks/dashboard.html" %}
+{% load compress %}
+
+{% block css %}
+{% compress css %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/prettify.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/markdown-editor.css" />
+{% endcompress %}
+{% endblock %}
+
+{% block dashboard_subnav %}
+    {% include "decks/dashboard_subnav.html" with active="browse" %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="row">
+        <div class="span12">
+            <form class="form-horizontal is-padded" id="deck-select-form">
+                <div class="input-prepend">
+                    <span class="add-on">Deck: </span>
+                    <select id="deck-select">
+                        {% for deck in decks %}
+                        <p>{{ deck.id }}</p>
+                        <p>{{ active_deck_id }}</p>
+                        <option value="{{ deck.id }}"{% ifequal  deck.id active_deck_id %} selected{% endifequal %}>{{ deck.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {% if deck %}
+                <a id="review-deck" class="btn" href="{% url review deck_id=deck.id %}">Review</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+            <div class="is-padded">
+                {% if deck and cards %}
+                <table id="deck-data" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Front</th>
+                            <th>Back</th>
+                            <th style="width:60px">Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for card in cards %}
+                        <tr>
+                            {# card.front|markdown|sanitize #}
+                            <td class="ellipsis">{{ card.front }}</td>
+                            <td class="ellipsis">{{ card.back }}</td>
+                            {# this first link is handled in js - brings up a modal #}
+                            <td><a href="#" data-id="{{ card.id }}" class="btn btn-success editcard" rel="tooltip" title="Edit Card">
+                                    <i class="icon-edit icon-large"></i></a>
+                                <a href="{% url delete_card deck_id=deck.id card_id=card.id %}" class="btn btn-danger delete-card pull-right" rel="tooltip" title="Delete">
+                                    <i class="icon-trash icon-large"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% elif deck %}
+                <p style="text-align:center">This deck doesn't contain any cards. Click the button below to add some.</p>
+                {% else  %}
+                <p style="text-align:center;">You haven't created any decks. <a href="{% url overview %}">Click here</a> to get started.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if deck %}
+    <div class="row">
+        <div class="span12">
+            <a id="add-card" class="btn btn-block btn-large addcard" href="{% url add_cards_to_deck deck_id=deck.id %}">Add Cards</a>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
+
+{% block modals %}
+    {% include "decks/add_cards_modal.html" %}
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        elements: ['wmd-preview-back', 'wmd-preview-front'],
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            displayMath: [ ['$$','$$'] ],
+            processEscapes: true
+        },
+        asciimath2jax: {
+            delimiters: [ ['@@', '@@'], ['\\(', '\\)'] ],
+        }
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML-full"></script>
+{% compress js %}
+<script src="{{ STATIC_URL }}js/datatables-bootstrap-integration.js"></script>
+<script src="{{ STATIC_URL }}js/pagedown-bootstrap/Markdown.Converter.js" %}"></script>
+<script src="{{ STATIC_URL }}js/pagedown-bootstrap/Markdown.Editor.js" %}"></script>
+<script src="{{ STATIC_URL }}js/pagedown-bootstrap/Markdown.Sanitizer.js" %}"></script>
+<script src="{{ STATIC_URL }}js/pagedown-bootstrap/Markdown.Extra.js" %}"></script> 
+<script src="{{ STATIC_URL }}js/prettify.js"></script>
+<script src="{{ STATIC_URL }}js/browse.js"></script>
+<script>
+    (function() {
+        $('#deck-select').change(function() {
+            // update the active id cookie
+            var did = $(this).val();
+            $.cookie('active-deck-id', did, {path: '/'});
+        });
+
+        $.fn.tooltip.defaults.animation = false;;
+        $("#deck-data").tooltip({ selector: '[rel=tooltip]' });
+
+        var inputFront = $('#wmd-input-front');
+        var inputBack = $('#wmd-input-back');
+        var cardIdInput = $('#card-id');
+
+        $('.wmd-preview').hide(); // `toggle checkbox` is initially unchecked
+
+        $('.editcard').click(function() {
+            $('#edit-card-modal').modal('show');
+            inputFront.focus();
+            var id = $(this).data('id');
+
+            // load the card data into the modal
+            $.ajax({
+                url: '/decks/get-card/' + id + '/',
+                type: 'POST',
+                success: function(json) {
+                    inputFront.val(json.front);
+                    inputBack.val(json.back);
+                    cardIdInput.val(id);
+                    Flashdown.editor1.refreshPreview();
+                    Flashdown.editor2.refreshPreview();
+                }
+            });
+            return false;
+        });
+
+        $('#card-edit-submit').click(function() {
+            $.ajax({
+                url: $(this).attr('href'),
+                type: 'POST',
+                data: {card_id: cardIdInput.val(),
+                       front: inputFront.val(),
+                       back: inputBack.val()
+                },
+                success: function() {
+                    alert("you changed it. need a refresh!");
+                    $('#edit-card-modal').modal('hide');
+                }
+            });
+            return false;
+        })
+
+
+        /* Data tables stuff, including the bootstrap pagination extension */
+        $('#deck-data').dataTable( {
+            "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+            "sPaginationType": "bootstrap",
+            "bAutoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "Show _MENU_ cards"
+            }
+        });
+
+        $.extend( $.fn.dataTableExt.oStdClasses, {
+            "sSortAsc": "header headerSortDown",
+            "sSortDesc": "header headerSortUp",
+            "sSortable": "header",
+            "sWrapper": "dataTables_wrapper form-inline"
+        });
+
+        $('#deck-data').css({'display': 'table'});
+
+        var words = [];
+
+        $('td.ellipsis').each(function(i, el) {
+            words = words.concat($(this).text().split(/\s+/));
+        });
+
+        $($('#deck-data_filter input')[0]).typeahead({source: words});
+
+    })();
+</script>
+{% endcompress %}
+{% endblock %}
+
+

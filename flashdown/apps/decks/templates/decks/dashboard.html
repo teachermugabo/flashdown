@@ -1,0 +1,20 @@
+{% extends "decks/base.html" %}
+
+{% block navbar %}
+    {% include "decks/navbar.html" with active="dashboard" %}
+{% endblock %}
+
+{% block wrapped_content %}
+
+    <div class="container">
+        {% block dashboard_subnav %}
+        {% endblock %}
+
+        <div id="dashboard-content-container">
+        {% block dashboard_content %}
+        {% endblock %}
+        </div>
+    </div>
+
+{% endblock %}
+

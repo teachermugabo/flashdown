@@ -1,0 +1,140 @@
+{% extends "decks/dashboard.html" %}
+{% load compress %}
+
+{% block dashboard_subnav %}
+    {% include "decks/dashboard_subnav.html" with active="overview" %}
+{% endblock %}
+
+{% block dashboard_content %}
+
+    <div class="row">
+        <div class="span6" id="decks-block">
+            <div class="content-block is-padded">
+
+                {% include "decks/block_header_partial.html" with title="Add Decks" %}
+
+                <div class="content-wrapper">
+                    <table id="deck-list"{% if not decks %} style="display:none;"{% endif %} class="table table-striped">
+                       <thead>
+                            <tr>
+                                <th style="width:60%">Deck</th>
+                                <th style="width:20%">Cards</th>
+                                <th style="width:20%">Due</th>
+                                <th style="width:90px">Settings</th>
+                            </tr>
+                        </thead>
+                         <tbody>
+                        {% for deck in decks %}
+                          {% include "decks/deckinfo_partial.html" with deck=deck %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if not decks %}
+                    <p id="empty-message" style="text-align:center;">Your decks will be displayed here once you create them.</p>
+                    {% else %}
+                    <p id="empty-message" style="text-align:center;display:none;">Your decks will be displayed here once you create them.</p>
+                    {% endif %}
+
+                    <form id="add-deck" action="{% url new_deck %}" method="post" class="form-inline">
+                      {% csrf_token %}
+                      <input id="deck-name" type="text" class="input-large">
+                      <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="span6" id="activity-block">
+            <div class="content-block is-padded">
+                {% include "decks/block_header_partial.html" with title="Recent Activity" %}
+
+                <div class="content-wrapper">
+                    <p>You created <strong>25</strong> new cards in <strong>8 decks</strong>.</p>
+                    <p>You have <strong>35 cards due</strong> in <strong>4 decks</strong>.</p>
+                    <p>User <a href="#profile">arandom_user</a> left a <a href="#comment">comment</a> on the deck <em>College Algebra</em>.</p>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- /.row -->
+
+{% endblock %}
+
+{% block js %}
+{% compress js %}
+<script>
+(function() {
+    $('#deck-list a.viewdeck').click(function() {
+        var did = $(this).data('deck-id');
+        var p = $.cookie('active-deck-id', did, {path: '/'});
+    });
+
+    // activate tooltips
+    $("#deck-list").tooltip({ selector: '[rel=tooltip]' });
+
+    var $deckList = $('#deck-list'); // hidden if no decks exist
+    var $deckNameInput = $('#deck-name');
+    var $emptyMessage = $('#empty-message'); // displayed if no decks exist
+    // and now set up the submit handler for adding a deck in overview.html
+    $("#add-deck").submit(function() {
+        var self = $(this);
+        // TODO: validate
+        $.ajax({
+            url: self.attr("action"),
+            type: "POST",
+            data: {deck_name : $deckNameInput.val()},
+            success: function(response) {
+                if (response === '')
+                    return;
+
+                // as a precaution. 
+                $emptyMessage.hide();
+                $deckList.show();
+
+                $deckList.append(response);
+
+                $deckNameInput.val('');
+            },
+            error: function(data) {
+                if (DEBUG)
+                    alert("ajax error on add deck");
+            }
+        });
+        return false; // prevents default submit behavior, which would
+        // cause a broken pipe in our ajax app
+    });
+
+
+    // overview controls
+    $('#deck-list').on('click', '.delete-deck', function() {
+        var self = $(this);
+        $.ajax({
+            url: self.attr('href'),
+            type: 'POST',
+            success: function() {
+                tr = self.closest('tr');
+                tr.fadeOut('slow', function() {
+                    $(this).remove();
+                    if ($deckList.find('tbody tr').length == 0) {
+                        $deckList.hide();
+                        $emptyMessage.show();
+                    }
+                });
+            },
+            error: function() {
+                if (DEBUG)
+                    alert("ajax error on delete deck");
+            }
+        });
+        return false;
+    });
+
+    //$('.edit-deck').click(function() { })
+    //$('.play-deck').click(function() { })
+})();
+</script>
+{% endcompress %}
+{% endblock %}

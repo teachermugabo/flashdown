@@ -1,0 +1,174 @@
+/* boostrap customizations */
+
+body {
+  line-height: 1.5em;
+  background-image:url('{{ STATIC_URL }}img/graybg.jpg');
+  background-color: @bgColor;
+  color: white;
+  font-family: 'Raleway', sans-serif;
+}
+
+// add spacing so span blocks don't line up with container edges
+.row [class^="span"] {
+  &:first-child .is-padded {
+    margin-left: 15px;
+  }
+
+  &:last-child .is-padded {
+    margin-right: 15px;
+  }
+}
+
+.row form {
+  label {
+    margin-left: 20px;
+    &:first-child { margin-left: 0; }
+  }
+}
+
+// blocks on overview page
+.content-block {
+  overflow: hidden;
+  .border-radius(5px);
+
+  .content-wrapper {
+    color: @darkTextColor;
+    background-color: @blockBgColor;
+    padding: 1em;
+
+    :first-child { margin-top: 0; }
+    :last-child { margin-bottom: 0; }
+
+    table {
+      margin-top: -8px;
+    }
+  }
+}
+
+// mixin
+.headerBackground {
+  .buttonBackground(@hdrPrimaryBackground, @hdrPrimaryBackgroundHighlight);
+}
+// header made from navbar
+.navbar-header {
+  margin: 0;
+  .navbar-inner {
+    .border-bottom-radius(0);
+    border-left: none;
+    border-right: none;
+    .headerBackground;
+
+    /*#gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground);*/
+
+    .brand {
+      color: white; /*#F9F9F9; */
+      text-shadow: 0 1px 0 #777;
+    }
+  }
+}
+
+#deck-data thead {
+  margin: 0;
+  .headerBackground;
+  /* #gradient > .vertical(@blockHeaderHighlight, @blockHeaderBackground); */
+  color: #F9F9F9;
+  font-weigth: bold;
+}
+
+
+// background of container
+.wrapper {
+  width: 940px;
+  background-color: @contentBgColor;
+  border-left: 1px dotted @linkColor;
+  border-right: 1px dotted @linkColor;
+  .proper-content > .container:first-child {
+    margin-top: 20px;
+    .row:last-child { margin-bottom: 20px; }
+  }
+}
+
+// Custom styles for front/back of cards.
+#card-editor {
+    h2.card-name { text-align: center; font-weight: normal; }
+}
+
+/* Dashboard-related stuff */
+#dashboard-subnav {
+    text-align: center;
+    div.btn-group {
+        text-align: center;
+        width: inherit;
+        display: inline-block;
+    }
+}
+
+/* browse screen */
+
+// input addons
+.add-on { color: @darkTextColor; }
+
+// center the form at the top of the page
+#deck-select-form { text-align: center; }
+
+// the table on the browse page
+.table {
+  h2 { margin-bottom: 0; }
+  thead td {
+    /* header 'review' button */
+    vertical-align: baseline;
+    &:last-child { padding-right: 0; }
+  }
+
+  tbody {
+    background-color: white;
+    color: @darkTextColor;
+  }
+}
+
+// add, play, settings buttons
+table .btn { padding: 0; width: 25px; height: 20px; }
+
+#deck-list {
+  table-layout: fixed;
+  .ellipsis { .text-overflow; }
+}
+
+#deck-data {
+  margin-bottom: 0;
+  table-layout:fixed;
+  display: none;  /* until after datatables finishes loading */
+  .ellipsis {
+      /* use the bootstrap mixin to force single line & ellipses */
+      .text-overflow;
+  }
+}
+
+// center the editors in the modal, and the modal itself
+#edit-card-modal {
+  width: 1000px;
+  margin-left: -500px; /* -(width / 2) */
+  #card-editor {
+    margin-left: 30px; /* margin:auto not working ?? */
+  }
+}
+
+// button
+#add-card {
+  border: 1px solid @linkColor;
+  width: 50%;
+  margin: auto;
+
+  &:hover, &:focus {
+    /* Turn off default bootstrap styles */
+    background-color: @accentColor;
+    background-position: 0 -50px;
+    border: 1px solid @accentColor;
+    color: white;
+    .transition(none);
+  }
+}
+
+// style text selections
+::selection { background: @accentColor !important; }
+
