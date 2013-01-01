@@ -19,5 +19,3 @@ celerybeat-schedule
 
 # Cached static files
 flashdown/static
-
-*.pyc

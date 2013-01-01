@@ -6352,7 +6352,7 @@ body {
   line-height: 1.5em;
   color: white;
   background-color: #707070;
-  background-image: url('{{ STATIC_URL }}/img/graybg.jpg');
+  background-image: url('{{ STATIC_URL }}img/graybg.jpg');
 }
 
 .row [class^="span"]:first-child .is-padded {
