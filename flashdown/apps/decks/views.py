@@ -1,11 +1,10 @@
-from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.utils import simplejson
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from apps.decks.models import Tag, Card
 from libs.utils import get_login_forms
+from libs.decorators import ajax_request
 
 
 # Note: ensure_csrf_cookie required if template doesn't have forms
@@ -18,8 +17,7 @@ def overview(request):
     decks = Tag.objects.filter(is_deck=True, deleted=False)
     ctx = {'decks': decks}
     ctx.update(get_login_forms(request))
-    return render_to_response('decks/overview.html', ctx,
-                              context_instance=RequestContext(request))
+    return render(request, 'decks/overview.html', ctx)
 
 @ensure_csrf_cookie
 def add_cards(request, deck_id=None):
@@ -47,8 +45,7 @@ def add_cards(request, deck_id=None):
 
     ctx = {'decks': decks, 'active_deck_id': deck_id}
     ctx.update(get_login_forms(request))
-    return render_to_response('decks/addcards.html', ctx,
-                              context_instance=RequestContext(request))
+    return render(request, 'decks/addcards.html', ctx)
 
 def review(request, deck_id):
     pass
@@ -88,8 +85,7 @@ def browse(request, deck_id=None):
     ctx = {'decks': decks, 'deck': deck,
            'cards': cards, 'active_deck_id': deck_id}
     ctx.update(get_login_forms(request))
-    return render_to_response('decks/browse.html', ctx,
-                              context_instance=RequestContext(request))
+    return render(request, 'decks/browse.html', ctx)
 
 def cards(request, deck_id):
     deck = Tag.objects.get(pk=deck_id)
@@ -98,21 +94,19 @@ def cards(request, deck_id):
 
     #cards = deck.deck_cards.all()
     cards = deck.deck_cards.filter(deleted=False)
-    return render_to_response('decks/browse.html',
-                              {'deck' : deck, 'cards' : cards})
+    return render(request, 'decks/browse.html',
+                  {'deck': deck, 'cards': cards})
 
 
 ###################################
 # Primarily AJAX Functions        #
 ###################################
 
+@ajax_request
 def new_deck(request):
     """process an ajax request to add a new deck"""
-    if not request.is_ajax():
-        return HttpResponse(status=400)
-
     if not request.POST:  # we need the post data
-        return HttpResponse('')
+        return HttpResponse()
 
     #TODO: validate data
 
@@ -121,13 +115,15 @@ def new_deck(request):
     deck = None
     try:
         deck = Tag.objects.get(name=deck_name, deleted=False) # will be 0 or 1 of these
-        return HttpResponse(status=200) # already exists, don't send a new list item
+        return HttpResponse() # already exists, don't send a new list item
     except Tag.DoesNotExist:
         deck = Tag(name=deck_name, is_deck=True)
         deck.save()
 
-    return render_to_response('decks/deckinfo_partial.html', {'deck' : deck})
+    return render(request, 'decks/deckinfo_partial.html', {'deck' : deck})
 
+
+@ajax_request
 def delete_deck(request, deck_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
@@ -142,6 +138,7 @@ def delete_deck(request, deck_id):
     return HttpResponse() #status=200 OK
 
 
+@ajax_request
 def new_card(request):
     if request.method != 'POST':
         return HttpResponseBadRequest()
@@ -150,38 +147,20 @@ def new_card(request):
     front = request.POST.get("front")
     back = request.POST.get("back")
 
-    for v in [deck_id, front, back]:
-        if v is None:
-            return HttpResponseBadRequest('missing data')
+    if not all([deck_id, front, back]): # Not None, not ''
+        return HttpResponseBadRequest('missing data')
 
     if deck_id == '':
         return HttpResponseBadRequest('malformed deck id')
 
     deck_id = int(deck_id)
-
     deck = get_object_or_404(Tag, pk=deck_id)
+
     if not deck.is_deck:
         return HttpResponseBadRequest()
 
-    # sanitize data
-    """
-    this is no longer necessary since we're just storing markdown and
-    rendering it later
-
-    import html5lib
-    from html5lib import sanitizer
-
-    p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
-    front = p.parseFragment(request.POST["front"]).toxml()
-    back = p.parseFragment(request.POST["back"]).toxml()
-    """
-
-    # escape newlines or we'll have trouble when inserting this in javascript
-    # later
     front = request.POST["front"]
-#    front = front.replace('\r\n', '\n')
     back = request.POST["back"]
-#    back = back.replace('\r\n', '\n')
 
     card = Card(front=front, back=back, deck=deck)
     card.save()
@@ -192,17 +171,17 @@ def new_card(request):
     return HttpResponse(status=201) # Created
 
 
+@ajax_request
 def get_card(request, card_id):
     try:
         card = Card.objects.get(pk=card_id, deleted=False)
     except Card.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponseNotFound
 
-    card = {'front': card.front, 'back': card.back}
-
-    return HttpResponse(simplejson.dumps(card), mimetype="application/json")
+    return {'front': card.front, 'back': card.back}
 
 
+@ajax_request
 def delete_card(request, deck_id, card_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
@@ -221,9 +200,10 @@ def delete_card(request, deck_id, card_id):
     card.deleted = True # keep it around in case we want to restore it later
     card.save()
 
-    return HttpResponse() #status=200 OK
+    return HttpResponse()
 
 
+@ajax_request
 def update_card(request):
     if request.method != 'POST':
         return HttpResponseBadRequest()
@@ -232,7 +212,7 @@ def update_card(request):
     front = request.POST.get('front')
     back = request.POST.get('back')
 
-    if card_id is None or front is None or back is None:
+    if not all([card_id, front, back]): # not None, not empty
         return HttpResponseBadRequest()
 
     try:
@@ -241,9 +221,9 @@ def update_card(request):
         card.back = back
         card.save()
     except Card.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponseNotFound()
 
-    return HttpResponse(status=200)
+    return HttpResponse()
 
 # vim: set ai et ts=4 sw=4 sts=4 :
 

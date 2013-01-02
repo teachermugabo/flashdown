@@ -62,9 +62,10 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                {% elif deck %}
-                <p style="text-align:center">This deck doesn't contain any cards. Click the button below to add some.</p>
-                {% else  %}
+                <p style="text-align:center;display:none;" id="empty-message">This deck doesn't contain any cards. Click the button below to add some.</p>
+                {% elif deck  %}
+                <p style="text-align:center;" id="empty-message">This deck doesn't contain any cards. Click the button below to add some.</p>
+                {% else %}
                 <p style="text-align:center;">You haven't created any decks. <a href="{% url overview %}">Click here</a> to get started.</p>
                 {% endif %}
             </div>

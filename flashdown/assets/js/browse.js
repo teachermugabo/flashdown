@@ -59,6 +59,37 @@
      });
      */
 
+    $emptyMessage = $('#empty-message');
+    $deckData = $('#deck-data');
+    $dataTable = $('#deck-data_wrapper');
+   // add this class to a delete link to submit it via ajax
+    $(".delete-card").click(function() {
+        var self = $(this);
+        $.ajax({
+            url: self.attr("href"),
+            type: "POST",
+            data: {},
+            success: function(response) {
+                tr = self.closest("tr");
+                tr.fadeOut("slow", function() {
+                    $(this).remove();
+                    if ($deckData.find('tbody tr').length === 0) {
+                        $dataTable.hide();
+                        $emptyMessage.show();
+                    }
+                });
+            },
+            error: function(data) {
+                if (DEBUG)
+                    alert("ajax error delete card");
+            }
+        });
+        return false; // prevents default submit behavior, which would
+        // cause a broken pipe in our ajax app
+
+    });
+
+
 
    // looks nicer if preview divs both line up
     function matchPreviewHeights() {
