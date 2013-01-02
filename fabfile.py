@@ -99,6 +99,7 @@ def bootstrap():
     """
     cont('heroku create', "Couldn't create the Heroku app, continue anyway?")
 
+
     for addon in HEROKU_ADDONS:
         cont('heroku addons:add %s' % addon,
             "Couldn't add %s to your Heroku app, continue anyway?" % addon)
@@ -116,15 +117,17 @@ def bootstrap():
     cont('%(run)s newrelic-admin validate-config - stdout' % env,
             "Couldn't initialize New Relic, continue anyway?")
 
+    collectstatic()
+    compress()
 
-#@task
-#def destroy():
-#    """Destroy this Heroku application. Wipe it from existance.
-#
-#    .. note::
-#        This really will completely destroy your application. Think twice.
-#    """
-#    local('heroku apps:destroy')
+@task
+def destroy():
+    """Destroy this Heroku application. Wipe it from existance.
+
+    .. note::
+        This really will completely destroy your application. Think twice.
+    """
+    local('heroku apps:destroy')
 
 @task
 def deploy():

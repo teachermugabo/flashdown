@@ -19,20 +19,11 @@ from password_reset.views import Recover
 # by future refactoring of templates.
 @ensure_csrf_cookie
 def overview(request):
-    """Renders the main page, with optional bound forms and errors, if they exist. Otherwise
-    it renders blank forms.
-    """
-    lform = get_and_delete(request.session, 'lform', LoginForm())
-    rform = get_and_delete(request.session, 'rform', RegistrationForm())
-    lform_errors = get_and_delete(request.session, 'lform_errors', None)
-    rform_errors = get_and_delete(request.session, 'rform_errors', None)
-
+    """Renders the main page."""
     decks = Tag.objects.filter(is_deck=True, deleted=False)
-    context = {'login_form' : lform, 'registration_form' : rform,
-               'login_errors' : lform_errors, 'registration_errors' : rform_errors,
-               'decks': decks}
-
-    return render_to_response('decks/overview.html', context,
+    ctx = {'decks': decks}
+    ctx.update(get_forms(request))
+    return render_to_response('decks/overview.html', ctx,
                               context_instance=RequestContext(request))
 
 @ensure_csrf_cookie
@@ -59,9 +50,9 @@ def add_cards(request, deck_id=None):
     if decks == []:
         deck_id = None
 
-
-    return render_to_response('decks/addcards.html',
-                              {'decks': decks, 'active_deck_id': deck_id},
+    ctx = {'decks': decks, 'active_deck_id': deck_id}
+    ctx.update(get_forms(request))
+    return render_to_response('decks/addcards.html', ctx,
                               context_instance=RequestContext(request))
 
 def review(request, deck_id):
@@ -99,9 +90,10 @@ def browse(request, deck_id=None):
     if deck_id is not None and deck_id != '':
         deck_id = int(deck_id)  # template will compre this to deck.id
 
-    return render_to_response('decks/browse.html',
-                              {'decks': decks, 'deck': deck,
-                               'cards': cards, 'active_deck_id': deck_id},
+    ctx = {'decks': decks, 'deck': deck,
+           'cards': cards, 'active_deck_id': deck_id}
+    ctx.update(get_forms(request))
+    return render_to_response('decks/browse.html', ctx,
                               context_instance=RequestContext(request))
 
 def cards(request, deck_id):
@@ -252,7 +244,6 @@ def new_card(request):
 
 
 def get_card(request, card_id):
-    print(card_id)
     try:
         card = Card.objects.get(pk=card_id, deleted=False)
     except Card.DoesNotExist:
@@ -337,6 +328,21 @@ def get_and_delete(d, key, default):
             return default
     else:
         return default
+
+def get_forms(request):
+    """Adds login and registration forms to the given context.
+
+    Adds optional bound forms and errors, if they exist. Otherwise
+    it provides blank forms.
+    """
+
+    lform = get_and_delete(request.session, 'lform', LoginForm())
+    rform = get_and_delete(request.session, 'rform', RegistrationForm())
+    lform_errors = get_and_delete(request.session, 'lform_errors', None)
+    rform_errors = get_and_delete(request.session, 'rform_errors', None)
+
+    return {'login_form' : lform, 'registration_form' : rform,
+            'login_errors' : lform_errors, 'registration_errors' : rform_errors}
 
 
 # vim: set ai et ts=4 sw=4 sts=4 :
