@@ -7,7 +7,7 @@ admin.autodiscover()
 
 
 # See: https://docs.djangoproject.com/en/dev/topics/http/urls/
-urlpatterns = patterns('',
+urlpatterns = patterns('flashdown.views',
     # Admin panel and documentation:
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'logout', name='logout'),
     url(r'', include('password_reset.urls')),
 
-    url(r'^/?$', 'flashdown.views.home', name='home'),
+    url(r'^/?$', 'home', name='home'),
     url(r'^decks/', include('apps.decks.urls')),
 )
 
