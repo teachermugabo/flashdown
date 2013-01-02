@@ -1,7 +1,10 @@
-{% extends "password_reset/base.html" %}{% load i18n %}{% load url from future %}
+{% extends "password_reset/base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% trans "Flashdown - Password Recovery" %}{% endblock %}
 
 {% block content %}
-{% include 'password_reset/recovery_nav.html' %}
 <div class="container">
     <div class="recover">
     {% if invalid %}{% url "password_reset_recover" as recovery_url %}

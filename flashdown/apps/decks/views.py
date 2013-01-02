@@ -9,9 +9,8 @@ from django.contrib.auth import logout as auth_logout, login as auth_login, auth
 from django.contrib.auth.models import User
 
 from apps.decks.models import Tag, Card
-from apps.decks.forms import RegistrationForm, LoginForm, CustomRecoveryForm
+from apps.decks.forms import RegistrationForm, LoginForm
 
-from password_reset.views import Recover
 
 # Note: ensure_csrf_cookie required if template doesn't have forms
 # containing the csrf_token tag. Forgetting about this has caused
@@ -146,11 +145,6 @@ def register(request):
     auth_login(request, user)
 
     return HttpResponseRedirect(reverse('overview'))
-
-class RecoverView(Recover):
-    form_class = CustomRecoveryForm  # to disallow social users from attempting password reset
-    search_fields = ['username']
-recover = RecoverView.as_view()
 
 
 ###################################

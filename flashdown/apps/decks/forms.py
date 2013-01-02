@@ -4,8 +4,6 @@ from django.contrib.auth.models import User
 
 from crispy_forms.helper import FormHelper
 
-from password_reset.forms import PasswordRecoveryForm
-
 
 class RegistrationForm(forms.Form):
     # all fields are required, but some are checked manually below, to avoid
@@ -88,22 +86,5 @@ class LoginForm(forms.Form):
 
         return password
 
-
-class CustomRecoveryForm(PasswordRecoveryForm):
-
-    # override the defaul password recovery from from django-password-reset
-    # We only need to override this single method to ensure that we raise a
-    # form validation error if the user is a facebook user
-    def clean_username_or_email(self):
-        # this will always be email, since that's how we set it up in our recovery view
-        username = self.cleaned_data['username_or_email']
-        user = self.get_user_by_username(username)
-
-        # make sure we don't have a social user
-        if user.social_auth.filter(provider="facebook"):
-            raise forms.ValidationError('You are authenticated through Facebook. Please visit www.facebook.com to reset your password.')
-
-        self.cleaned_data['user'] = user
-        return username
 
 

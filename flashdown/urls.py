@@ -9,11 +9,17 @@ admin.autodiscover()
 # See: https://docs.djangoproject.com/en/dev/topics/http/urls/
 urlpatterns = patterns('',
     # Admin panel and documentation:
+
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
+    # user registration and password recovery
+    url(r'^register/$', 'register', name='register'),
+    url(r'^login/$', 'login', name='login'),
+    url(r'^logout/$', 'logout', name='logout'),
+    url(r'', include('password_reset.urls')),
+
     url(r'^/?$', 'flashdown.views.home', name='home'),
     url(r'^decks/', include('apps.decks.urls')),
-
 )
 
