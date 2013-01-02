@@ -16,3 +16,4 @@ urlpatterns = patterns('',
     url(r'^decks/', include('apps.decks.urls')),
 
 )
+
