@@ -132,8 +132,6 @@ def destroy():
 @task
 def deploy():
     """Perform all necessary steps to deploy our app to Heroku."""
-    cont('heroku config:add DEBUG=False',
-            "Couldn't push your application to Heroku, continue anyway?")
     cont('git push heroku master',
             "Couldn't push your application to Heroku, continue anyway?")
     syncdb()
