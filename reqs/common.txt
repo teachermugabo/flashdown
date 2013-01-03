@@ -6,3 +6,5 @@ South==0.7.6
 Sphinx==1.1.3
 django-crispy-forms==1.2.3
 django-password-reset==0.3
+html5lib==0.95
+Markdown==2.2.1

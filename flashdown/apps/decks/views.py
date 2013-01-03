@@ -48,7 +48,10 @@ def add_cards(request, deck_id=None):
     return render(request, 'decks/addcards.html', ctx)
 
 def review(request, deck_id):
-    pass
+    deck = get_object_or_404(Tag, is_deck=True, pk=deck_id, deleted=False)
+    cards = deck.deck_cards.filter(deleted=False)
+    #TODO: if len(cards) == 0, in review.html show message that there's nothing to review
+    return render(request, 'decks/review.html', {'deck': deck, 'cards': cards})
 
 def get_cards(request, deck_id):
     pass
@@ -63,37 +66,37 @@ def browse(request, deck_id=None):
 
     if deck_id is not None:
         try:
-            deck = Tag.objects.get(pk=deck_id, deleted=False)
+            deck = Tag.objects.get(pk=deck_id, is_deck=True, deleted=False)
         except Tag.DoesNotExist:
             deck_id = None
-    elif len(decks) > 0:
+
+    if deck_id is None and len(decks) > 0:
          # no deck_id, no active deck cookie - just get the first one
         deck_id = decks[0].pk
         deck = decks[0]
 
-    if deck:
-        if not deck.is_deck:  #TODO: do we care if we're browsing decks vs tags?
-            deck = None
-        else:
-            cards = deck.deck_cards.filter(deleted=False)
+    cards = deck.deck_cards.filter(deleted=False) if deck else None
 
-    if deck_id is not None and deck_id != '':
-        deck_id = int(deck_id)  # template will compre this to deck.id
+    if deck_id: # not None, not ''
+        deck_id = int(deck_id)  # template will compare this to deck.id
 
     ctx = {'decks': decks, 'deck': deck,
            'cards': cards, 'active_deck_id': deck_id}
     ctx.update(get_login_forms(request))
     return render(request, 'decks/browse.html', ctx)
 
+
+#TODO: unused
+@ajax_request
 def cards(request, deck_id):
     deck = Tag.objects.get(pk=deck_id, deleted=False)
     if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
         return HttpResponse(code=400)
 
     #cards = deck.deck_cards.all()
-    cards = deck.deck_cards.filter(deleted=False)
-    return render(request, 'decks/browse.html',
-                  {'deck': deck, 'cards': cards})
+    cards = deck.deck_cards.filter(deleted=False).values();
+    deck = deck.values()
+    return {'deck': deck, 'cards': cards}
 
 
 ###################################
@@ -126,10 +129,7 @@ def delete_deck(request, deck_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
 
-    deck = get_object_or_404(Tag, pk=deck_id, deleted=False)
-    if not deck.is_deck:
-        return HttpResponseBadRequest()
-
+    deck = get_object_or_404(Tag, pk=deck_id, is_deck=True, deleted=False)
     deck.deleted = True # keep it around in case we want to restore it later
     deck.save()
 
@@ -148,17 +148,7 @@ def new_card(request):
     if not all([deck_id, front, back]): # Not None, not ''
         return HttpResponseBadRequest('missing data')
 
-    if deck_id == '':
-        return HttpResponseBadRequest('malformed deck id')
-
-    deck_id = int(deck_id)
-    deck = get_object_or_404(Tag, pk=deck_id)
-
-    if not deck.is_deck:
-        return HttpResponseBadRequest()
-
-    front = request.POST["front"]
-    back = request.POST["back"]
+    deck = get_object_or_404(Tag, pk=int(deck_id), is_deck=True)
 
     card = Card(front=front, back=back, deck=deck)
     card.save()
@@ -184,17 +174,8 @@ def delete_card(request, deck_id, card_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
 
-    deck = get_object_or_404(Tag, pk=deck_id)
-    if not deck.is_deck:
-        return HttpResponseBadRequest()
-
-    card = get_object_or_404(Card, pk=card_id)
-    try:
-        if not card.tags.filter(name=deck.name):
-            return HttpResponseBadRequest()
-    except:
-        pass
-
+    deck = get_object_or_404(Tag, pk=deck_id, is_deck=True)
+    card = get_object_or_404(Card, pk=card_id, deck=deck)
     card.deleted = True # keep it around in case we want to restore it later
     card.save()
 

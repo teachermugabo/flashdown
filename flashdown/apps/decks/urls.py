@@ -7,7 +7,6 @@ urlpatterns = patterns('apps.decks.views',
     url(r'^add-cards/$', 'add_cards', name='add_cards'),
     url(r'^(?P<deck_id>\d+)/add-cards/$', 'add_cards', name='add_cards_to_deck'),
 
-
     # view a list of all cards in a deck
     url(r'^browse/$', 'browse', name='browse_all'),
     url(r'^(?P<deck_id>\d+)/browse/$', 'browse', name='browse'),
