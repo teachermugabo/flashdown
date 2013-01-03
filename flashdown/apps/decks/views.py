@@ -30,7 +30,7 @@ def add_cards(request, deck_id=None):
 
     if deck_id is None:
         if decks.count() > 0:
-            deck_id = decks[0].id
+            deck_id = decks[0].pk
     else:
         try:
             Tag.objects.filter(pk=deck_id)
@@ -63,15 +63,13 @@ def browse(request, deck_id=None):
 
     if deck_id is not None:
         try:
-            deck = Tag.objects.get(pk=deck_id)
+            deck = Tag.objects.get(pk=deck_id, deleted=False)
         except Tag.DoesNotExist:
             deck_id = None
-
-
-    elif decks and len(decks) > 0:
+    elif len(decks) > 0:
          # no deck_id, no active deck cookie - just get the first one
+        deck_id = decks[0].pk
         deck = decks[0]
-        deck_id = deck.id
 
     if deck:
         if not deck.is_deck:  #TODO: do we care if we're browsing decks vs tags?
@@ -88,7 +86,7 @@ def browse(request, deck_id=None):
     return render(request, 'decks/browse.html', ctx)
 
 def cards(request, deck_id):
-    deck = Tag.objects.get(pk=deck_id)
+    deck = Tag.objects.get(pk=deck_id, deleted=False)
     if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
         return HttpResponse(code=400)
 
