@@ -22,12 +22,12 @@
                 <!-- start -->
                 {% crispy login_form %}
                 <!-- end -->
-                <hr />
-                <p>Don't have an account yet? <a data-toggle="modal" data-dismiss="modal" href="#register-modal">Sign up</a>.</p>
-                <p>Forgot your password? Try <a href="{% url password_reset_recover %}">Password Reset</a>.</p>
+
+                <p>If you don't know your password, click <a href="{% url password_reset_recover %}">here</a> to reset it.</p>
             </div>
 
             <div class="modal-footer">
+                <p class="pull-left">Don't have an account yet? <a data-toggle="modal" data-dismiss="modal" href="#register-modal">Sign up</a>.</p>
                 <button type="submit" name="finish" value="ok" class="btn primary">Login</button>
             </div>
             <!-- form1 -->
@@ -54,12 +54,11 @@
                 </div>
                 {% endif %}
                 {% crispy registration_form %}
-                <hr />
-                <p>Already have an account? <a data-toggle="modal" data-dismiss="modal" href="#login-modal">Login</a>.</p>
             </div>
 
 
             <div class="modal-footer">
+                <p class="pull-left">Already have an account? <a data-toggle="modal" data-dismiss="modal" href="#login-modal">Login</a>.</p>
                 <button type="submit" name="finish" value="ok" class="btn primary">Submit</button>
             </div>
         </form>

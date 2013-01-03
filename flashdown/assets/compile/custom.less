@@ -183,3 +183,22 @@ table .btn { padding: 0; width: 25px; height: 20px; }
 }
 
 .navbar .btn { color: @navbarText; }
+
+.modal {
+    form { 
+        margin: 0;
+        div:last-child { margin-bottom: 0; }
+    }
+    hr { margin-bottom: 15px; }
+    p:last-child { margin-bottom: 0; }
+    .modal-header { .headerBackground; }
+    .modal-body {
+        p { font-size: 85%; text-align: center; }
+    }
+    .modal-footer {
+        p {
+            margin: 0;
+            &:first-child { padding-top: 5px; }
+        }
+    }
+}
