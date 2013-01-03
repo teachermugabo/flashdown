@@ -14,7 +14,7 @@ class Tag(models.Model):
         return self.deck_cards.filter(deleted=False).count()
 
     def due_count(self):
-        return self.deck_cards.filter(next_due__lt=timezone.now()).count()
+        return self.deck_cards.filter(deleted=False, next_due__lt=timezone.now()).count()
 
 class Card(models.Model):
     front = models.TextField()
@@ -32,7 +32,7 @@ class Card(models.Model):
 
     def is_due(self):
         #return self.next_due < datetime.datetime.utcnow().replace(tzinfo=utc) <-- correct but long
-        return self.next_due < timezone.now()
+        return self.next_due < timezone.now() and not self.deleted
 
 
 # vim: set ai et ts=4 sw=4 sts=4 :
