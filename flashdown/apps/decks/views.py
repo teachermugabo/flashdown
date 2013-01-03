@@ -1,17 +1,12 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import HttpResponse, HttpResponseBadRequest
 
 from apps.decks.models import Tag, Card
-from libs.utils import get_login_forms
+from libs.login import get_login_forms
+from libs.utils import get_object_or_None
 from libs.decorators import ajax_request
 
 
-# Note: ensure_csrf_cookie required if template doesn't have forms
-# containing the csrf_token tag. Forgetting about this has caused
-# problems in the past so I'm leaving it here to prevent problems caused
-# by future refactoring of templates.
-@ensure_csrf_cookie
 def overview(request):
     """Renders the main page."""
     decks = Tag.objects.filter(is_deck=True, deleted=False)
@@ -19,7 +14,6 @@ def overview(request):
     ctx.update(get_login_forms(request))
     return render(request, 'decks/overview.html', ctx)
 
-@ensure_csrf_cookie
 def add_cards(request, deck_id=None):
     if deck_id is None:
         deck_id = request.COOKIES.get('active-deck-id', None)
@@ -28,20 +22,19 @@ def add_cards(request, deck_id=None):
 
     decks = Tag.objects.filter(is_deck=True, deleted=False)
 
-    if deck_id is None:
-        if decks.count() > 0:
-            deck_id = decks[0].pk
+    if deck_id is None and len(decks) > 0:
+        deck_id = decks[0].pk
     else:
         try:
-            Tag.objects.filter(pk=deck_id)
+            Tag.objects.get(pk=deck_id)
         except Tag.DoesNotExist:
             deck_id = None   # we got an invalid id
 
     if deck_id is not None:
         deck_id = int(deck_id)
 
-    if decks == []:
-        deck_id = None
+    deck_id = deck_id if decks else None
+    deck_id = int(deck_id) if deck_id else None
 
     ctx = {'decks': decks, 'active_deck_id': deck_id}
     ctx.update(get_login_forms(request))
@@ -89,11 +82,7 @@ def browse(request, deck_id=None):
 #TODO: unused
 @ajax_request
 def cards(request, deck_id):
-    deck = Tag.objects.get(pk=deck_id, deleted=False)
-    if not deck.is_deck:  #TODO: do we care? change this method to view-tag?
-        return HttpResponse(code=400)
-
-    #cards = deck.deck_cards.all()
+    deck = Tag.objects.get_object_or_404(pk=deck_id, deleted=False, id_deck=True)
     cards = deck.deck_cards.filter(deleted=False).values();
     deck = deck.values()
     return {'deck': deck, 'cards': cards}
@@ -113,11 +102,10 @@ def new_deck(request):
 
     # currently the max deck name length is 50 characters
     deck_name = request.POST["deck_name"][:50]
-    deck = None
-    try:
-        deck = Tag.objects.get(name=deck_name, deleted=False) # will be 0 or 1 of these
+    deck = get_object_or_None(Tag, name=deck_name, is_deck=True, deleted=False)
+    if deck:
         return HttpResponse() # already exists, don't send a new list item
-    except Tag.DoesNotExist:
+    else:
         deck = Tag(name=deck_name, is_deck=True)
         deck.save()
 
@@ -161,11 +149,7 @@ def new_card(request):
 
 @ajax_request
 def get_card(request, card_id):
-    try:
-        card = Card.objects.get(pk=card_id, deleted=False)
-    except Card.DoesNotExist:
-        return HttpResponseNotFound
-
+    card = get_object_or_404(Card, pk=card_id, deleted=False)
     return {'front': card.front, 'back': card.back}
 
 
@@ -174,8 +158,8 @@ def delete_card(request, deck_id, card_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
 
-    deck = get_object_or_404(Tag, pk=deck_id, is_deck=True)
-    card = get_object_or_404(Card, pk=card_id, deck=deck)
+    deck = get_object_or_404(Tag, pk=deck_id, deleted=False, is_deck=True)
+    card = get_object_or_404(Card, pk=card_id, deleted=False, deck=deck)
     card.deleted = True # keep it around in case we want to restore it later
     card.save()
 
@@ -194,13 +178,10 @@ def update_card(request):
     if not all([card_id, front, back]): # not None, not empty
         return HttpResponseBadRequest()
 
-    try:
-        card = Card.objects.get(pk=card_id, deleted=False)
-        card.front = front
-        card.back = back
-        card.save()
-    except Card.DoesNotExist:
-        return HttpResponseNotFound()
+    card = get_object_or_404(Card, pk=card_id, deleted=False)
+    card.front = front
+    card.back = back
+    card.save()
 
     return HttpResponse()
 
