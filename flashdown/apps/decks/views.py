@@ -15,67 +15,36 @@ def overview(request):
     return render(request, 'decks/overview.html', ctx)
 
 def add_cards(request, deck_id=None):
-    if deck_id is None:
-        deck_id = request.COOKIES.get('active-deck-id', None)
-
-    # TODO: what if we're passed some random string here using this cookie?
-
-    decks = Tag.objects.filter(is_deck=True, deleted=False)
-
-    if deck_id is None and len(decks) > 0:
-        deck_id = decks[0].pk
-    else:
-        try:
-            Tag.objects.get(pk=deck_id)
-        except Tag.DoesNotExist:
-            deck_id = None   # we got an invalid id
-
-    if deck_id is not None:
-        deck_id = int(deck_id)
-
-    deck_id = deck_id if decks else None
-    deck_id = int(deck_id) if deck_id else None
-
+    (deck_id, __, decks) = resolve_deck_id(request, deck_id)
     ctx = {'decks': decks, 'active_deck_id': deck_id}
     ctx.update(get_login_forms(request))
+
+    request.session['active_deck_id'] = deck_id
+
     return render(request, 'decks/addcards.html', ctx)
 
 def review(request, deck_id):
     deck = get_object_or_404(Tag, is_deck=True, pk=deck_id, deleted=False)
     cards = deck.deck_cards.filter(deleted=False)
     #TODO: if len(cards) == 0, in review.html show message that there's nothing to review
+
+    request.session['active_deck_id'] = deck_id
+
     return render(request, 'decks/review.html', {'deck': deck, 'cards': cards})
 
 def get_cards(request, deck_id):
     pass
 
 def browse(request, deck_id=None):
-    if deck_id is None:
-        deck_id = request.COOKIES.get('active-deck-id', None)
-
-    decks = Tag.objects.filter(is_deck=True, deleted=False)
-    deck = None
-    cards = None
-
-    if deck_id is not None:
-        try:
-            deck = Tag.objects.get(pk=deck_id, is_deck=True, deleted=False)
-        except Tag.DoesNotExist:
-            deck_id = None
-
-    if deck_id is None and len(decks) > 0:
-         # no deck_id, no active deck cookie - just get the first one
-        deck_id = decks[0].pk
-        deck = decks[0]
-
+    (deck_id, deck, decks) = resolve_deck_id(request, deck_id)
     cards = deck.deck_cards.filter(deleted=False) if deck else None
 
-    if deck_id: # not None, not ''
-        deck_id = int(deck_id)  # template will compare this to deck.id
+    request.session['active_deck_id'] = deck_id
 
     ctx = {'decks': decks, 'deck': deck,
            'cards': cards, 'active_deck_id': deck_id}
     ctx.update(get_login_forms(request))
+
     return render(request, 'decks/browse.html', ctx)
 
 
@@ -108,6 +77,9 @@ def new_deck(request):
     else:
         deck = Tag(name=deck_name, is_deck=True)
         deck.save()
+
+    request.session['active_deck_id'] = deck.pk
+    print(deck.pk)
 
     return render(request, 'decks/deckinfo_partial.html', {'deck' : deck})
 
@@ -144,6 +116,8 @@ def new_card(request):
 
     #todo: store additional tags
 
+    request.session['active_deck_id'] = deck_id
+
     return HttpResponse(status=201) # Created
 
 
@@ -162,6 +136,8 @@ def delete_card(request, deck_id, card_id):
     card = get_object_or_404(Card, pk=card_id, deleted=False, deck=deck)
     card.deleted = True # keep it around in case we want to restore it later
     card.save()
+
+    request.session['active_deck_id'] = deck_id
 
     return HttpResponse()
 
@@ -184,6 +160,37 @@ def update_card(request):
     card.save()
 
     return HttpResponse()
+
+def resolve_deck_id(request, deck_id):
+    """
+    Returned deck_id is first of these that is valid:
+    [stored active deck id, id of first deck], else None.
+    Returns deck_id and the list of decks.
+    """
+    # TODO: what if we're passed some random string here using this cookie?
+    # duh, use session storage to be safe
+
+    if deck_id is None:
+        deck_id = request.session.get('active_deck_id', None)
+
+    decks = Tag.objects.filter(is_deck=True, deleted=False)
+    deck = None
+
+    # first try, using the given deck id
+    if deck_id:
+        try:
+            deck = Tag.objects.get(pk=deck_id, is_deck=True, deleted=False)
+        except Tag.DoesNotExist:
+            deck_id = None   # we got an invalid id
+
+    # next try, using the first active deck
+    if not deck_id and len(decks) > 0:
+        deck_id = decks[0].pk
+        deck = decks[0]
+
+    deck_id = int(deck_id) if deck_id else None
+
+    return (deck_id, deck, decks)
 
 # vim: set ai et ts=4 sw=4 sts=4 :
 

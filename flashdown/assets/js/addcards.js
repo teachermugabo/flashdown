@@ -17,14 +17,6 @@
         $('#wmd-button-bar-back').toggle();
     });
 
-    // set cookie to keep track of the active deck
-    $('#deck-select').change(function() {
-        var did = $(this).val();
-        $('#deck-id-input').val(did);
-        // update the cookie
-        $.cookie('active-deck-id', did, {path: '/'});
-    });
-
    $('#new-card-form').submit(function() {
         var data = {'deck-id': $('#deck-id-input').val(),
                      front: inputFront.val(),

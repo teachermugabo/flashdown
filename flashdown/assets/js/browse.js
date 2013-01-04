@@ -4,9 +4,6 @@
         previewFront = $('#wmd-preview-front'),
         previewBack = $('#wmd-preview-back');
 
-    // focus on card front when page loads
-    //inputFront.focus(); DIFF - this is done when modal is opened
-
     // show / hide previews if user clicks checkbox
     $('#show-preview').change(function() {
         $('.wmd-preview').toggle();
@@ -16,48 +13,6 @@
         $('#wmd-button-bar-front').toggle();
         $('#wmd-button-bar-back').toggle();
     });
-
-    /* DIFF
-    // set cookie to keep track of the active deck
-    $('#deck-select').change(function() {
-        var did = $(this).val();
-        $('#deck-id-input').val(did);
-        // update the cookie
-        $.cookie('active-deck-id', did, {path: '/'});
-    });
-    */
-
-
-   /* DIFF
-    $('#new-card-form').submit(function() {
-        var data = {'deck-id': $('#deck-id-input').val(),
-                     front: inputFront.val(),
-                     back: inputBack.val()
-                    };
-        var self = this;
-        $.post($(this).attr("action"), data, function() {
-            // clear card data
-            inputFront.val('');
-            inputBack.val('');
-
-            // clear previews
-            previewFront.html('');
-            previewBack.html('');
-
-            // focus on front card textarea
-            inputFront.focus();
-
-            // resize previews
-            matchPreviewHeights();
-
-            alert("success! now add that recently added section jackass.");
-            // show recently added cards to right of addcard area
-
-        }); // TODO; handle / log errors
-        return false; // prevents default submit behavior, which would
-        // cause a broken pipe in our ajax app
-     });
-     */
 
     $emptyMessage = $('#empty-message');
     $deckData = $('#deck-data');
@@ -88,7 +43,6 @@
         // cause a broken pipe in our ajax app
 
     });
-
 
 
    // looks nicer if preview divs both line up
@@ -167,8 +121,6 @@
 
     inputFront.on('keyup change paste', function() { form_autosize(inputFront) });
     inputBack.on('keyup change paste', function() { form_autosize(inputBack) });
-
-
 
     Markdown.Extra.setup({fencedCodeBlocks: {highlighter:"prettify"}});
 
