@@ -21,9 +21,6 @@ urlpatterns = patterns('apps.decks.views',
     # get a list of cards for a deck id (ajax)
     url(r'^(?P<deck_id>\d+)/get-cards/$', 'get_cards', name='get_cards'),
 
-    # get a card by its id
-    url(r'^get-card/(?P<card_id>\d+)/$', 'get_card', name='get_card'),
-
     # add a new deck (ajax)
     url(r'^new-deck/$', 'new_deck', name='new_deck'),
 

@@ -8,13 +8,15 @@ from libs.decorators import ajax_request
 
 
 def overview(request):
-    """Renders the main page."""
+    """Renders the main dashboard page."""
     decks = Tag.objects.filter(is_deck=True, deleted=False)
     ctx = {'decks': decks}
     ctx.update(get_login_forms(request))
     return render(request, 'decks/overview.html', ctx)
 
+
 def add_cards(request, deck_id=None):
+    """Card editing page. User can add new cards to their decks."""
     (deck_id, __, decks) = resolve_deck_id(request, deck_id)
     ctx = {'decks': decks, 'active_deck_id': deck_id}
     ctx.update(get_login_forms(request))
@@ -23,19 +25,9 @@ def add_cards(request, deck_id=None):
 
     return render(request, 'decks/addcards.html', ctx)
 
-def review(request, deck_id):
-    deck = get_object_or_404(Tag, is_deck=True, pk=deck_id, deleted=False)
-    cards = deck.deck_cards.filter(deleted=False)
-    #TODO: if len(cards) == 0, in review.html show message that there's nothing to review
-
-    request.session['active_deck_id'] = deck_id
-
-    return render(request, 'decks/review.html', {'deck': deck, 'cards': cards})
-
-def get_cards(request, deck_id):
-    pass
 
 def browse(request, deck_id=None):
+    """Browse decks and their associated cards."""
     (deck_id, deck, decks) = resolve_deck_id(request, deck_id)
     cards = deck.deck_cards.filter(deleted=False) if deck else None
 
@@ -48,18 +40,31 @@ def browse(request, deck_id=None):
     return render(request, 'decks/browse.html', ctx)
 
 
+def review(request, deck_id):
+    """Review/study a given deck."""
+    deck = get_object_or_404(Tag, is_deck=True, pk=deck_id, deleted=False)
+    cards = deck.deck_cards.filter(deleted=False)
+    #TODO: if len(cards) == 0, in review.html show message that there's nothing to review
+
+    request.session['active_deck_id'] = deck_id
+
+    return render(request, 'decks/review.html', {'deck': deck, 'cards': cards})
+
+
+###################################
+# Primarily AJAX Functions        #
+###################################
+
 #TODO: unused
 @ajax_request
-def cards(request, deck_id):
+def get_cards(request, deck_id):
+    """Get a json list of cards for a given deck."""
     deck = Tag.objects.get_object_or_404(pk=deck_id, deleted=False, id_deck=True)
     cards = deck.deck_cards.filter(deleted=False).values();
     deck = deck.values()
     return {'deck': deck, 'cards': cards}
 
 
-###################################
-# Primarily AJAX Functions        #
-###################################
 
 @ajax_request
 def new_deck(request):
@@ -122,12 +127,6 @@ def new_card(request):
 
 
 @ajax_request
-def get_card(request, card_id):
-    card = get_object_or_404(Card, pk=card_id, deleted=False)
-    return {'front': card.front, 'back': card.back}
-
-
-@ajax_request
 def delete_card(request, deck_id, card_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
@@ -161,6 +160,9 @@ def update_card(request):
 
     return HttpResponse()
 
+
+## Utility Methods ##
+
 def resolve_deck_id(request, deck_id):
     """
     Returned deck_id is first of these that is valid:
@@ -192,5 +194,5 @@ def resolve_deck_id(request, deck_id):
 
     return (deck_id, deck, decks)
 
-# vim: set ai et ts=4 sw=4 sts=4 :
 
+# vim: set ai et ts=4 sw=4 sts=4 :
