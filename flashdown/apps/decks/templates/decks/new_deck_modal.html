@@ -1,0 +1,20 @@
+{% load crispy_forms_tags %}
+    <!-- Modals -->
+    <div id="new-deck-modal" class="modal hide fade">
+        <form action="{% url new_deck %}" class="form-horizontal" id="new-deck-form" method="post">
+            {% csrf_token %}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3>Create a New Deck</h3>
+            </div>
+
+            <div class="modal-body">
+                {% crispy new_deck_form %}
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" name="finish" value="ok" class="btn primary">Create</button>
+            </div>
+        </form>
+    </div>
+

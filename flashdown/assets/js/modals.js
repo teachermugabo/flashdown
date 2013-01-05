@@ -7,6 +7,9 @@ $(function () {
     else if (($("#login-modal").find(".help-inline").length > 0) || ($("#login-modal").find(".alert").length > 0)) {
         $("#login-modal").modal("show");
     }
+    else if (($("#new-deck-modal").find(".help-inline").length > 0) || ($("#login-modal").find(".alert").length > 0)) {
+        $("#new-deck-modal").modal("show");
+    }
 
     // these are for password reset. If a url comes in with a hash matching a modal id, display that modal
     if (window.location.hash == "#register-modal") {

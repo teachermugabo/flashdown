@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('apps.decks.views',
     url(r'^/?$', 'overview', name='overview'),
+    url(r'^/?$', 'overview', name='new_deck'),
 
     # open editor for a new card (optionally specify the deck)
     url(r'^add-cards/$', 'add_cards', name='add_cards'),
@@ -21,8 +22,8 @@ urlpatterns = patterns('apps.decks.views',
     # get a list of cards for a deck id (ajax)
     url(r'^(?P<deck_id>\d+)/get-cards/$', 'get_cards', name='get_cards'),
 
-    # add a new deck (ajax)
-    url(r'^new-deck/$', 'new_deck', name='new_deck'),
+    # get a card by its id (ajax)
+    url(r'^get-card/(?P<card_id>\d+)/$', 'get_card', name='get_card'),
 
     # delete a deck (ajax)
     url(r'^(?P<deck_id>\d+)/delete-deck/$', 'delete_deck', name='delete_deck'),

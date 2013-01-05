@@ -6709,6 +6709,9 @@ table .btn {
 
 .modal .modal-body p {
   font-size: 85%;
+}
+
+.modal .modal-body p.center {
   text-align: center;
 }
 

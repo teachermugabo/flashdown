@@ -206,6 +206,9 @@ THIRD_PARTY_APPS = (
 
     # Heirarchical data in our db:
     'mptt',
+
+    # Tagging library:
+    'taggit',
 )
 
 LOCAL_APPS = (

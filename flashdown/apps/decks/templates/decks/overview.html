@@ -36,11 +36,7 @@
                     <p id="empty-message" style="text-align:center;display:none;">Your decks will be displayed here once you create them.</p>
                     {% endif %}
 
-                    <form id="add-deck" action="{% url new_deck %}" method="post" class="form-inline">
-                      {% csrf_token %}
-                      <input id="deck-name" type="text" class="input-large">
-                      <button type="submit" class="btn btn-primary">Add</button>
-                    </form>
+                    <a href="#new-deck-modal" role="button" class="btn btn-primary" data-toggle="modal">New Deck</a>
                 </div>
             </div>
 
@@ -61,7 +57,10 @@
 
     </div> <!-- /.row -->
 
+    {% include "decks/new_deck_modal.html" %}
+
 {% endblock %}
+
 
 {% block js %}
 {% compress js %}
@@ -74,39 +73,7 @@
 
     // activate tooltips
     $("#deck-list").tooltip({ selector: '[rel=tooltip]' });
-
     var $deckList = $('#deck-list'); // hidden if no decks exist
-    var $deckNameInput = $('#deck-name');
-    var $emptyMessage = $('#empty-message'); // displayed if no decks exist
-    // and now set up the submit handler for adding a deck in overview.html
-    $("#add-deck").submit(function() {
-        var self = $(this);
-        // TODO: validate
-        $.ajax({
-            url: self.attr("action"),
-            type: "POST",
-            data: {deck_name : $deckNameInput.val()},
-            success: function(response) {
-                if (response === '')
-                    return;
-
-                // as a precaution. 
-                $emptyMessage.hide();
-                $deckList.show();
-
-                $deckList.append(response);
-
-                $deckNameInput.val('');
-            },
-            error: function(data) {
-                if (DEBUG)
-                    alert("ajax error on add deck");
-            }
-        });
-        return false; // prevents default submit behavior, which would
-        // cause a broken pipe in our ajax app
-    });
-
 
     // overview controls
     $('#deck-list').on('click', '.delete-deck', function() {
@@ -133,7 +100,6 @@
     });
 
     //$('.edit-deck').click(function() { })
-    //$('.play-deck').click(function() { })
 })();
 </script>
 {% endcompress %}

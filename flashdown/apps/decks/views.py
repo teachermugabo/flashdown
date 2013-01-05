@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseBadRequest
 
 from apps.decks.models import Deck, Card
-from libs.login import get_login_forms
-from libs.utils import get_object_or_None
+from apps.decks.forms import DeckForm
+
 from libs.decorators import ajax_request, login_required
 
 import functools
@@ -11,23 +11,41 @@ login_required = functools.partial(login_required, url_name='overview')
 
 
 #TODO: add splash page and make this login_required as well
+@login_required
 def overview(request):
     """Renders the main dashboard page."""
     decks = Deck.objects.filter(active=True)
-    ctx = {'decks': decks}
-    ctx.update(get_login_forms(request))
+    deck_form = DeckForm()
+    ctx = {'decks': decks, 'new_deck_form': deck_form}
+
+    if not request.POST:
+        return render(request, 'decks/overview.html', ctx)
+
+    #TODO: move add deck logic to add_deck ajax view
+    form = DeckForm(request.POST)
+    if not form.is_valid():
+        ctx['new_deck_form'] = form
+        return render(request, 'decks/overview.html', ctx)
+
+    deck = form.save(commit=False)
+    deck.owner = request.user
+    deck.save()
+
+    request.session['active_deck_id'] = deck.pk
+
     return render(request, 'decks/overview.html', ctx)
+
 
 @login_required
 def add_cards(request, deck_id=None):
     """Card editing page. User can add new cards to their decks."""
     (deck_id, __, decks) = resolve_deck_id(request, deck_id)
-    ctx = {'decks': decks, 'active_deck_id': deck_id}
-    ctx.update(get_login_forms(request))
 
     request.session['active_deck_id'] = deck_id
 
+    ctx = {'decks': decks, 'active_deck_id': deck_id}
     return render(request, 'decks/addcards.html', ctx)
+
 
 @login_required
 def browse(request, deck_id=None):
@@ -39,7 +57,6 @@ def browse(request, deck_id=None):
 
     ctx = {'decks': decks, 'deck': deck,
            'cards': cards, 'active_deck_id': deck_id}
-    ctx.update(get_login_forms(request))
 
     return render(request, 'decks/browse.html', ctx)
 
@@ -69,28 +86,6 @@ def get_cards(request, deck_id):
     deck = deck.values()
     return {'deck': deck, 'cards': cards}
 
-
-@ajax_request
-def new_deck(request):
-    """process an ajax request to add a new deck"""
-    if not request.POST:  # we need the post data
-        return HttpResponse()
-
-    #TODO: validate data
-
-    # currently the max deck name length is 50 characters
-    deck_name = request.POST["deck_name"][:50]
-    deck = get_object_or_None(Deck, name=deck_name, owner=request.user)
-    if deck:
-        return HttpResponse() # already exists, don't send a new list item
-    else:
-        deck = Deck(name=deck_name, owner=request.user)
-        deck.save()
-
-    request.session['active_deck_id'] = deck.pk
-    print(deck.pk)
-
-    return render(request, 'decks/deckinfo_partial.html', {'deck' : deck})
 
 
 @ajax_request
@@ -125,11 +120,10 @@ def new_card(request):
     card = Card(front=front, back=back, deck=deck, owner=request.user)
     card.save()
 
-    #todo: store additional tags
-
     request.session['active_deck_id'] = deck_id
 
     return HttpResponse(status=201) # Created
+
 
 @ajax_request
 def get_card(request, card_id):

@@ -1,14 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+
 from mptt.models import MPTTModel, TreeForeignKey
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __unicode__(self):
-        return self.name
+from taggit.managers import TaggableManager
 
 
 class Deck(MPTTModel):
@@ -21,8 +16,8 @@ class Deck(MPTTModel):
     A separate DAG models nested-deck relationships for a particular user's decks.
     """
     name = models.CharField(max_length=50)
-    description = models.TextField(null=True)
-    tags = models.ManyToManyField(Tag, null=True)
+    description = models.TextField(blank=True, null=True)
+    tags = TaggableManager(blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User)

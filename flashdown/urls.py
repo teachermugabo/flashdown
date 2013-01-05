@@ -19,7 +19,7 @@ urlpatterns = patterns('flashdown.views',
     url(r'^logout/$', 'logout', name='logout'),
     url(r'', include('password_reset.urls')),
 
-    url(r'^/?$', 'home', name='home'),
+    url(r'^/?$', 'home', name='index'),
     url(r'^decks/', include('apps.decks.urls')),
 )
 
