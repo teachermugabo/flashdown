@@ -1,20 +1,24 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseBadRequest
 
-from apps.decks.models import Tag, Card
+from apps.decks.models import Deck, Card
 from libs.login import get_login_forms
 from libs.utils import get_object_or_None
-from libs.decorators import ajax_request
+from libs.decorators import ajax_request, login_required
+
+import functools
+login_required = functools.partial(login_required, url_name='overview')
 
 
+#TODO: add splash page and make this login_required as well
 def overview(request):
     """Renders the main dashboard page."""
-    decks = Tag.objects.filter(is_deck=True, deleted=False)
+    decks = Deck.objects.filter(active=True)
     ctx = {'decks': decks}
     ctx.update(get_login_forms(request))
     return render(request, 'decks/overview.html', ctx)
 
-
+@login_required
 def add_cards(request, deck_id=None):
     """Card editing page. User can add new cards to their decks."""
     (deck_id, __, decks) = resolve_deck_id(request, deck_id)
@@ -25,11 +29,11 @@ def add_cards(request, deck_id=None):
 
     return render(request, 'decks/addcards.html', ctx)
 
-
+@login_required
 def browse(request, deck_id=None):
     """Browse decks and their associated cards."""
     (deck_id, deck, decks) = resolve_deck_id(request, deck_id)
-    cards = deck.deck_cards.filter(deleted=False) if deck else None
+    cards = deck.deck_cards.filter(active=True) if deck else None
 
     request.session['active_deck_id'] = deck_id
 
@@ -40,10 +44,11 @@ def browse(request, deck_id=None):
     return render(request, 'decks/browse.html', ctx)
 
 
+@login_required
 def review(request, deck_id):
     """Review/study a given deck."""
-    deck = get_object_or_404(Tag, is_deck=True, pk=deck_id, deleted=False)
-    cards = deck.deck_cards.filter(deleted=False)
+    deck = get_object_or_404(Deck, pk=deck_id, active=True)
+    cards = deck.deck_cards.filter(active=True)
     #TODO: if len(cards) == 0, in review.html show message that there's nothing to review
 
     request.session['active_deck_id'] = deck_id
@@ -59,11 +64,10 @@ def review(request, deck_id):
 @ajax_request
 def get_cards(request, deck_id):
     """Get a json list of cards for a given deck."""
-    deck = Tag.objects.get_object_or_404(pk=deck_id, deleted=False, id_deck=True)
-    cards = deck.deck_cards.filter(deleted=False).values();
+    deck = Deck.objects.get_object_or_404(pk=deck_id, active=True)
+    cards = deck.deck_cards.filter(active=True).values();
     deck = deck.values()
     return {'deck': deck, 'cards': cards}
-
 
 
 @ajax_request
@@ -76,11 +80,11 @@ def new_deck(request):
 
     # currently the max deck name length is 50 characters
     deck_name = request.POST["deck_name"][:50]
-    deck = get_object_or_None(Tag, name=deck_name, is_deck=True, deleted=False)
+    deck = get_object_or_None(Deck, name=deck_name, owner=request.user)
     if deck:
         return HttpResponse() # already exists, don't send a new list item
     else:
-        deck = Tag(name=deck_name, is_deck=True)
+        deck = Deck(name=deck_name, owner=request.user)
         deck.save()
 
     request.session['active_deck_id'] = deck.pk
@@ -91,11 +95,14 @@ def new_deck(request):
 
 @ajax_request
 def delete_deck(request, deck_id):
+    if not request.user.is_authenticated():
+        return HttpResponse(status=401)
+
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
 
-    deck = get_object_or_404(Tag, pk=deck_id, is_deck=True, deleted=False)
-    deck.deleted = True # keep it around in case we want to restore it later
+    deck = get_object_or_404(Deck, pk=deck_id, active=True)
+    deck.active = False # keep it around in case we want to restore it later
     deck.save()
 
     return HttpResponse() #status=200 OK
@@ -113,11 +120,10 @@ def new_card(request):
     if not all([deck_id, front, back]): # Not None, not ''
         return HttpResponseBadRequest('missing data')
 
-    deck = get_object_or_404(Tag, pk=int(deck_id), is_deck=True)
+    deck = get_object_or_404(Deck, pk=int(deck_id))
 
-    card = Card(front=front, back=back, deck=deck)
+    card = Card(front=front, back=back, deck=deck, owner=request.user)
     card.save()
-    card.tags.add(deck)
 
     #todo: store additional tags
 
@@ -125,15 +131,20 @@ def new_card(request):
 
     return HttpResponse(status=201) # Created
 
+@ajax_request
+def get_card(request, card_id):
+    card = get_object_or_404(Card, pk=card_id, active=True)
+    return {'front': card.front, 'back': card.back}
+
 
 @ajax_request
 def delete_card(request, deck_id, card_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
 
-    deck = get_object_or_404(Tag, pk=deck_id, deleted=False, is_deck=True)
-    card = get_object_or_404(Card, pk=card_id, deleted=False, deck=deck)
-    card.deleted = True # keep it around in case we want to restore it later
+    deck = get_object_or_404(Deck, pk=deck_id, active=True)
+    card = get_object_or_404(Card, pk=card_id, active=True, deck=deck)
+    card.active = False # keep it around in case we want to restore it later
     card.save()
 
     request.session['active_deck_id'] = deck_id
@@ -153,7 +164,7 @@ def update_card(request):
     if not all([card_id, front, back]): # not None, not empty
         return HttpResponseBadRequest()
 
-    card = get_object_or_404(Card, pk=card_id, deleted=False)
+    card = get_object_or_404(Card, pk=card_id, active=True)
     card.front = front
     card.back = back
     card.save()
@@ -175,14 +186,14 @@ def resolve_deck_id(request, deck_id):
     if deck_id is None:
         deck_id = request.session.get('active_deck_id', None)
 
-    decks = Tag.objects.filter(is_deck=True, deleted=False)
+    decks = Deck.objects.filter(active=True)
     deck = None
 
     # first try, using the given deck id
     if deck_id:
         try:
-            deck = Tag.objects.get(pk=deck_id, is_deck=True, deleted=False)
-        except Tag.DoesNotExist:
+            deck = Deck.objects.get(pk=deck_id, active=True)
+        except Deck.DoesNotExist:
             deck_id = None   # we got an invalid id
 
     # next try, using the first active deck

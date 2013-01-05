@@ -1,12 +1,12 @@
 <tr>
-    <td class="ellipsis"><a data-deck-id="{{deck.id}}" class="viewdeck" href="{% url browse deck_id=deck.id %}">{{ deck.name }}</a></td>
+    <td class="ellipsis"><a data-deck-id="{{deck.pk}}" class="viewdeck" href="{% url browse deck_id=deck.id %}">{{ deck.name }}</a></td>
     <td>{{ deck.card_count }}</td>
     <td>{{ deck.due_count }}</td>
-    <td><a href={% url review deck_id=deck.id %} class="btn btn-success play-deck" rel="tooltip" title="Review Deck">
+    <td><a href={% url review deck_id=deck.pk %} class="btn btn-success play-deck" rel="tooltip" title="Review Deck">
             <i class="icon-play icon-large"></i></a>
-        <a href="#" data-id="{{ deck.id }}" class="btn edit-deck" rel="tooltip" title="Deck Settings">
+        <a href="#" data-id="{{ deck.pk }}" class="btn edit-deck" rel="tooltip" title="Deck Settings">
             <i class="icon-cog icon-large"></i></a>
-        <a href="{% url delete_deck deck_id=deck.id %}" class="btn btn-danger delete-deck" rel="tooltip" title="Delete Deck">
+        <a href="{% url delete_deck deck_id=deck.pk %}" class="btn btn-danger delete-deck" rel="tooltip" title="Delete Deck">
             <i class="icon-trash icon-large"></i></a>
     </td>
 </tr>

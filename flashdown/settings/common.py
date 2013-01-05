@@ -203,6 +203,9 @@ THIRD_PARTY_APPS = (
 
     # Painless password reset:
     'password_reset',
+
+    # Heirarchical data in our db:
+    'mptt',
 )
 
 LOCAL_APPS = (

@@ -8,70 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Tag'
-        db.create_table('decks_tag', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-        ))
-        db.send_create_signal('decks', ['Tag'])
 
-        # Adding model 'Deck'
-        db.create_table('decks_deck', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('description', self.gf('django.db.models.fields.TextField')()),
-            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('private', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('active', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('diff_from_parent', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('parent', self.gf('mptt.fields.TreeForeignKey')(blank=True, related_name='forks', null=True, to=orm['decks.Deck'])),
-            ('super_deck', self.gf('mptt.fields.TreeForeignKey')(blank=True, related_name='sub_decks', null=True, to=orm['decks.Deck'])),
-            ('top_level', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('lft', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            ('rght', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            ('tree_id', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            ('level', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-        ))
-        db.send_create_signal('decks', ['Deck'])
-
-        # Adding M2M table for field tags on 'Deck'
-        db.create_table('decks_deck_tags', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('deck', models.ForeignKey(orm['decks.deck'], null=False)),
-            ('tag', models.ForeignKey(orm['decks.tag'], null=False))
-        ))
-        db.create_unique('decks_deck_tags', ['deck_id', 'tag_id'])
-
-        # Adding model 'Card'
-        db.create_table('decks_card', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('deck', self.gf('django.db.models.fields.related.ForeignKey')(related_name='deck_cards', to=orm['decks.Deck'])),
-            ('front', self.gf('django.db.models.fields.TextField')()),
-            ('back', self.gf('django.db.models.fields.TextField')()),
-            ('last_asked', self.gf('django.db.models.fields.DateTimeField')(null=True)),
-            ('next_due', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('active', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('private', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal('decks', ['Card'])
-
+        # Changing field 'Deck.description'
+        db.alter_column('decks_deck', 'description', self.gf('django.db.models.fields.TextField')(null=True))
 
     def backwards(self, orm):
-        # Deleting model 'Tag'
-        db.delete_table('decks_tag')
 
-        # Deleting model 'Deck'
-        db.delete_table('decks_deck')
-
-        # Removing M2M table for field tags on 'Deck'
-        db.delete_table('decks_deck_tags')
-
-        # Deleting model 'Card'
-        db.delete_table('decks_card')
-
+        # Changing field 'Deck.description'
+        db.alter_column('decks_deck', 'description', self.gf('django.db.models.fields.TextField')(default=''))
 
     models = {
         'auth.group': {
@@ -127,7 +71,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Deck'},
             'active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {}),
+            'description': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'diff_from_parent': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
@@ -138,7 +82,7 @@ class Migration(SchemaMigration):
             'private': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'super_deck': ('mptt.fields.TreeForeignKey', [], {'blank': 'True', 'related_name': "'sub_decks'", 'null': 'True', 'to': "orm['decks.Deck']"}),
-            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['decks.Tag']", 'symmetrical': 'False'}),
+            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['decks.Tag']", 'null': 'True', 'symmetrical': 'False'}),
             'top_level': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
         },
