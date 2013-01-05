@@ -21,8 +21,8 @@ class Deck(MPTTModel):
     A separate DAG models nested-deck relationships for a particular user's decks.
     """
     name = models.CharField(max_length=50)
-    description = models.TextField()
-    tags = models.ManyToManyField(Tag)
+    description = models.TextField(null=True)
+    tags = models.ManyToManyField(Tag, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User)

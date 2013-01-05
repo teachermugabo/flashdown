@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import simplejson
+from django.core.urlresolvers import reverse
 from functools import wraps
 
 class JsonResponse(HttpResponse):
@@ -31,4 +32,16 @@ def ajax_request(func):
             return response
     return wrapper
 
+def login_required(func, url_name, append=''):
+    """
+    Require user authentication. If unauthenticated, redirect to the login page and
+    show the login forms.
+    """
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            request.session['lform_errors'] = ['You need to sign in to do that.']
+            return HttpResponseRedirect(reverse(url_name) + append)
+        return func(request, *args, **kwargs)
 
+    return wrapper
