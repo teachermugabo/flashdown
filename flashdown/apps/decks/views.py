@@ -7,7 +7,7 @@ from apps.decks.forms import DeckForm
 from libs.decorators import ajax_request, login_required
 
 import functools
-login_required = functools.partial(login_required, url_name='overview')
+login_required = functools.partial(login_required, url_name='index')
 
 
 #TODO: add splash page and make this login_required as well
