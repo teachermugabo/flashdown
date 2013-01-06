@@ -1,13 +1,18 @@
 from django import forms
 from apps.decks.models import Deck
-
 from crispy_forms.helper import FormHelper
+
+MAX_DESC_LEN = 500
 
 class DeckForm(forms.ModelForm):
 
     class Meta:
         model = Deck
         fields = ('name', 'description', 'private', 'tags')
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 5,
+                                                 'maxlength': MAX_DESC_LEN})
+        }
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
@@ -24,5 +29,13 @@ class DeckForm(forms.ModelForm):
             return name
 
         raise forms.ValidationError("Deck with that name already exists.")
+
+    def clean_description(self):
+        desc = self.cleaned_data.get('description', None)
+        if desc is not None and len(desc) > MAX_DESC_LEN:
+            raise forms.ValidationError("Must be less than %d characters." % MAX_DESC_LEN)
+
+        return desc
+
 
 
