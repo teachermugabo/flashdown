@@ -7,7 +7,7 @@ from apps.decks.forms import DeckForm
 from libs.decorators import ajax_request, login_required
 
 import functools
-login_required = functools.partial(login_required, url_name='index')
+login_required = functools.partial(login_required, login_url='index')
 
 
 #TODO: add splash page and make this login_required as well
@@ -174,9 +174,6 @@ def resolve_deck_id(request, deck_id):
     [stored active deck id, id of first deck], else None.
     Returns deck_id and the list of decks.
     """
-    # TODO: what if we're passed some random string here using this cookie?
-    # duh, use session storage to be safe
-
     if deck_id is None:
         deck_id = request.session.get('active_deck_id', None)
 
@@ -192,8 +189,8 @@ def resolve_deck_id(request, deck_id):
 
     # next try, using the first active deck
     if not deck_id and len(decks) > 0:
-        deck_id = decks[0].pk
         deck = decks[0]
+        deck_id = deck.pk
 
     deck_id = int(deck_id) if deck_id else None
 

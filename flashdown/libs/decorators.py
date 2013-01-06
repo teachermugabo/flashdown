@@ -1,7 +1,9 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
+
 from functools import wraps
+
 
 class JsonResponse(HttpResponse):
     """
@@ -14,14 +16,6 @@ class JsonResponse(HttpResponse):
 def ajax_request(func):
     """
     If view returned serializable dict, returns JsonResponse with this dict as content.
-
-    example:
-
-        @ajax_request
-        def my_view(request):
-            news = News.objects.all()
-            news_titles = [entry.title for entry in news]
-            return {'news_titles': news_titles}
     """
     @wraps(func)
     def wrapper(request, *args, **kwargs):
@@ -32,7 +26,8 @@ def ajax_request(func):
             return response
     return wrapper
 
-def login_required(func, url_name, append=''):
+
+def login_required(func, login_url, append=''):
     """
     Require user authentication. If unauthenticated, redirect to the login page and
     show the login forms.
@@ -41,7 +36,9 @@ def login_required(func, url_name, append=''):
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated():
             request.session['lform_errors'] = ['You need to sign in to do that.']
-            return HttpResponseRedirect(reverse(url_name) + append)
+            return HttpResponseRedirect(reverse(login_url) + append)
         return func(request, *args, **kwargs)
 
     return wrapper
+
+
