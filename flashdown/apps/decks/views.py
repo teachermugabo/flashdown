@@ -14,7 +14,7 @@ login_required = functools.partial(login_required, url_name='overview')
 @login_required
 def overview(request):
     """Renders the main dashboard page."""
-    decks = Deck.objects.filter(active=True)
+    decks = Deck.objects.filter(active=True, owner=request.user)
     deck_form = DeckForm()
     ctx = {'decks': decks, 'new_deck_form': deck_form}
 
@@ -64,7 +64,7 @@ def browse(request, deck_id=None):
 @login_required
 def review(request, deck_id):
     """Review/study a given deck."""
-    deck = get_object_or_404(Deck, pk=deck_id, active=True)
+    deck = get_object_or_404(Deck, pk=deck_id, owner=request.user, active=True)
     cards = deck.deck_cards.filter(active=True)
     #TODO: if len(cards) == 0, in review.html show message that there's nothing to review
 
@@ -81,11 +81,11 @@ def review(request, deck_id):
 @ajax_request
 def get_cards(request, deck_id):
     """Get a json list of cards for a given deck."""
-    deck = Deck.objects.get_object_or_404(pk=deck_id, active=True)
+    deck = Deck.objects.get_object_or_404(pk=deck_id, owner=request.user,
+                                          active=True)
     cards = deck.deck_cards.filter(active=True).values();
     deck = deck.values()
     return {'deck': deck, 'cards': cards}
-
 
 
 @ajax_request
@@ -96,7 +96,7 @@ def delete_deck(request, deck_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
 
-    deck = get_object_or_404(Deck, pk=deck_id, active=True)
+    deck = get_object_or_404(Deck, pk=deck_id, owner=request.user, active=True)
     deck.active = False # keep it around in case we want to restore it later
     deck.save()
 
@@ -115,7 +115,7 @@ def new_card(request):
     if not all([deck_id, front, back]): # Not None, not ''
         return HttpResponseBadRequest('missing data')
 
-    deck = get_object_or_404(Deck, pk=int(deck_id))
+    deck = get_object_or_404(Deck, pk=int(deck_id), owner=request.user)
 
     card = Card(front=front, back=back, deck=deck, owner=request.user)
     card.save()
@@ -127,7 +127,7 @@ def new_card(request):
 
 @ajax_request
 def get_card(request, card_id):
-    card = get_object_or_404(Card, pk=card_id, active=True)
+    card = get_object_or_404(Card, pk=card_id, owner=request.user, active=True)
     return {'front': card.front, 'back': card.back}
 
 
@@ -136,8 +136,8 @@ def delete_card(request, deck_id, card_id):
     if not request.is_ajax() or request.method != 'POST':
         return HttpResponseBadRequest()
 
-    deck = get_object_or_404(Deck, pk=deck_id, active=True)
-    card = get_object_or_404(Card, pk=card_id, active=True, deck=deck)
+    deck = get_object_or_404(Deck, pk=deck_id, owner=request.user, active=True)
+    card = get_object_or_404(Card, pk=card_id, owner=request.user, active=True, deck=deck)
     card.active = False # keep it around in case we want to restore it later
     card.save()
 
@@ -158,7 +158,7 @@ def update_card(request):
     if not all([card_id, front, back]): # not None, not empty
         return HttpResponseBadRequest()
 
-    card = get_object_or_404(Card, pk=card_id, active=True)
+    card = get_object_or_404(Card, pk=card_id, owner=request.user, active=True)
     card.front = front
     card.back = back
     card.save()
@@ -180,13 +180,13 @@ def resolve_deck_id(request, deck_id):
     if deck_id is None:
         deck_id = request.session.get('active_deck_id', None)
 
-    decks = Deck.objects.filter(active=True)
+    decks = Deck.objects.filter(active=True, owner=request.user)
     deck = None
 
     # first try, using the given deck id
     if deck_id:
         try:
-            deck = Deck.objects.get(pk=deck_id, active=True)
+            deck = Deck.objects.get(pk=deck_id, active=True, owner=request.user)
         except Deck.DoesNotExist:
             deck_id = None   # we got an invalid id
 
