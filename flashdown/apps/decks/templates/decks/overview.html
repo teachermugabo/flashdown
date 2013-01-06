@@ -72,8 +72,9 @@
     });
 
     // activate tooltips
-    $("#deck-list").tooltip({ selector: '[rel=tooltip]' });
     var $deckList = $('#deck-list'); // hidden if no decks exist
+    $deckList.tooltip({ selector: '[rel=tooltip]' });
+    $emptyMessage = $('#empty-message');
 
     // overview controls
     $('#deck-list').on('click', '.delete-deck', function() {
