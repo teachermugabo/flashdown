@@ -9,4 +9,4 @@ django-password-reset==0.3
 html5lib==0.95
 Markdown==2.2.1
 django-mptt==0.5.5
-django-taggit=0.9.3
+django-taggit==0.9.3
