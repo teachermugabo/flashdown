@@ -87,7 +87,7 @@ def compress():
 
 ########## HEROKU MANAGEMENT
 @task
-def bootstrap():
+def bootstrap(app=''):
     """Bootstrap your new application with Heroku, preparing it for a production
     deployment. This will:
 
@@ -97,7 +97,7 @@ def bootstrap():
         - Apply all database migrations.
         - Initialize New Relic's monitoring add-on.
     """
-    cont('heroku create', "Couldn't create the Heroku app, continue anyway?")
+    cont('heroku create %s' % app, "Couldn't create the Heroku app, continue anyway?")
 
 
     for addon in HEROKU_ADDONS:
@@ -121,13 +121,13 @@ def bootstrap():
     compress()
 
 @task
-def destroy():
+def destroy(app=''):
     """Destroy this Heroku application. Wipe it from existance.
 
     .. note::
         This really will completely destroy your application. Think twice.
     """
-    local('heroku apps:destroy')
+    local('heroku apps:destroy %s' % app)
 
 @task
 def deploy():
