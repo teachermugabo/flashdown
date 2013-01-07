@@ -1,6 +1,8 @@
 {% load crispy_forms_tags %}
     <!-- Modals -->
+    {% if not form_only %}
     <div id="new-deck-modal" class="modal hide fade">
+    {% endif %}
         <form action="{% url new_deck %}" class="form-horizontal" id="new-deck-form" method="post">
             {% csrf_token %}
             <div class="modal-header">
@@ -9,12 +11,14 @@
             </div>
 
             <div class="modal-body">
-                {% crispy new_deck_form %}
+                {% crispy deck_form %}
             </div>
 
             <div class="modal-footer">
                 <button type="submit" name="finish" value="ok" class="btn primary">Create</button>
             </div>
         </form>
+    {% if not form_only %}
     </div>
+    {% endif %}
 

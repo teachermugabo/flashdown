@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.template import RequestContext, loader
 
 from apps.decks.models import Deck, Card
 from apps.decks.forms import DeckForm
@@ -15,26 +16,10 @@ login_required = functools.partial(login_required, login_url='index')
 def overview(request):
     """Renders the main dashboard page."""
     decks = Deck.objects.filter(active=True, owner=request.user)
-    deck_form = DeckForm()
-    ctx = {'decks': decks, 'new_deck_form': deck_form}
+    ctx = {'decks': decks, 'deck_form': DeckForm()}
 
     if not request.POST:
         return render(request, 'decks/overview.html', ctx)
-
-    #TODO: move add deck logic to add_deck ajax view
-    form = DeckForm(request.POST)
-    if not form.is_valid():
-        ctx['new_deck_form'] = form
-        return render(request, 'decks/overview.html', ctx)
-
-    deck = form.save(commit=False)
-    deck.owner = request.user
-    deck.save()
-
-    request.session['active_deck_id'] = deck.pk
-
-    return render(request, 'decks/overview.html', ctx)
-
 
 @login_required
 def add_cards(request, deck_id=None):
@@ -123,6 +108,34 @@ def new_card(request):
     request.session['active_deck_id'] = deck_id
 
     return HttpResponse(status=201) # Created
+
+
+@ajax_request
+def new_deck(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest()
+
+    t = loader.get_template('decks/new_deck_modal.html')
+    form = DeckForm(request.POST)
+    if not form.is_valid():
+        c = RequestContext(request, {'deck_form': form, 'form_only': True})
+        form_html = t.render(c)
+        return {'form_html': form_html, 'success': False}
+
+    deck = form.save(commit=False)
+    deck.owner = request.user
+    deck.save()
+
+    request.session['active_deck_id'] = deck.pk
+
+    c = RequestContext(request, {'deck_form': DeckForm(), 'form_only': True})
+    form_html = t.render(c)
+
+    t2 = loader.get_template('decks/deckinfo_partial.html')
+    c2 = RequestContext(request, {'deck': deck})
+    deck_html = t2.render(c2)
+
+    return {'form_html': form_html, 'deck_html': deck_html, 'success': True}
 
 
 @ajax_request

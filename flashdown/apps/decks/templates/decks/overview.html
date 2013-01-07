@@ -100,6 +100,30 @@
         return false;
     });
 
+    $newDeckModal = $('#new-deck-modal');
+    $('#new-deck-form').submit(function() {
+        var self = $(this);
+        $.ajax({
+            url: self.attr('action'),
+            type: 'POST',
+            data: self.serialize(),
+            success: function(data) {   
+                if (data.success) {
+                    // may not be visible if no decks are listed
+                    $emptyMessage.hide();
+                    $deckList.show();
+
+                    $newDeckModal.modal('hide');
+                    $deckList.append(data.deck_html);
+                }
+
+                self.html(data.form_html);
+            }
+        });
+        return false;
+    })
+
+
     //$('.edit-deck').click(function() { })
 })();
 </script>
