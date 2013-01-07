@@ -39,7 +39,31 @@
 {% endblock %}
 
 {% block modals %}
-    {% include "login_modals.html" %}
+    {% include "login_modal.html" %}
+    {% include "registration_modal.html" %}
 {% endblock %}
 
+{% block js %}
+<script>
+    var userFormSubmit = function() {
+         var self = $(this);
+        $.ajax({
+            url: self.attr('action'),
+            type: 'POST',
+            data: self.serialize(),
+            success: function(data) {
+                if (data.success) {
+                    window.location = data.redirect;
+                }
+                self.html(data.form_html);
+            }
+        });
+        return false;
+    }
+
+    $('#login-form').submit(userFormSubmit);
+    $('#registration-form').submit(userFormSubmit);
+
+</script>
+{% endblock %}
 

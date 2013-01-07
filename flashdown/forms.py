@@ -78,7 +78,6 @@ class LoginForm(forms.Form):
 
         return username
 
-
     def clean_password(self):
         password = self.cleaned_data.get('password', None)
         if not password:

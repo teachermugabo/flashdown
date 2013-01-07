@@ -1,0 +1,25 @@
+{% load crispy_forms_tags %}
+
+    {% if not form_only %}
+    <div id="register-modal" class="modal hide fade">
+    {% endif %}
+        <form action="{% url register %}" class="form-horizontal" id="registration-form" method="post">
+            {% csrf_token %}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3>Sign Up</h3>
+            </div>
+
+            <div class="modal-body">
+                {% crispy registration_form %}
+            </div>
+
+            <div class="modal-footer">
+                <p class="pull-left">Already have an account? <a data-toggle="modal" data-dismiss="modal" href="#login-modal">Login</a>.</p>
+                <button type="submit" name="finish" value="ok" class="btn primary">Submit</button>
+            </div>
+        </form>
+    {% if not form_only %}
+    </div>
+    {% endif %}
+
